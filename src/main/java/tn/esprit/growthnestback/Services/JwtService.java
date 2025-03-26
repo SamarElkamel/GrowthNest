@@ -1,4 +1,4 @@
-package tn.esprit.growthnestback.Sevice;
+package tn.esprit.growthnestback.Services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

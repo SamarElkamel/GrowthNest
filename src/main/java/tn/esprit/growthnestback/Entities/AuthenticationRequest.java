@@ -1,4 +1,5 @@
-package tn.esprit.growthnestback.Auth;
+package tn.esprit.growthnestback.Entities;
+
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,15 +12,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class RegistrationRequest {
+public class AuthenticationRequest {
 
-    @NotEmpty(message="Firstname is mandatory")
-    @NotBlank(message="Firstname is mandatory")
-    private String firstName;
-    @NotEmpty(message="Lastname is mandatory")
-    @NotBlank(message="Lasttname is mandatory")
-    private String lastname;
-    @Email (message= "Email is not formated")
+    @Email(message= "Email is not formated")
     @NotEmpty(message="Email is mandatory")
     @NotBlank(message="Email is mandatory")
     private String email;
@@ -27,4 +22,6 @@ public class RegistrationRequest {
     @NotBlank(message="Password is mandatory")
     @Size(min = 8, message = "Password should be 8 characters long minimum")
     private String password;
+
+
 }

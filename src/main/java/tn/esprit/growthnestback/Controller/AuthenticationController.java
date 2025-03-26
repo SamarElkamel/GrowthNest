@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.growthnestback.Auth.AuthenticationRequest;
-import tn.esprit.growthnestback.Auth.AuthenticationResponse;
-import tn.esprit.growthnestback.Auth.RegistrationRequest;
-import tn.esprit.growthnestback.Sevice.AuthenticationService;
+import tn.esprit.growthnestback.Entities.AuthenticationRequest;
+import tn.esprit.growthnestback.Entities.AuthenticationResponse;
+import tn.esprit.growthnestback.Entities.RegistrationRequest;
+import tn.esprit.growthnestback.Services.AuthenticationService;
 
 @RestController
 @RequestMapping("/auth")

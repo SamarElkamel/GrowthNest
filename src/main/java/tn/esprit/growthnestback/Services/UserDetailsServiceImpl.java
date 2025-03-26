@@ -1,13 +1,11 @@
-package tn.esprit.growthnestback.Sevice;
+package tn.esprit.growthnestback.Services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import tn.esprit.growthnestback.Entities.User;
 import tn.esprit.growthnestback.Repository.UserRepository;
 
 

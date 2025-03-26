@@ -1,4 +1,4 @@
-package tn.esprit.growthnestback.Sevice;
+package tn.esprit.growthnestback.Services;
 
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -6,7 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.spring6.SpringTemplateEngine;
-import tn.esprit.growthnestback.Email.EmailTemplateName;
+import tn.esprit.growthnestback.Entities.EmailTemplateName;
 
 import jakarta.mail.MessagingException;
 import org.springframework.scheduling.annotation.Async;
