@@ -1,4 +1,4 @@
-package tn.esprit.growthnestback.Sevice;
+package tn.esprit.growthnestback.Services;
 
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
@@ -8,13 +8,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import tn.esprit.growthnestback.Auth.AuthenticationRequest;
-import tn.esprit.growthnestback.Auth.AuthenticationResponse;
-import tn.esprit.growthnestback.Email.EmailTemplateName;
+import tn.esprit.growthnestback.Entities.AuthenticationRequest;
+import tn.esprit.growthnestback.Entities.AuthenticationResponse;
+import tn.esprit.growthnestback.Entities.EmailTemplateName;
 import tn.esprit.growthnestback.Entities.RoleName;
 import tn.esprit.growthnestback.Entities.Token;
 import tn.esprit.growthnestback.Entities.User;
-import tn.esprit.growthnestback.Auth.RegistrationRequest;
+import tn.esprit.growthnestback.Entities.RegistrationRequest;
 import org.springframework.stereotype.Service;
 import tn.esprit.growthnestback.Repository.RoleRepository;
 import tn.esprit.growthnestback.Repository.TokenRepository;
@@ -27,6 +27,7 @@ import java.util.HashMap;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
+
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

@@ -1,4 +1,4 @@
-package tn.esprit.growthnestback.Auth;
+package tn.esprit.growthnestback.Entities;
 
 import lombok.Builder;
 import lombok.Getter;

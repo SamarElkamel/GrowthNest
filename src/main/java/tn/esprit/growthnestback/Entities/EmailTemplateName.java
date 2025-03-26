@@ -1,4 +1,4 @@
-package tn.esprit.growthnestback.Email;
+package tn.esprit.growthnestback.Entities;
 
 import lombok.Getter;
 

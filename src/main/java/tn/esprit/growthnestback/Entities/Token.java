@@ -23,4 +23,5 @@ public class Token {
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User user;
+
 }
