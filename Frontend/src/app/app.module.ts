@@ -8,7 +8,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
-
+import { CodeInputModule } from 'angular-code-input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { FullComponent } from './layouts/full/full.component';
@@ -20,11 +20,17 @@ import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SpinnerComponent } from './shared/spinner.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SpinnerComponent,
+    LoginComponent,
+    RegisterComponent,
+    ActivateAccountComponent,
   ],
   imports: [
     CommonModule,
@@ -38,8 +44,10 @@ import { SpinnerComponent } from './shared/spinner.component';
     FullComponent,
     NavigationComponent,
     SidebarComponent,
+    CodeInputModule
   ],
   providers: [
+    HttpClient,
     {
       provide: LocationStrategy,
       useClass: PathLocationStrategy

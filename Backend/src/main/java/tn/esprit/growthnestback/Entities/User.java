@@ -32,6 +32,7 @@ public class User implements UserDetails, Principal {
     private Long id;
     private String firstname;
     private String lastname;
+    private String image;
     private LocalDate dateOfBirth;
     @Column(unique = true)
     private String email;

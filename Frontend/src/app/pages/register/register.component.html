@@ -1,0 +1,67 @@
+<!-- register.component.html -->
+<section class="fullscreen-container" id="back" style="background-color: #2b2b2b;" >
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-xl-10">
+        <div class="card login-card" style="width: 60%; margin: auto;">
+          <div class="row g-0">
+            <div class="col-md-6 col-lg-5 d-none d-md-block">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
+                alt="register form" class="img-fluid login-image" id="logimg" />
+            </div>
+            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+              <div class="card-body p-4 p-lg-5 text-black">
+                
+                  <div class="d-flex align-items-center mb-3 pb-1">
+                    <img src="assets/images/logos/logo-icon.png" alt="Logo" class="logo-img me-3" />
+                  </div>
+
+                 
+
+                  <div class="mb-3">
+                    <label for="firstname" class="form-label">Firstname</label>
+                    <input [(ngModel)]="registerRequest.firstName" type="text" class="form-control" id="firstname" placeholder="Firstname">
+                  </div>
+                  <div class="mb-3">
+                    <label for="lastname" class="form-label">Lastname</label>
+                    <input [(ngModel)]="registerRequest.lastname" type="text" class="form-control" id="lastname" placeholder="Lastname">
+                  </div>
+                  <div class="mb-3">
+                    <label for="login" class="form-label">Email address</label>
+                    <input [(ngModel)]="registerRequest.email" type="email" class="form-control" id="login" placeholder="name@example.com">
+                  </div>
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input [(ngModel)]="registerRequest.password" type="password" class="form-control" id="password" placeholder="Password">
+                  </div>
+              
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="image">Profile Image</label>
+                    <div class="custom-file">
+                      <input [(ngModel)]="registerRequest.image" type="file" id="image" class="custom-file-input" />
+            
+                    </div>
+                  </div>
+                  
+                 
+                  
+
+                  <div class="pt-1 mb-4">
+                    <button (click)="register()" type="button" class="btn btn-dark btn-lg btn-block" id="log">Create Account</button>
+                  </div>
+                  
+                  <div>
+                    Already have an account?&nbsp;
+                    <button (click)="login()" type="button" class="btn btn-link custom-register-btn">
+                      Login
+                    </button>
+                  </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

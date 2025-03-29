@@ -27,5 +27,8 @@ public class RegistrationRequest {
     @NotBlank(message="Password is mandatory")
     @Size(min = 8, message = "Password should be 8 characters long minimum")
     private String password;
+    @NotEmpty(message="Password is mandatory")
+    @NotBlank(message="Password is mandatory")
+    private String image;
 
 }

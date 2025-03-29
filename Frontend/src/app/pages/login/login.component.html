@@ -1,0 +1,46 @@
+<section class="vh-100" style="background-color: #2b2b2b;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-xl-10">
+        <div class="card login-card" style="width: 60%; margin: auto;">
+          <div class="row g-0">
+            <div class="col-md-6 col-lg-5 d-none d-md-block">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
+                alt="login form" class="img-fluid login-image" id="logimg"/>
+            </div>
+            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+              <div class="card-body p-4 p-lg-5 text-black">
+                  <div class="d-flex align-items-center mb-3 pb-1">
+                    <img src="assets/images/logos/logo-icon.png" alt="Logo" class="logo-img me-3" />
+                  </div>
+
+                  <h5 class="fw-normal mb-3 pb-3">Sign into your account</h5>
+                  <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
+                    <p *ngFor="let msg of errorMsg">{{msg}}</p>
+                  </div>
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="email">Email address</label>
+                    <input [(ngModel)]="authRequest.email" type="email" class="form-control" id="login" placeholder="name@example.com">
+                  </div>
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="password">Password</label>
+                    <input [(ngModel)]="authRequest.password" type="password" class="form-control" id="password" placeholder="Password">
+                  </div>
+                  <div class="pt-1 mb-4">
+                    <button (click)="login()" type="button" class="btn btn-dark btn-lg btn-block" id="log">Login</button>
+                  </div>
+                  <a class="small text-muted" href="#">Forgot password?</a>
+                  <div>
+                    Don't have an account?&nbsp;
+                    <button (click)="register()" type="button" class="btn btn-link custom-register-btn">
+                      Register
+                    </button>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
