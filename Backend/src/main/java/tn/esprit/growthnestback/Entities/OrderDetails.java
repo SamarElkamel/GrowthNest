@@ -20,7 +20,7 @@ public class OrderDetails {
 
      Integer quantity;
      Double priceAtTime;
-     Double discountApplied;
+     //Double discountApplied;
 
     @ManyToOne
     @JoinColumn(name = "order_id")

@@ -8,7 +8,7 @@ import tn.esprit.growthnestback.Repository.OrderRepository;
 import java.util.List;
 @Service
 
-public class OrderServiceImp implements OrderService{
+public class OrderServiceImp implements IOrderService {
 
     @Autowired
     private OrderRepository orderRepository;
@@ -18,9 +18,14 @@ public class OrderServiceImp implements OrderService{
     }
 
     @Override
-    public Order updateOrder(Long id, Order order) {
+    public Order updateOrder(Long id, Order updatedOrder) {
         Order existing = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with id " + id));
+        existing.setStatus(updatedOrder.getStatus());
+        existing.setTotalAmount(updatedOrder.getTotalAmount());
+        existing.setPaymentMethod(updatedOrder.getPaymentMethod());
+        existing.setDeliveryAddress(updatedOrder.getDeliveryAddress());
+        existing.setUser(updatedOrder.getUser());
         return orderRepository.save(existing);
     }
 

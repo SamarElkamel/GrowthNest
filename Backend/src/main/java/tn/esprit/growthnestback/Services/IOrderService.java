@@ -4,7 +4,7 @@ import tn.esprit.growthnestback.Entities.Order;
 
 import java.util.List;
 
-public interface OrderService {
+public interface IOrderService {
     Order createOrder(Order order);
     Order updateOrder(Long id, Order order);
     void deleteOrder(Long id);

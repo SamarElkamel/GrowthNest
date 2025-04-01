@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.growthnestback.Entities.Order;
-import tn.esprit.growthnestback.Services.OrderService;
+import tn.esprit.growthnestback.Services.IOrderService;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/orders")
 public class OrderRestController {
-    private OrderService orderService;
+    private IOrderService orderService;
 
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
