@@ -1,6 +1,8 @@
 package tn.esprit.growthnestback.Services;
 
 import tn.esprit.growthnestback.Entities.Order;
+import tn.esprit.growthnestback.dto.CreateOrderRequestDTO;
+import tn.esprit.growthnestback.dto.OrderResponseDTO;
 
 import java.util.List;
 
@@ -10,4 +12,6 @@ public interface IOrderService {
     void deleteOrder(Long id);
     Order getOrderById(Long id);
     List<Order> getAllOrders();
+    OrderResponseDTO createOrderWithDetails(CreateOrderRequestDTO requestDTO);
+
 }

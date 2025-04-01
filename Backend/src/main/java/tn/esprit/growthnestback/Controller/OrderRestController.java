@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.growthnestback.Entities.Order;
 import tn.esprit.growthnestback.Services.IOrderService;
+import tn.esprit.growthnestback.dto.CreateOrderRequestDTO;
+import tn.esprit.growthnestback.dto.OrderResponseDTO;
 
 import java.util.List;
 
@@ -40,5 +42,10 @@ public class OrderRestController {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
+    @PostMapping("/full")
+    public ResponseEntity<OrderResponseDTO> createFullOrder(@RequestBody CreateOrderRequestDTO request) {
+        OrderResponseDTO response = orderService.createOrderWithDetails(request);
+        return ResponseEntity.ok(response);
+    }
 
 }
