@@ -49,6 +49,7 @@ public class AuthenticationService {
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .image(request.getImage())
                 .accountLocked(false)
                 .enabled(false)
                 .role(userRole)

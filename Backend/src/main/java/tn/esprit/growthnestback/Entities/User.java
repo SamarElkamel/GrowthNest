@@ -1,6 +1,5 @@
 package tn.esprit.growthnestback.Entities;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.security.auth.Subject;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -26,14 +24,14 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails, Principal {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstname;
     private String lastname;
+    @Lob
     private String image;
-    private LocalDate dateOfBirth;
+
     @Column(unique = true)
     private String email;
     private String password;
@@ -43,14 +41,14 @@ public class User implements UserDetails, Principal {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
+
     @LastModifiedDate
     @Column(insertable = false)
-    private LocalDateTime LastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
     @ManyToOne
     @JoinColumn(name="ID_ROLE", referencedColumnName="id")
-    private Role role ;
-
+    private Role role;
 
     @Override
     public String getName() {
@@ -97,8 +95,7 @@ public class User implements UserDetails, Principal {
         return enabled;
     }
 
-    public String fullName()
-    {
+    public String fullName() {
         return firstname + " " + lastname;
     }
 
@@ -126,12 +123,12 @@ public class User implements UserDetails, Principal {
         this.lastname = lastname;
     }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
+    public String getImage() {
+        return image;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setImage(String image) {
+        this.image = image; // Store image path or URL
     }
 
     public String getEmail() {
@@ -167,11 +164,11 @@ public class User implements UserDetails, Principal {
     }
 
     public LocalDateTime getLastModifiedDate() {
-        return LastModifiedDate;
+        return lastModifiedDate;
     }
 
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        LastModifiedDate = lastModifiedDate;
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Role getRole() {
@@ -181,5 +178,4 @@ public class User implements UserDetails, Principal {
     public void setRole(Role role) {
         this.role = role;
     }
-
 }
