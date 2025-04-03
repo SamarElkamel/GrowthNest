@@ -60,5 +60,12 @@ public class CartRestController {
     public ResponseEntity<OrderResponseDTO> checkoutCart(@RequestParam Long userId) {
         return ResponseEntity.ok(cartService.checkoutCart(userId));
     }
+    @PostMapping("/apply-coupon")
+    public ResponseEntity<OrderResponseDTO> applyCouponToCart(
+            @RequestParam Long userId,
+            @RequestParam String code
+    ) {
+        return ResponseEntity.ok(cartService.applyCouponToCart(userId, code));
+    }
 
 }

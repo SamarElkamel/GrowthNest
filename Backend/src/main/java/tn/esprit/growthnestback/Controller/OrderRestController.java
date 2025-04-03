@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.growthnestback.Entities.Order;
+import tn.esprit.growthnestback.Entities.OrderStatus;
 import tn.esprit.growthnestback.Services.IOrderService;
 import tn.esprit.growthnestback.dto.CreateOrderRequestDTO;
 import tn.esprit.growthnestback.dto.OrderResponseDTO;
@@ -17,35 +18,33 @@ import java.util.List;
 public class OrderRestController {
     private IOrderService orderService;
 
-    @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        return ResponseEntity.ok(orderService.createOrder(order));
-    }
-    @PutMapping("/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order order) {
-        return ResponseEntity.ok(orderService.updateOrder(id, order));
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderResponseDTO>> getAllUserOrders(@PathVariable Long userId) {
+        return ResponseEntity.ok(orderService.getOrdersForUser(userId));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-        orderService.deleteOrder(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponseDTO> getOrder(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.getOrderById(orderId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.getOrderById(id));
+    @GetMapping("/user/{userId}/status")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByStatus(
+            @PathVariable Long userId,
+            @RequestParam OrderStatus status) {
+        return ResponseEntity.ok(orderService.getOrdersByStatus(userId, status));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    @GetMapping("/history/{userId}")
+    public ResponseEntity<List<OrderResponseDTO>> getOrderHistory(@PathVariable Long userId) {
+        return ResponseEntity.ok(orderService.getUserOrderHistory(userId));
     }
-
-    @PostMapping("/full")
-    public ResponseEntity<OrderResponseDTO> createFullOrder(@RequestBody CreateOrderRequestDTO request) {
-        OrderResponseDTO response = orderService.createOrderWithDetails(request);
-        return ResponseEntity.ok(response);
+    @PostMapping("/reorder/{orderId}")
+    public ResponseEntity<OrderResponseDTO> reorder(
+            @PathVariable Long orderId,
+            @RequestParam Long userId
+    ) {
+        return ResponseEntity.ok(orderService.reorder(userId, orderId));
     }
 
 }

@@ -7,5 +7,7 @@ public record OrderResponseDTO (Long orderId,
                                String status,
                                String deliveryAddress,
                                String paymentMethod,
-                               List<OrderItemDTO> items){
+                               List<OrderItemDTO> items ,
+                                String couponCode,
+                                Double discountAmount ){
 }

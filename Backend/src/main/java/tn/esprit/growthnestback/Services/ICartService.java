@@ -10,5 +10,7 @@ public interface ICartService {
     void cancelCart(Long userId);
     OrderResponseDTO checkoutCart(Long userId);
     OrderResponseDTO createOrUpdateCartWithDetails(CreateOrderRequestDTO request);
+    OrderResponseDTO applyCouponToCart(Long userId, String couponCode);
+
 
 }

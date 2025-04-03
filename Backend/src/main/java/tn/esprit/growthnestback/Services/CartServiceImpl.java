@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.growthnestback.Entities.*;
-import tn.esprit.growthnestback.Repository.OrderDetailsRepository;
-import tn.esprit.growthnestback.Repository.OrderRepository;
-import tn.esprit.growthnestback.Repository.ProductRepository;
-import tn.esprit.growthnestback.Repository.UserRepository;
+import tn.esprit.growthnestback.Repository.*;
 import tn.esprit.growthnestback.dto.CreateOrderRequestDTO;
 import tn.esprit.growthnestback.dto.OrderItemDTO;
 import tn.esprit.growthnestback.dto.OrderResponseDTO;
@@ -17,6 +14,8 @@ import tn.esprit.growthnestback.dto.OrderDetailDTO;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +36,8 @@ public class CartServiceImpl implements ICartService {
     @Autowired
 
     private  OrderDetailsRepository orderDetailsRepository;
+    @Autowired
+    private CouponRepository couponRepository ;
 
     @Override
     public OrderResponseDTO viewCart(Long userId) {
@@ -140,7 +141,8 @@ public class CartServiceImpl implements ICartService {
                 order.getStatus().toString(),
                 order.getDeliveryAddress(),
                 order.getPaymentMethod(),
-                items
+                items, order.getCoupon() != null ? order.getCoupon().getCode() : null,
+                order.getDiscountAmount() != null ? order.getDiscountAmount() : 0.0
         );
     }
     @Override
@@ -214,8 +216,40 @@ public class CartServiceImpl implements ICartService {
                 cart.getStatus().toString(),
                 cart.getDeliveryAddress(),
                 cart.getPaymentMethod(),
-                items
+                items, cart.getCoupon() != null ? cart.getCoupon().getCode() : null,
+                cart.getDiscountAmount() != null ? cart.getDiscountAmount() : 0.0
         );
+    }
+    @Override
+    @Transactional
+    public OrderResponseDTO applyCouponToCart(Long userId, String couponCode) {
+        // Step 1: Get user's active cart
+        Order cart = orderRepository.findCartByUserIdAndStatus(userId, OrderStatus.CART)
+                .orElseThrow(() -> new RuntimeException("No active cart found for user"));
+
+        // Step 2: Validate coupon
+        Coupons coupon = couponRepository.findByCodeIgnoreCase(couponCode)
+                .filter(Coupons::isActive)
+                .filter(c -> c.getExpiryDate().isAfter(LocalDateTime.now()))
+                .orElseThrow(() -> new RuntimeException("Invalid or expired coupon"));
+
+        // Step 3: Calculate eligible discount
+        double subtotal = cart.getOrderDetails().stream()
+                .mapToDouble(detail -> detail.getQuantity() * detail.getPriceAtTime())
+                .sum();
+
+        double discount = subtotal * (coupon.getDiscountPercentage() / 100.0);
+        BigDecimal roundedDiscount = BigDecimal.valueOf(discount).setScale(2, RoundingMode.HALF_UP);
+
+        double totalAfterDiscount = subtotal - discount;
+
+        // Step 4: Apply to cart
+        cart.setCoupon(coupon);
+        cart.setTotalAmount(totalAfterDiscount);
+        cart.setDiscountAmount(roundedDiscount.doubleValue());
+        orderRepository.save(cart);
+
+        return mapOrderToDTO(cart);
     }
 
 }

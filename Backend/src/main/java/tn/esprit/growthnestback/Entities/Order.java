@@ -39,5 +39,10 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<OrderDetails> orderDetails = new ArrayList<>(); ;
+    private List<OrderDetails> orderDetails = new ArrayList<>();
+    @ManyToOne
+    private Coupons coupon;
+
+    private Double discountAmount;
+
 }

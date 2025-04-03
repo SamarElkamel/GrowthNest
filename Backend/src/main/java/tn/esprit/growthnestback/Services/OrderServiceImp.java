@@ -35,106 +35,115 @@ public class OrderServiceImp implements IOrderService {
     @Autowired
     private  UserRepository userRepository;
 
-    @Override
-    public Order createOrder(Order order) {
-         return orderRepository.save(order);
+    private OrderResponseDTO mapOrderToDTO(Order order) {
+        List<OrderItemDTO> items = order.getOrderDetails().stream()
+                .map(detail -> new OrderItemDTO(
+                        detail.getProduct().getId(),
+                        detail.getProduct().getName(),
+                        detail.getPriceAtTime(),
+                        detail.getQuantity()
+                ))
+                .toList();
+
+        return new OrderResponseDTO(
+                order.getId(),
+                order.getTotalAmount(),
+                order.getStatus().toString(),
+                order.getDeliveryAddress(),
+                order.getPaymentMethod(),
+                items ,order.getCoupon() != null ? order.getCoupon().getCode() : null,
+                order.getDiscountAmount() != null ? order.getDiscountAmount() : 0.0
+
+        );
+    }
+
+  @Override
+    public List<OrderResponseDTO> getOrdersForUser(Long userId) {
+        return orderRepository.findAllByUserIdAndStatusNot(userId, OrderStatus.CART).stream()
+                .map(this::mapOrderToDTO)
+                .toList();
     }
 
     @Override
-    public Order updateOrder(Long id, Order updatedOrder) {
-        Order existing = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id " + id));
-        existing.setStatus(updatedOrder.getStatus());
-        existing.setTotalAmount(updatedOrder.getTotalAmount());
-        existing.setPaymentMethod(updatedOrder.getPaymentMethod());
-        existing.setDeliveryAddress(updatedOrder.getDeliveryAddress());
-        existing.setUser(updatedOrder.getUser());
-        return orderRepository.save(existing);
+    public List<OrderResponseDTO> getOrdersByStatus(Long userId, OrderStatus status) {
+        return orderRepository.findAllByUserIdAndStatus(userId, status).stream()
+                .map(this::mapOrderToDTO)
+                .toList();
     }
 
     @Override
-    public void deleteOrder(Long id) {
-        orderRepository.deleteById(id);
+    public OrderResponseDTO getOrderById(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        return mapOrderToDTO(order);
     }
-
     @Override
-    public Order getOrderById(Long id) {
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id " + id));
+    public List<OrderResponseDTO> getUserOrderHistory(Long userId) {
+        return orderRepository.findAllByUserIdAndStatusNot(userId, OrderStatus.CART).stream()
+                .map(this::mapOrderToDTO)
+                .toList();
     }
-
-    @Override
-    public List<Order> getAllOrders() {
-          return orderRepository.findAll();
-    }
-
     @Override
     @Transactional
-    public OrderResponseDTO createOrderWithDetails(CreateOrderRequestDTO request) {
-        // Step 1: Fetch user
-        User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + request.userId()));
+    public OrderResponseDTO reorder(Long userId, Long originalOrderId) {
+        Order original = orderRepository.findById(originalOrderId)
+                .orElseThrow(() -> new EntityNotFoundException("Original order not found"));
 
-        // Step 2: Create initial order
-        Order order = new Order();
-        order.setUser(user);
-        order.setStatus(OrderStatus.CART);
-        order.setPaymentMethod(request.paymentMethod());
-        order.setDeliveryAddress(request.deliveryAddress());
+        if (!original.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("This order does not belong to the user.");
+        }
 
-        Order savedOrder = orderRepository.save(order);
+        // ✅ Step 1: Reuse existing cart if it exists
+        Order cart = orderRepository.findCartByUserIdAndStatus(userId, OrderStatus.CART)
+                .orElseGet(() -> {
+                    Order newCart = new Order();
+                    newCart.setUser(original.getUser());
+                    newCart.setStatus(OrderStatus.CART);
+                    newCart.setPaymentMethod(original.getPaymentMethod());
+                    newCart.setDeliveryAddress(original.getDeliveryAddress());
+                    newCart.setTotalAmount(0.0);
+                    return orderRepository.save(newCart);
+                });
 
-        // Step 3: Merge duplicates
-        Map<Long, Integer> mergedItems = request.orderDetails().stream()
-                .collect(Collectors.toMap(
-                        OrderDetailDTO::productId,
-                        OrderDetailDTO::quantity,
-                        Integer::sum // merge duplicate product IDs
-                ));
+        // ✅ Step 2: Clear existing items from cart if you want to replace them
+        orderDetailsRepository.deleteAll(cart.getOrderDetails());
+        cart.getOrderDetails().clear();
 
-        // Step 4: Save order details and calculate total
+        // ✅ Step 3: Add items from original order
         BigDecimal total = BigDecimal.ZERO;
         List<OrderItemDTO> items = new ArrayList<>();
 
-        for (Map.Entry<Long, Integer> entry : mergedItems.entrySet()) {
-            Long productId = entry.getKey();
-            Integer quantity = entry.getValue();
+        for (OrderDetails detail : original.getOrderDetails()) {
+            OrderDetails newDetail = new OrderDetails();
+            newDetail.setOrder(cart);
+            newDetail.setProduct(detail.getProduct());
+            newDetail.setQuantity(detail.getQuantity());
+            newDetail.setPriceAtTime(detail.getProduct().getPrice().doubleValue());
 
-            Product product = productRepository.findById(productId)
-                    .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
+            orderDetailsRepository.save(newDetail);
 
-            OrderDetails detail = new OrderDetails();
-            detail.setOrder(savedOrder);
-            detail.setProduct(product);
-            detail.setQuantity(quantity);
-            detail.setPriceAtTime(product.getPrice().doubleValue());
+            total = total.add(detail.getProduct().getPrice()
+                    .multiply(BigDecimal.valueOf(detail.getQuantity())));
 
-            orderDetailsRepository.save(detail);
-
-            // Update total
-            BigDecimal lineTotal = product.getPrice().multiply(BigDecimal.valueOf(quantity));
-            total = total.add(lineTotal);
-
-            // Add to response DTO list
             items.add(new OrderItemDTO(
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice().doubleValue(),
-                    quantity
+                    detail.getProduct().getId(),
+                    detail.getProduct().getName(),
+                    detail.getProduct().getPrice().doubleValue(),
+                    detail.getQuantity()
             ));
         }
 
-        // Step 5: Set total and return DTO
-        savedOrder.setTotalAmount(total.doubleValue());
-        orderRepository.save(savedOrder);
+        cart.setTotalAmount(total.doubleValue());
+        orderRepository.save(cart);
 
         return new OrderResponseDTO(
-                savedOrder.getId(),
+                cart.getId(),
                 total.doubleValue(),
-                savedOrder.getStatus().toString(),
-                savedOrder.getDeliveryAddress(),
-                savedOrder.getPaymentMethod(),
-                items
+                cart.getStatus().toString(),
+                cart.getDeliveryAddress(),
+                cart.getPaymentMethod(),
+                items , cart.getCoupon() != null ? cart.getCoupon().getCode() : null,
+                cart.getDiscountAmount() != null ? cart.getDiscountAmount() : 0.0
         );
     }
 
