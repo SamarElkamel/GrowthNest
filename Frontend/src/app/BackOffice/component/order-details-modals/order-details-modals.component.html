@@ -1,0 +1,21 @@
+<h2 mat-dialog-title *ngIf="order">Order #{{ order.orderId }}</h2>
+
+<div mat-dialog-content *ngIf="order">
+  <p><strong>Status:</strong> {{ order.status }}</p>
+  <p><strong>Payment Method:</strong> {{ order.paymentMethod }}</p>
+  <p><strong>Delivery Address:</strong> {{ order.deliveryAddress }}</p>
+
+  <h3>Products</h3>
+  <ul>
+    <li *ngFor="let item of order.items">
+      Qty: {{ item.quantity }} × {{ item.unitPrice }} = {{ item.total }}
+    </li>
+  </ul>
+
+  <h3>Summary</h3>
+  <p>Subtotal: {{ order.totalAmount + (order.discountAmount || 0) }} TND</p>
+  <p *ngIf="order.discountAmount">
+    Discount ({{ order.couponCode || 'N/A' }}): -{{ order.discountAmount }} TND
+  </p>
+  <p><strong>Total: {{ order.totalAmount }} TND</strong></p>
+</div>

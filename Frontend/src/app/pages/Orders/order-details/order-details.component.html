@@ -1,0 +1,19 @@
+<div *ngIf="order">
+    <h2>Order #{{ order.id }}</h2>
+    <p><strong>Date:</strong> {{ order.date }}</p>
+    <p><strong>Status:</strong> {{ order.status }}</p>
+    <p><strong>User:</strong> {{ order.user.name }} ({{ order.user.email }})</p>
+  
+    <h3>Products</h3>
+    <ul>
+      <li *ngFor="let item of order.items">
+        {{ item.name }} — Qty: {{ item.quantity }} × {{ item.unitPrice }} = {{ item.total }}
+      </li>
+    </ul>
+  
+    <h3>Pricing Summary</h3>
+    <p>Subtotal: {{ order.subtotal }} TND</p>
+    <p *ngIf="order.discount">Discount ({{ order.coupon.code }}): -{{ order.discount }} TND</p>
+    <p><strong>Total: {{ order.total }} TND</strong></p>
+  </div>
+  

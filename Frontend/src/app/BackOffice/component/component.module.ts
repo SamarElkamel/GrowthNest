@@ -12,6 +12,7 @@ import { NgbdnavBasicComponent } from './nav/nav.component';
 import { NgbdButtonsComponent } from './buttons/buttons.component';
 import { CardsComponent } from './card/card.component';
 import { TableComponent } from "./table/table.component";
+import { OrderDetailsModalComponent } from './order-details-modals/order-details-modals.component';
 
 @NgModule({
   imports: [
@@ -27,6 +28,9 @@ import { TableComponent } from "./table/table.component";
     NgbdButtonsComponent,
     CardsComponent,
     TableComponent
+  ],
+  declarations: [
+    OrderDetailsModalComponent
   ],
 })
 export class ComponentsModule { }

@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Order Table</h4>
+        <h5 class="card-subtitle text-muted">Overview of customer orders</h5>
+
+        <div class="table-responsive">
+          <table class="table align-middle text-nowrap table-bordered table-striped">
+            <thead>
+              <tr>
+                <th class="text-dark font-medium fs-4">ID</th>
+                <th class="text-dark font-medium fs-4">Status</th>
+                <th class="text-dark font-medium fs-4">Total</th>
+                <th class="text-dark font-medium fs-4">Payment</th>
+                <th class="text-dark font-medium fs-4">Coupon</th>
+                <th class="text-dark font-medium fs-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of orders">
+                <td>{{ order.orderId }}</td>
+                <td>
+                  <div class="d-inline-block" ngbDropdown>
+                    <button
+                      class="btn btn-primary d-flex align-items-center"
+                      id="dropdown-{{ order.orderId }}"
+                      ngbDropdownToggle
+                    >
+                      {{ order.status }}
+                    </button>
+                    <div
+                      ngbDropdownMenu
+                      [attr.aria-labelledby]="'dropdown-' + order.orderId"
+                    >
+                      <button
+                        class="dropdown-item"
+                        *ngFor="let s of statuses"
+                        [disabled]="s === order.status"
+                        (click)="updateStatus(order, s)"
+                      >
+                        {{ s }}
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ order.totalAmount | currency }}</td>
+                <td>{{ order.paymentMethod }}</td>
+                <td>{{ order.couponCode || 'N/A' }}</td>
+                <td>
+                  <button class="btn btn-sm btn-info me-1" mat-button (click)="openOrderDetails(order.orderId)">Details</button>
+                  <button class="btn btn-sm btn-warning">Edit</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

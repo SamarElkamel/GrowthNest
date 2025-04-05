@@ -14,17 +14,26 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FullComponent } from './layouts/full/full.component';
 
 
-import { NavigationComponent } from './shared/header/navigation.component';
-import { SidebarComponent } from './shared/sidebar/sidebar.component';
+import { NavigationComponent } from './BackOffice/shared/header/navigation.component';
+import { SidebarComponent } from './BackOffice/shared/sidebar/sidebar.component';
 
 import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SpinnerComponent } from './shared/spinner.component';
+import { SpinnerComponent } from './BackOffice/shared/spinner.component';
+import { OrderListComponent } from './pages/Orders/order-list/order-list.component';
+import { HomeComponent } from './FrontOffice/home/home.component';
+import { OrderDetailsComponent } from './pages/Orders/order-details/order-details.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
     AppComponent,
     SpinnerComponent,
+    OrderListComponent,
+    HomeComponent,
+    OrderDetailsComponent,
+   
   ],
   imports: [
     CommonModule,
@@ -38,6 +47,9 @@ import { SpinnerComponent } from './shared/spinner.component';
     FullComponent,
     NavigationComponent,
     SidebarComponent,
+    MatDialogModule,
+    MatButtonModule
+   
   ],
   providers: [
     {
