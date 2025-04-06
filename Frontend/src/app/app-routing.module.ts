@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { FullComponent } from './layouts/full/full.component';
+import { FullComponent } from 'src/app/BackOffice/layouts/full/full.component';
 
 export const Approutes: Routes = [
   {
@@ -11,15 +11,15 @@ export const Approutes: Routes = [
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import('src/app/BackOffice/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
         path: 'about',
-        loadChildren: () => import('./about/about.module').then(m => m.AboutModule)
+        loadChildren: () => import('src/app/BackOffice/about/about.module').then(m => m.AboutModule)
       },
       {
         path: 'component',
-        loadChildren: () => import('./component/component.module').then(m => m.ComponentsModule)
+        loadChildren: () => import('src/app/BackOffice/component/component.module').then(m => m.ComponentsModule)
       }
     ]
   },

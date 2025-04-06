@@ -11,20 +11,26 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { FullComponent } from './layouts/full/full.component';
+import { FullComponent } from 'src/app/BackOffice/layouts/full/full.component';
 
 
-import { NavigationComponent } from './shared/header/navigation.component';
-import { SidebarComponent } from './shared/sidebar/sidebar.component';
+import { NavigationComponent } from 'src/app/BackOffice/shared/header/navigation.component';
+import { SidebarComponent } from 'src/app/BackOffice/shared/sidebar/sidebar.component';
 
 import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SpinnerComponent } from './shared/spinner.component';
+import { SpinnerComponent } from 'src/app/BackOffice/shared/spinner.component';
+import { HomeComponent } from './FrontOffice/home/home.component';
+import { FooterComponent } from './FrontOffice/footer/footer.component';
+import { HeaderComponent } from 'src/app/FrontOffice/header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SpinnerComponent,
+    HomeComponent,
+    FooterComponent,
+    HeaderComponent,
   ],
   imports: [
     CommonModule,

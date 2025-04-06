@@ -1,0 +1,596 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "OpenAPI definition",
+        "version": "v0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080/Growthnest",
+            "description": "Generated server url"
+        }
+    ],
+    "paths": {
+        "/Registration/updateRegistration": {
+            "put": {
+                "tags": [
+                    "Registration Management"
+                ],
+                "description": "UpdateRegistration",
+                "operationId": "updateRegistration",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Registration"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Registration"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Event/updateEvent": {
+            "put": {
+                "tags": [
+                    "Event Management"
+                ],
+                "description": "UpdateEvent",
+                "operationId": "updateEvent",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Event"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Event"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "register",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/authenticate": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "authenticate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthenticationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Registration/addRegistration": {
+            "post": {
+                "tags": [
+                    "Registration Management"
+                ],
+                "description": "AddRegistration",
+                "operationId": "addRegistration",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Registration"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Registration"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Event/addEvent": {
+            "post": {
+                "tags": [
+                    "Event Management"
+                ],
+                "description": "AddEvent",
+                "operationId": "addEvent",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Event"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Event"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/activate-account": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "confirm",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/Registration/DisplayRegistration/{idR}": {
+            "get": {
+                "tags": [
+                    "Registration Management"
+                ],
+                "description": "Display Registration By ID ",
+                "operationId": "DisplayRegistration",
+                "parameters": [
+                    {
+                        "name": "idR",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Registration"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Registration/DisplayAllRegistration": {
+            "get": {
+                "tags": [
+                    "Registration Management"
+                ],
+                "description": "Display All Registration",
+                "operationId": "Display",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Registration"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Event/DisplayEvent/{idE}": {
+            "get": {
+                "tags": [
+                    "Event Management"
+                ],
+                "description": "Display Event By ID ",
+                "operationId": "DisplayEvent",
+                "parameters": [
+                    {
+                        "name": "idE",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Event"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Event/DisplayAllEvents": {
+            "get": {
+                "tags": [
+                    "Event Management"
+                ],
+                "description": "Display All Events",
+                "operationId": "Display_1",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Event"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Registration/deleteRegistration/{idR}": {
+            "delete": {
+                "tags": [
+                    "Registration Management"
+                ],
+                "description": "DeleteRegistration",
+                "operationId": "deleteRegistration",
+                "parameters": [
+                    {
+                        "name": "idR",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Event": {
+                "type": "object",
+                "properties": {
+                    "idEvent": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "startTime": {
+                        "$ref": "#/components/schemas/LocalTime"
+                    },
+                    "endTime": {
+                        "$ref": "#/components/schemas/LocalTime"
+                    },
+                    "location": {
+                        "type": "string"
+                    },
+                    "history": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "PLANNED",
+                            "ONGOING",
+                            "COMPLETED",
+                            "CANCELED"
+                        ]
+                    },
+                    "registrations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Registration"
+                        }
+                    }
+                }
+            },
+            "GrantedAuthority": {
+                "type": "object",
+                "properties": {
+                    "authority": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LocalTime": {
+                "type": "object",
+                "properties": {
+                    "hour": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "minute": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "second": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "nano": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "Registration": {
+                "type": "object",
+                "properties": {
+                    "idRegist": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "event": {
+                        "$ref": "#/components/schemas/Event"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "reservationDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "PENDING",
+                            "CONFIRMED",
+                            "CANCELED"
+                        ]
+                    }
+                }
+            },
+            "Role": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string",
+                        "enum": [
+                            "ADMIN",
+                            "USER",
+                            "BuisnessOwner",
+                            "MarketingAgent"
+                        ]
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "firstname": {
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "type": "string"
+                    },
+                    "dateOfBirth": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "accountLocked": {
+                        "type": "boolean"
+                    },
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "createdDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "role": {
+                        "$ref": "#/components/schemas/Role"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "accountNonExpired": {
+                        "type": "boolean"
+                    },
+                    "credentialsNonExpired": {
+                        "type": "boolean"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "authorities": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GrantedAuthority"
+                        }
+                    },
+                    "lastModifiedDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "accountNonLocked": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "RegistrationRequest": {
+                "required": [
+                    "email",
+                    "firstName",
+                    "lastname",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "maxLength": 2147483647,
+                        "minLength": 8,
+                        "type": "string"
+                    }
+                }
+            },
+            "AuthenticationRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "maxLength": 2147483647,
+                        "minLength": 8,
+                        "type": "string"
+                    }
+                }
+            },
+            "AuthenticationResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

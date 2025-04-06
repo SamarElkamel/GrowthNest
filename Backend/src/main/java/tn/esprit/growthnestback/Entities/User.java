@@ -51,6 +51,8 @@ public class User implements UserDetails, Principal {
     private Role role ;
 
 
+
+
     @Override
     public String getName() {
         return email;
@@ -180,5 +182,6 @@ public class User implements UserDetails, Principal {
     public void setRole(Role role) {
         this.role = role;
     }
+
 
 }
