@@ -21,18 +21,30 @@ import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SpinnerComponent } from './BackOffice/shared/spinner.component';
 import { OrderListComponent } from './pages/Orders/order-list/order-list.component';
-import { HomeComponent } from './FrontOffice/home/home.component';
 import { OrderDetailsComponent } from './pages/Orders/order-details/order-details.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { CouponListComponent } from './pages/Orders/coupon-list/coupon-list.component';
+import { CouponFormComponent } from './pages/Orders/coupon-form/coupon-form.component';
+import { HomeComponent } from './FrontOffice/home/home.component';
+import { HeaderComponent } from './FrontOffice/header/header.component';
+import { FooterComponent } from './FrontOffice/footer/footer.component';
+import { FrontLayoutComponent } from './layouts/front-layout/front-layout.component';
+import { BackLayoutComponent } from './layouts/back-layout/back-layout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SpinnerComponent,
     OrderListComponent,
-    HomeComponent,
     OrderDetailsComponent,
+    CouponListComponent,
+    CouponFormComponent,
+    HeaderComponent,
+    FooterComponent,
+    HomeComponent,
+    FrontLayoutComponent,
+    BackLayoutComponent
    
   ],
   imports: [

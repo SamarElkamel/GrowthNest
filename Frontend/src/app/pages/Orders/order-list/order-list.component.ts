@@ -15,12 +15,43 @@ export class OrderListComponent implements OnInit {
   statuses = ['CART', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELED'];
 
   
+  
   ngOnInit(): void {
     this.orderService.getOrders().subscribe(data => {
       this.orders = data;
     });
   }
-
+  filters = {
+    status: '',
+    startDate: '',
+    endDate: ''
+  };
+  applyFilters() {
+    const queryParams: any = {};
+  
+    if (this.filters.status) {
+      queryParams.status = this.filters.status;
+    }
+  
+    if (this.filters.startDate) {
+      queryParams.startDate = new Date(this.filters.startDate).toISOString(); // e.g., 2024-01-01T00:00:00
+    }
+  
+    if (this.filters.endDate) {
+      queryParams.endDate = new Date(this.filters.endDate).toISOString();
+    }
+  
+    this.orderService.getFilteredOrders(queryParams).subscribe({
+      next: (orders) => this.orders = orders,
+      error: (err) => console.error('Failed to fetch filtered orders:', err)
+    });
+  }
+  
+  
+  resetFilters() {
+    this.filters = { status: '', startDate: '', endDate: '' };
+    this.applyFilters();
+  }
   updateStatus(order: OrderResponse, newStatus: string): void {
     this.orderService.updateOrderStatus(order.orderId, newStatus).subscribe({
       next: () => {
