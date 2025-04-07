@@ -35,26 +35,29 @@ public class SecurityConfig {
         http.cors(withDefaults())
                // .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**"))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers(
 
+                .authorizeHttpRequests(req ->
+                        req
+                                .requestMatchers(
                                         "/auth/**",
                                         "/v2/api-docs",
-                                        "/v3/api-docs",
                                         "/v3/api-docs/**",
-                                        "/swagger-resources",
                                         "/swagger-resources/**",
                                         "/configuration/ui",
                                         "/configuration/security",
                                         "/swagger-ui/**",
                                         "/webjars/**",
-                                        "/swagger-ui.html"
-                                )
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
+                                        "/swagger-ui.html",
+                                        "/Growthnest/post/**",
+                                        "/Growthnest/respons/**",
+                                        "/Growthnest/api/reacts/**"
 
+                                ).permitAll()
+                                .requestMatchers("/post/addPost").authenticated()
+                                .anyRequest().authenticated()
                 )
+
+
                 .sessionManagement(session->session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
