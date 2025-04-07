@@ -142,5 +142,9 @@ export class EventManagementService extends BaseService {
       map((r: StrictHttpResponse<Array<Event>>): Array<Event> => r.body)
     );
   }
-
+  getAllEvents(): Observable<Event[]> {
+    return display1(this.http, this.rootUrl).pipe(
+      map((res: StrictHttpResponse<Event[]>) => res.body ?? [])
+    );
+  }
 }

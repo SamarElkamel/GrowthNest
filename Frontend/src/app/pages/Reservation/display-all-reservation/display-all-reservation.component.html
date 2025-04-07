@@ -1,0 +1,37 @@
+<!-- registration-list.component.html -->
+<div class="registration-list">
+    <h2>All Registrations</h2>
+    
+    <div *ngIf="isLoading" class="loading">Loading registrations...</div>
+    
+    <div *ngIf="!isLoading && registrations.length === 0" class="no-registrations">
+      No registrations found.
+    </div>
+    
+    <table *ngIf="!isLoading && registrations.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Event</th>
+          <th>User</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reg of registrations">
+          <td>{{ reg.idRegist }}</td>
+          <td>{{ reg.event?.title }}</td>
+          <td>{{ reg.user?.username }}</td>
+          <td [ngClass]="reg.status?.toLowerCase()">{{ reg.status }}</td>
+          <td>{{ reg.reservationDate | date }}</td>
+          <td class="actions">
+            <a [routerLink]="['/registrations', reg.idRegist]" class="btn view">View</a>
+            <a [routerLink]="['/registrations/edit', reg.idRegist]" class="btn edit">Edit</a>
+            <button (click)="deleteRegistration(reg.idRegist!)" class="btn delete">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

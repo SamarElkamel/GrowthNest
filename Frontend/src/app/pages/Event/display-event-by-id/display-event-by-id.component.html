@@ -1,0 +1,35 @@
+<!-- event-detail.component.html -->
+<div class="event-detail">
+    <div *ngIf="isLoading" class="loading">Loading event details...</div>
+    
+    <div *ngIf="error" class="error">{{ error }}</div>
+    
+    <div *ngIf="event && !isLoading" class="event-content">
+      <h2>{{ event.title }}</h2>
+      
+      <div class="event-meta">
+        <span class="date">{{ event.date | date }}</span>
+        <span class="location">{{ event.location }}</span>
+        <span class="status" [ngClass]="event.status?.toLowerCase()">{{ event.status }}</span>
+      </div>
+      
+      <div class="event-description">
+        <p>{{ event.description }}</p>
+      </div>
+      
+      <div *ngIf="event.history" class="event-history">
+        <h3>History</h3>
+        <p>{{ event.history }}</p>
+      </div>
+      
+      <div class="event-times">
+        <span><strong>Start:</strong> {{ event.startTime }}</span>
+        <span><strong>End:</strong> {{ event.endTime }}</span>
+      </div>
+      
+      <div class="event-actions">
+        <a [routerLink]="['/events/edit', event.idEvent]" class="btn edit">Edit Event</a>
+        <a routerLink="/events" class="btn back">Back to Events</a>
+      </div>
+    </div>
+  </div>

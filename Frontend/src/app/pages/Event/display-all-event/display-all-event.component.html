@@ -1,0 +1,26 @@
+<!-- event-list.component.html -->
+<div class="event-list">
+    <h2>All Events</h2>
+    
+    <div *ngIf="isLoading" class="loading">Loading events...</div>
+    
+    <div *ngIf="!isLoading && events.length === 0" class="no-events">
+      No events found.
+    </div>
+    
+    <div class="event-grid">
+      <div *ngFor="let event of events" class="event-card">
+        <h3>{{ event.title }}</h3>
+        <p>{{ event.description }}</p>
+        <div class="event-details">
+          <span><strong>Date:</strong> {{ event.date  }}</span>
+          <span><strong>Location:</strong> {{ event.location }}</span>
+          <span><strong>Status:</strong> {{ event.status }}</span>
+        </div>
+        <div class="event-actions">
+          <a [routerLink]="['/events', event.idEvent]" class="btn view">View</a>
+          <a [routerLink]="['/events/edit', event.idEvent]" class="btn edit">Edit</a>
+        </div>
+      </div>
+    </div>
+  </div>

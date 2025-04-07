@@ -23,6 +23,15 @@ import { SpinnerComponent } from 'src/app/BackOffice/shared/spinner.component';
 import { HomeComponent } from './FrontOffice/home/home.component';
 import { FooterComponent } from './FrontOffice/footer/footer.component';
 import { HeaderComponent } from 'src/app/FrontOffice/header/header.component';
+import { AddEventComponent } from './pages/Event/add-event/add-event.component';
+import { UpdateEventComponent } from './pages/Event/update-event/update-event.component';
+import { EventListComponent } from './pages/Event/display-all-event/display-all-event.component';
+import { EventDetailComponent } from './pages/Event/display-event-by-id/display-event-by-id.component';
+import { AddRegistrationComponent } from './pages/Reservation/add-reservation/add-reservation.component';
+import { UpdateRegistrationComponent } from './pages/Reservation/update-reservation/update-reservation.component';
+import { RegistrationListComponent } from './pages/Reservation/display-all-reservation/display-all-reservation.component';
+import { RegistrationDetailComponent } from './pages/Reservation/display-reservation-by-id/display-reservation-by-id.component';
+
 
 @NgModule({
   declarations: [
@@ -31,6 +40,15 @@ import { HeaderComponent } from 'src/app/FrontOffice/header/header.component';
     HomeComponent,
     FooterComponent,
     HeaderComponent,
+    AddEventComponent,
+    UpdateEventComponent,
+    EventListComponent,
+    EventDetailComponent,
+    AddRegistrationComponent,
+    UpdateRegistrationComponent,
+    RegistrationListComponent,
+    RegistrationDetailComponent,
+   
   ],
   imports: [
     CommonModule,
