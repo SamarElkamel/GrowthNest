@@ -5,7 +5,7 @@ import { RegistrationManagementService } from '../../../services/services/regist
 @Component({
   selector: 'app-registration-list',
   templateUrl: './display-all-reservation.component.html',
-  styleUrls: ['./display-all-reservation.component.css']
+  styleUrls: ['./display-all-reservation.component.scss']
 })
 export class RegistrationListComponent implements OnInit {
   registrations: Registration[] = [];
@@ -21,6 +21,7 @@ export class RegistrationListComponent implements OnInit {
     this.isLoading = true;
     this.registrationService.display().subscribe(
       (response) => {
+        console.log('API Response:', response);
         this.registrations = response;
         this.isLoading = false;
       },

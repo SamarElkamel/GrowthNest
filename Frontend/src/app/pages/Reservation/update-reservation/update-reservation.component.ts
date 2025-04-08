@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-update-registration',
   templateUrl: './update-reservation.component.html',
-  styleUrls: ['./update-reservation.component.css']
+  styleUrls: ['./update-reservation.component.scss']
 })
 export class UpdateRegistrationComponent implements OnInit {
   registration: Registration = {

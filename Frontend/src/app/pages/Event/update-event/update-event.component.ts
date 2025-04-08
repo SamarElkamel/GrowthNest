@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-update-event',
   templateUrl: './update-event.component.html',
-  styleUrls: ['./update-event.component.css']
+  styleUrls: ['./update-event.component.scss']
 })
 export class UpdateEventComponent implements OnInit {
   event: Event = {

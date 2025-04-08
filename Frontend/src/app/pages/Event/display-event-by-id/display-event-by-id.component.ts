@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-event-detail',
   templateUrl: './display-event-by-id.component.html',
-  styleUrls: ['./display-event-by-id.component.css']
+  styleUrls: ['./display-event-by-id.component.scss']
 })
 export class EventDetailComponent implements OnInit {
   event: Event | null = null;

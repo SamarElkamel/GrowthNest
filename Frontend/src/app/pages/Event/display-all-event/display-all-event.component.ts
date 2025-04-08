@@ -5,7 +5,7 @@ import { EventManagementService } from '../../../services/services/event-managem
 @Component({
   selector: 'app-event-list',
   templateUrl: './display-all-event.component.html',
-  styleUrls: ['./display-all-event.component.css']
+  styleUrls: ['./display-all-event.component.scss']
 })
 export class EventListComponent implements OnInit {
   events: Event[] = [];

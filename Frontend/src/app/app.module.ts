@@ -11,7 +11,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { FullComponent } from 'src/app/BackOffice/layouts/full/full.component';
+import { FullComponent } from 'src/app/layouts/full/full.component';
 
 
 import { NavigationComponent } from 'src/app/BackOffice/shared/header/navigation.component';
@@ -33,6 +33,7 @@ import { RegistrationListComponent } from './pages/Reservation/display-all-reser
 import { RegistrationDetailComponent } from './pages/Reservation/display-reservation-by-id/display-reservation-by-id.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,6 +49,8 @@ import { RegistrationDetailComponent } from './pages/Reservation/display-reserva
     UpdateRegistrationComponent,
     RegistrationListComponent,
     RegistrationDetailComponent,
+ 
+    
    
   ],
   imports: [
@@ -62,6 +65,8 @@ import { RegistrationDetailComponent } from './pages/Reservation/display-reserva
     FullComponent,
     NavigationComponent,
     SidebarComponent,
+
+    
   ],
   providers: [
     {

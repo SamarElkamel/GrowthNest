@@ -5,7 +5,7 @@ import { RegistrationManagementService } from '../../../services/services/regist
 @Component({
   selector: 'app-add-registration',
   templateUrl: './add-reservation.component.html',
-  styleUrls: ['./add-reservation.component.css']
+  styleUrls: ['./add-reservation.component.scss']
 })
 export class AddRegistrationComponent {
   newRegistration: Registration = {

@@ -26,25 +26,25 @@ import { DOCUMENT } from '@angular/common';
 })
 export class SpinnerComponent implements OnDestroy {
   public isSpinnerVisible = true;
+public isBackOfficeRoute = true;
+
+  
 
   @Input() public backgroundColor = 'rgba(0, 115, 170, 0.69)';
 
   constructor(private router: Router, @Inject(DOCUMENT) private document: Document) {
-    this.router.events.subscribe(
-      event => {
-        if (event instanceof NavigationStart) {
-          this.isSpinnerVisible = true;
-        } 
-        else if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
-          this.isSpinnerVisible = false;
-        }
-      },      
-      () => {
+    this.router.events.subscribe(event => {   
+           this.isBackOfficeRoute = this.router.url.startsWith('/admin');
+
+      if (event instanceof NavigationStart) {
+        // Dynamically check the target URL
+        this.isSpinnerVisible = this.isBackOfficeRoute;
+      } 
+      else if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
         this.isSpinnerVisible = false;
       }
-    );
+    })
   }
-
   ngOnDestroy(): void {
     this.isSpinnerVisible = false;
   }

@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-registration-detail',
   templateUrl: './display-reservation-by-id.component.html',
-  styleUrls: ['./display-reservation-by-id.component.css']
+  styleUrls: ['./display-reservation-by-id.component.scss']
 })
 export class RegistrationDetailComponent implements OnInit {
   registration: Registration | null = null;
