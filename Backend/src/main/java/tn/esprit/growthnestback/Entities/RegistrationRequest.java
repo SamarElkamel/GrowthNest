@@ -32,6 +32,7 @@ public class RegistrationRequest {
     @Pattern(regexp = ".*[@$!%*?&].*", message = "Password must contain at least one special character (@$!%*?&)")
     private String password;
     private String image;
+    private RoleName role;
 
 
 }

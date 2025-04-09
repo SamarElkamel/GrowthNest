@@ -23,6 +23,7 @@ import { SpinnerComponent } from './backoffice/shared/spinner.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
+import { SelectRoleComponent } from './pages/select-role/select-role.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { ActivateAccountComponent } from './pages/activate-account/activate-acco
     LoginComponent,
     RegisterComponent,
     ActivateAccountComponent,
+    SelectRoleComponent,
   ],
   imports: [
     CommonModule,

@@ -6,12 +6,14 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
 import { UserListComponent } from './BackOffice/component/users-list/users-list.component';
+import { SelectRoleComponent } from './pages/select-role/select-role.component';
 
 export const Approutes: Routes = [
   // Auth Routes
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'activate-account', component: ActivateAccountComponent },
+  { path: 'select-role', component: SelectRoleComponent },
 
   // Front Office Routes (wrapped in LayoutComponent)
   {
@@ -53,6 +55,6 @@ export const Approutes: Routes = [
     ],
   },
 
-  // Catch-all
+  
   { path: '**', redirectTo: 'login' },
 ];

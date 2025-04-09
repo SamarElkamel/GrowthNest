@@ -41,9 +41,9 @@ public class AuthenticationService {
 
 
     public void register(RegistrationRequest request) throws MessagingException {
-        var userRole = roleRepository.findByName(RoleName.USER)
+        var userRole = roleRepository.findByName(request.getRole())
+                .orElseThrow(() -> new IllegalStateException("ROLE " + request.getRole() + " was not initiated"));
 
-                .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
         var user = User.builder()
                 .firstname(request.getFirstName())
                 .lastname(request.getLastname())
@@ -54,10 +54,11 @@ public class AuthenticationService {
                 .enabled(false)
                 .role(userRole)
                 .build();
+
         userRepository.save(user);
         sendValidationEmail(user);
-
     }
+
 
     private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);

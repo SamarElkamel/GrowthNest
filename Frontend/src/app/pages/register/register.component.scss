@@ -1,28 +1,8 @@
-.custom-file-input::file-selector-button {
-
-  padding: 5px 10px;
-  
+/* login.component.css */
+#logimg
+{
+  height : 100% ;
 }
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: #2b2b2b; /* Set the full background color */
-}
-
-.fullscreen-container {
-  min-height: 100vh; /* Ensures full viewport height */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.main-content {
-  width: 100%; /* Ensures full width */
-}
-
-
 
 #log
 {
@@ -32,62 +12,40 @@ html, body {
   
 }
 
-#image
-{
-  height: 35px;  
-  font-size: 12px;
-}
 
-
-
-
-body {
-  background-color: #2b2b2b; 
-}
-#back
-{
-  height: 100%;
-  width: 100%;
-}
-
-#logimg
-{
-  height : 100% ;
-}
-
-
-
-.login-card {
-  border-radius: 1rem;
-}
-
-.login-image {
-  border-radius: 1rem 0 0 1rem;
+.vh-100 {
+    height: 100vh;
+  }
   
-}
+  .login-card {
+    border-radius: 1rem;
+  }
+  
+  .login-image {
+    border-radius: 1rem 0 0 1rem;
+  }
+  
+  .logo-icon {
+    color: #ff6219;
+  }
+  
+  .btn-dark {
+    background-color: #fb9678;
+    border: none;
+  }
+  
+  .btn-dark:hover {
+    background-color: #fca68c;
+  }
 
-
-
-.logo-icon {
-  color: #ff6219;
-}
-
-.btn-dark {
-  background-color: #fb9678;
-  border: none;
-}
-
-.btn-dark:hover {
-  background-color: #fca68c;
-}
-
-.custom-register-btn {
-  color: #fb9678 !important; 
-  font-weight: bold; 
-  text-decoration: none; 
-}
-
-.custom-register-btn:hover {
-  color: #fb9678; 
-}
-
+  .custom-register-btn {
+    color: #fb9678 !important; /* Change to your preferred color */
+    font-weight: bold; /* Optional */
+    text-decoration: none; /* Optional, removes underline */
+  }
+  
+  .custom-register-btn:hover {
+    color: #fb9678; /* Optional, changes color on hover */
+  }
+  
+  

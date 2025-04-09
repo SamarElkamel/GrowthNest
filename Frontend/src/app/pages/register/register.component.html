@@ -1,4 +1,3 @@
-<!-- register.component.html -->
 <section class="fullscreen-container" id="back" style="background-color: #2b2b2b;" >
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -16,56 +15,50 @@
                   <p *ngFor="let msg of errorMsg">{{ msg }}</p>
                 </div>
                 
-                
-                  <div class="d-flex align-items-center mb-3 pb-1">
-                    <img src="assets/images/logos/logo-icon.png" alt="Logo" class="logo-img me-3" />
-                  </div>
+                <div class="d-flex align-items-center mb-3 pb-1">
+                  <img src="assets/images/logos/logo-icon.png" alt="Logo" class="logo-img me-3" />
+                </div>
 
-               
-                  <div class="mb-3">
-                    <label for="firstname" class="form-label">Firstname</label>
-                    <input [(ngModel)]="registerRequest.firstName" type="text" class="form-control" id="firstname" placeholder="Firstname">
-                  </div>
-                  <div class="mb-3">
-                    <label for="lastname" class="form-label">Lastname</label>
-                    <input [(ngModel)]="registerRequest.lastname" type="text" class="form-control" id="lastname" placeholder="Lastname">
-                  </div>
-                  <div class="mb-3">
-                    <label for="login" class="form-label">Email address</label>
-                    <input [(ngModel)]="registerRequest.email" type="email" class="form-control" id="login" placeholder="name@example.com">
-                  </div>
-                  <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input [(ngModel)]="registerRequest.password" type="password" class="form-control" id="password" placeholder="Password">
-                  </div>
-              
-                 <!-- <div class="form-outline mb-4">
-                    <label class="form-label" for="image">Profile Image</label>
-                    <div class="custom-file">
-                      <input [(ngModel)]="registerRequest.image" type="file" id="image" class="custom-file-input" />
-            
-                    </div>   </div>-->
-                    <label for="image" class="form-label">Profile Photo</label>
-                    <div class="custom-file">
-                      <input (change)="onFileSelected($event)" class="custom-file-input" [(ngModel)]="registerRequest.image" type="file" id="image" class="custom-file-input" />
-                      <img *ngIf="previewUrl" [src]="previewUrl" class="img-fluid mt-2" style="max-height: 150px;" />
-                    </div>
-                
-                  
-                 
-                  
+                <!-- Change field title dynamically for MarketingAgent -->
+                <div class="mb-3" *ngIf="!isMarketingAgent">
+                  <label for="firstname" class="form-label">First Name</label>
+                  <input [(ngModel)]="registerRequest.firstName" type="text" class="form-control" id="firstname" placeholder="First Name">
+                </div>
+                <div class="mb-3" *ngIf="!isMarketingAgent">
+                  <label for="lastname" class="form-label">Last Name</label>
+                  <input [(ngModel)]="registerRequest.lastname" type="text" class="form-control" id="lastname" placeholder="Last Name">
+                </div>
 
-                  <div class="pt-1 mb-4">
-                    <button (click)="register()" type="button" class="btn btn-dark btn-lg btn-block" id="log">Create Account</button>
-                  </div>
-                
-                  
-                  <div>
-                    Already have an account?&nbsp;
-                    <button (click)="login()" type="button" class="btn btn-link custom-register-btn">
-                      Login
-                    </button>
-                  </div>
+                <div class="mb-3" *ngIf="isMarketingAgent">
+                  <label for="companyname" class="form-label">Company Name</label>
+                  <input [(ngModel)]="registerRequest.firstName" type="text" class="form-control" id="companyname" placeholder="Company Name">
+                </div>
+
+                <div class="mb-3">
+                  <label for="login" class="form-label">Email address</label>
+                  <input [(ngModel)]="registerRequest.email" type="email" class="form-control" id="login" placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input [(ngModel)]="registerRequest.password" type="password" class="form-control" id="password" placeholder="Password">
+                </div>
+
+                <label for="image" class="form-label">{{ isMarketingAgent ? 'Upload Your Logo' : 'Upload Profile Photo' }}</label>
+                <div class="custom-file">
+                  <input (change)="onFileSelected($event)" class="custom-file-input" [(ngModel)]="registerRequest.image" type="file" id="image" />
+                  <img *ngIf="previewUrl" [src]="previewUrl" class="img-fluid mt-2" style="max-height: 150px;" />
+                </div>
+
+                <div class="pt-1 mb-4">
+                  <button (click)="register()" type="button" class="btn btn-dark btn-lg btn-block" id="log">Create Account</button>
+                </div>
+
+                <div>
+                  Already have an account?&nbsp;
+                  <button (click)="login()" type="button" class="btn btn-link custom-register-btn">
+                    Login
+                  </button>
+                </div>
                 
               </div>
             </div>

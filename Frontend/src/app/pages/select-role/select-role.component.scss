@@ -1,0 +1,52 @@
+/* Styles for centering the content */
+.role-selection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #f4f4f9;
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color:white;
+  }
+  
+  .role-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .role-btn {
+    background-color: #fb9678;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 250px;  /* Adjust width for a consistent button size */
+  }
+  
+  .role-btn:hover {
+    background-color: #fca68c;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .role-btn:focus {
+    outline: none;
+    box-shadow: 0 0 5px 2px #4CAF50;
+  }
+
+  .h2
+  {
+    color:white;
+  }
+  
