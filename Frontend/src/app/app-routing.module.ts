@@ -1,46 +1,58 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 
-import { FullComponent } from './layouts/full/full.component';
+import { FullComponent } from './backoffice/layouts/full/full.component';
+import { LayoutComponent } from './FrontOffice/layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
+import { UserListComponent } from './BackOffice/component/users-list/users-list.component';
 
 export const Approutes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // Auth Routes
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'activate-account', component: ActivateAccountComponent },
+
+  // Front Office Routes (wrapped in LayoutComponent)
   {
-    path: 'login',
-    component: LoginComponent
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./FrontOffice/front-office/front-office.module').then((m) => m.FrontOfficeModule),
+      },
+    ],
   },
-  {
-    path: 'register',
-    component: RegisterComponent
-  },
-  {
-    path: 'activate-account',
-    component: ActivateAccountComponent
-  },
+
+  // Back Office Routes (NO 'admin' prefix anymore)
   {
     path: '',
     component: FullComponent,
     children: [
-      { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () =>
+          import('./BackOffice/dashboard/dashboard.module').then((m) => m.DashboardModule),
       },
       {
         path: 'about',
-        loadChildren: () => import('./about/about.module').then(m => m.AboutModule)
+        loadChildren: () =>
+          import('./BackOffice/about/about.module').then((m) => m.AboutModule),
       },
       {
         path: 'component',
-        loadChildren: () => import('./component/component.module').then(m => m.ComponentsModule)
-      }
-    ]
+        loadChildren: () =>
+          import('./BackOffice/component/component.module').then((m) => m.ComponentsModule),
+      },
+      {
+        path: 'users',
+        component: UserListComponent,
+      },
+    ],
   },
-  {
-    path: '**',
-    redirectTo: '/starter'
-  }
+
+  // Catch-all
+  { path: '**', redirectTo: 'login' },
 ];

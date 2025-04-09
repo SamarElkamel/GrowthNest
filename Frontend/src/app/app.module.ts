@@ -11,15 +11,15 @@ import { Routes, RouterModule } from '@angular/router';
 import { CodeInputModule } from 'angular-code-input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { FullComponent } from './layouts/full/full.component';
+import { FullComponent } from './backoffice/layouts/full/full.component';
 
 
-import { NavigationComponent } from './shared/header/navigation.component';
-import { SidebarComponent } from './shared/sidebar/sidebar.component';
+import { NavigationComponent } from './backoffice/shared/header/navigation.component';
+import { SidebarComponent } from './backoffice/shared/sidebar/sidebar.component';
 
 import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SpinnerComponent } from './shared/spinner.component';
+import { SpinnerComponent } from './backoffice/shared/spinner.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';

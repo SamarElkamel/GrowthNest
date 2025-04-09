@@ -1,0 +1,39 @@
+/* Change color of menu item on hover (desktop) */
+.main-menu > li > a:hover {
+    color: #ff5733; /* Example: Change to orange on hover */
+  
+  }
+  
+  /* Change color of menu item on hover (mobile) */
+  .main-menu-m > li > a:hover {
+    color: #ff5733; /* Example: Change to orange on hover */
+  
+  }
+  
+  /* Active state (selected link) */
+  .main-menu > li > a:active,
+  .main-menu > li > a:focus {
+    color: #ff5733; /* Change to orange when active or focused */
+    
+  }
+  
+  /* Change submenu item color on hover (desktop) */
+  .main-menu > li > .sub-menu > li > a:hover {
+    color: #ff5733;
+  }
+  
+  /* Change submenu item color on hover (mobile) */
+  .main-menu-m > li > .sub-menu-m > li > a:hover {
+    color: #ff5733;
+  }
+  
+  /* Active menu item color (desktop) */
+  .main-menu > li.active-menu > a {
+    color: #ff5733; /* Ensure active menu items are orange */
+  }
+  
+  /* Smooth transition for hover, active, and focus effects */
+  .main-menu > li > a {
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+  

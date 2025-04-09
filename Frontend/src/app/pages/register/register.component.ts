@@ -10,21 +10,21 @@ import { AuthenticationService } from 'src/app/services/services';
 })
 export class RegisterComponent {
 
-  registerRequest: RegistrationRequest = {email: '', firstName: '',  image: '', lastname: '', password: '' };
+  registerRequest: RegistrationRequest = { email: '', firstName: '', image: '', lastname: '', password: '' };
+  previewUrl: string | ArrayBuffer | null = null;
 
-  
   errorMsg: Array<string> = [];
   constructor(
     private router: Router,
     private authService: AuthenticationService
-  ) {}
+  ) { }
 
   login() {
     this.router.navigate(['login']);
   }
   register() {
-    this.errorMsg = []; 
-  
+    this.errorMsg = [];
+
     this.authService.register({
       body: this.registerRequest
     }).subscribe({
@@ -33,51 +33,49 @@ export class RegisterComponent {
       },
 
       error: (err) => {
-                          
-                        
         if (err.error instanceof Blob) {
-         
           const reader = new FileReader();
           reader.onload = () => {
             try {
               const errorResponse = JSON.parse(reader.result as string);
-          
-      
               if (errorResponse.errors) {
                 this.errorMsg = Object.values(errorResponse.errors);
-              } else if (errorResponse.error) {  
+              } else if (errorResponse.error) {
                 this.errorMsg.push(errorResponse.error);
               } else {
                 this.errorMsg.push("An unexpected error occurred.");
               }
             } catch (jsonError) {
-              
               this.errorMsg.push("An unexpected error occurred.");
             }
           };
           reader.readAsText(err.error);
         } else {
-       
-      
           if (err.error?.errors) {
             this.errorMsg = Object.values(err.error.errors);
-          } else if (err.error?.error) { 
+          } else if (err.error?.error) {
             this.errorMsg.push(err.error.error);
           } else {
             this.errorMsg.push("An unexpected error occurred.");
           }
         }
       }
-      
-    
-    
-});
-}
-
-
-
-
+    });
   }
-  
 
-
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result;
+        // Extract the Base64 part and store it in registerRequest.image
+        const base64String = reader.result?.toString().split(',')[1];
+        if (base64String) {
+          this.registerRequest.image = base64String;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+}

@@ -1,6 +1,7 @@
 package tn.esprit.growthnestback.Entities;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 public class RegistrationRequest {
 
     @NotEmpty(message="Firstname is mandatory")
@@ -29,7 +31,7 @@ public class RegistrationRequest {
     @Pattern(regexp = ".*[0-9].*", message = "Password must contain at least one number")
     @Pattern(regexp = ".*[@$!%*?&].*", message = "Password must contain at least one special character (@$!%*?&)")
     private String password;
-    private LocalDate dateOfBirth;
     private String image;
+
 
 }

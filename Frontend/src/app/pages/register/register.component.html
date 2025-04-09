@@ -39,13 +39,18 @@
                     <input [(ngModel)]="registerRequest.password" type="password" class="form-control" id="password" placeholder="Password">
                   </div>
               
-                  <div class="form-outline mb-4">
+                 <!-- <div class="form-outline mb-4">
                     <label class="form-label" for="image">Profile Image</label>
                     <div class="custom-file">
                       <input [(ngModel)]="registerRequest.image" type="file" id="image" class="custom-file-input" />
             
+                    </div>   </div>-->
+                    <label for="image" class="form-label">Profile Photo</label>
+                    <div class="custom-file">
+                      <input (change)="onFileSelected($event)" class="custom-file-input" [(ngModel)]="registerRequest.image" type="file" id="image" class="custom-file-input" />
+                      <img *ngIf="previewUrl" [src]="previewUrl" class="img-fluid mt-2" style="max-height: 150px;" />
                     </div>
-                  </div>
+                
                   
                  
                   
