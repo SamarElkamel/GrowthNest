@@ -1,6 +1,7 @@
 package tn.esprit.growthnestback.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -114,6 +115,7 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     EventStatus status;
+    @JsonIgnoreProperties("event")
     @OneToMany(mappedBy = "event",cascade = CascadeType.ALL)
     List<Registration> registrations;
 
