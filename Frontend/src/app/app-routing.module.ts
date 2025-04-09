@@ -14,6 +14,14 @@ export const Approutes: Routes = [
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
+        path: 'gestion-marketing',
+        loadChildren: () =>
+          import('./backoffice/gestion-marketing/gestion-marketing.module').then(
+            (m) => m.GestionMarketingModule
+          ),
+      },
+      
+      {
         path: 'about',
         loadChildren: () => import('./about/about.module').then(m => m.AboutModule)
       },

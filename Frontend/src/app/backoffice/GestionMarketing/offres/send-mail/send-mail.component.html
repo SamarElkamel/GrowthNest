@@ -1,0 +1,34 @@
+<div class="mail-container">
+    <h2 class="title">📨 Send Marketing Email</h2>
+  
+    <form (ngSubmit)="sendEmail()" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="to">Recipient Email</label>
+        <input id="to" type="email" [(ngModel)]="email.to" name="to" required placeholder="client@example.com" />
+      </div>
+  
+      <div class="form-group">
+        <label for="subject">Subject</label>
+        <input id="subject" type="text" [(ngModel)]="email.subject" name="subject" required placeholder="Email subject" />
+      </div>
+  
+      <div class="form-group">
+        <label for="body">Message</label>
+        <textarea id="body" [(ngModel)]="email.body" name="body" rows="5" required placeholder="Write your message..."></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="attachment">Attachment (optional)</label>
+        <input id="attachment" type="file" (change)="onFileSelected($event)" />
+      </div>
+  
+      <div class="actions">
+        <button type="submit" [disabled]="sending">
+          {{ sending ? 'Sending...' : 'Send Email' }}
+        </button>
+      </div>
+    </form>
+  
+    <p class="response" *ngIf="responseMessage">{{ responseMessage }}</p>
+  </div>
+  

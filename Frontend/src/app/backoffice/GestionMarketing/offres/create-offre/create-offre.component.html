@@ -1,0 +1,69 @@
+<div class="gestion-marketing-page">
+    <h1 class="page-title">
+      <span class="icon">📢</span> Marketing Space – Offer Creation
+    </h1>
+  
+    <div class="forms-container">
+      <!-- Card 1: Offer Type -->
+      <div class="card type-card">
+        <div class="card-header">
+          <h2 class="form-title">🎥 New Offer Type</h2>
+          <p class="form-subtitle">Add a type to categorize your offers (e.g. Instagram Reel).</p>
+        </div>
+        <form [formGroup]="formType" (ngSubmit)="submitType()">
+          <label>Type name</label>
+          <input
+            type="text"
+            formControlName="nom"
+            class="input"
+            placeholder="e.g. Reels Instagram"
+          />
+          <button type="submit" class="btn btn-blue">Add</button>
+        </form>
+      </div>
+  
+      <!-- Card 2: Marketing Offer -->
+      <div class="card offre-card">
+        <div class="card-header">
+          <h2 class="form-title">📦 New Marketing Offer</h2>
+          <p class="form-subtitle">Create a complete offer to propose to business owners.</p>
+        </div>
+        <form [formGroup]="formOffre" (ngSubmit)="submitOffre()">
+          <label>Offer name</label>
+          <input
+            type="text"
+            formControlName="nom"
+            class="input"
+            placeholder="e.g. Social Media Visibility Pack"
+          />
+  
+          <label> 📋 Description</label>
+          <textarea
+            formControlName="description"
+            class="input"
+            rows="3"
+            placeholder="Detailed description..."
+          ></textarea>
+  
+          <label> 💲 Price </label>
+          <input 
+            type="number" 
+            formControlName="prix" 
+            class="input"
+            min="0"
+            (keydown)="preventNegative($event)"
+          />
+
+  
+          <label>🎥 Offer type</label>
+          <select formControlName="typeOffre" class="input">
+            <option *ngFor="let type of typesOffre" [ngValue]="type">{{ type.nom }}</option>
+          </select>
+          
+  
+          <button type="submit" class="btn btn-green">Publish</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  

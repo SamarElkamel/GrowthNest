@@ -1,0 +1,133 @@
+.gestion-marketing-page {
+    max-width: 1280px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+  
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      color: #1e293b;
+      margin-bottom: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+  
+      .icon {
+        font-size: 2.5rem;
+      }
+    }
+  
+    .forms-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 2.5rem;
+    }
+  
+    .card {
+      background: linear-gradient(to bottom right, #ffffff, #f1f5f9);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+  
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.1);
+      }
+  
+      .card-header {
+        margin-bottom: 1.8rem;
+  
+        .form-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin-bottom: 0.4rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+  
+        .form-subtitle {
+          color: #64748b;
+          font-size: 0.95rem;
+          line-height: 1.4;
+        }
+      }
+  
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+  
+        label {
+          font-weight: 600;
+          color: #334155;
+          font-size: 0.95rem;
+        }
+  
+        .input {
+          padding: 0.85rem 1.1rem;
+          border: 1px solid #cbd5e1;
+          border-radius: 0.7rem;
+          font-size: 1rem;
+          background-color: #f9fafb;
+          transition: border 0.3s ease, box-shadow 0.3s ease;
+  
+          &:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+          }
+        }
+  
+        .btn {
+          padding: 0.85rem;
+          font-size: 1.05rem;
+          font-weight: 600;
+          border: none;
+          border-radius: 0.75rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  
+          &.btn-blue {
+            background: linear-gradient(to right, #3b82f6, #2563eb);
+            color: white;
+  
+            &:hover {
+              background: #1e40af;
+            }
+          }
+  
+          &.btn-green {
+            background: linear-gradient(to right, #22c55e, #16a34a);
+            color: white;
+  
+            &:hover {
+              background: #15803d;
+            }
+          }
+        }
+      }
+    }
+  
+    // Responsive improvements for smaller screens
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 1.8rem;
+  
+        .icon {
+          font-size: 2rem;
+        }
+      }
+  
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  }
+  

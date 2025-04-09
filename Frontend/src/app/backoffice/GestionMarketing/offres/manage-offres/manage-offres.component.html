@@ -1,0 +1,62 @@
+<div class="marketing-dashboard">
+
+    <div class="header">
+      <h1>🎯 Marketing Offers Management</h1>
+      <input
+        type="text"
+        class="search-bar"
+        placeholder="Search offers by name..."
+        [(ngModel)]="searchQuery"
+        (input)="filter()"
+      />
+      <select class="type-filter" [(ngModel)]="selectedTypeId" (change)="filter()">
+        <option [ngValue]="null">All types</option>
+        <option *ngFor="let t of types" [ngValue]="t.id">{{ t.nom }}</option>
+      </select>
+      
+    </div>
+  
+    <div class="dashboard-body">
+      <!-- Offer Cards -->
+      <div class="offers-list">
+        <div class="offer-card" *ngFor="let offre of filteredOffres">
+          <div *ngIf="editingId !== offre.id; else editForm">
+            <h3>{{ offre.nom }}</h3>
+            <p class="desc">{{ offre.description }}</p>
+            <p><strong>Price:</strong> {{ offre.prix }} $</p>
+            <p><strong>Type:</strong> {{ offre.typeOffre?.nom }}</p>
+  
+            <div class="actions">
+              <button class="btn edit" (click)="startEdit(offre)">✏️ Edit</button>
+              <button class="btn delete" (click)="deleteOffre(offre.id!)">🗑️ Delete</button>
+            </div>
+          </div>
+  
+          <ng-template #editForm>
+            <input class="form-field" [(ngModel)]="editOffre.nom" placeholder="Name" />
+            <textarea class="form-field" [(ngModel)]="editOffre.description" placeholder="Description"></textarea>
+            <input class="form-field" type="number" [(ngModel)]="editOffre.prix" placeholder="Price" />
+            <select class="form-field" [(ngModel)]="editOffre.typeOffre">
+              <option *ngFor="let t of types" [ngValue]="t">{{ t.nom }}</option>
+            </select>
+            <div class="actions">
+              <button class="btn save" (click)="saveEdit()">💾 Save</button>
+              <button class="btn cancel" (click)="cancelEdit()">❌ Cancel</button>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+  
+      <!-- Sidebar for Offer Types -->
+      <div class="sidebar">
+        <h3>📂 Offer Types</h3>
+        <ul class="types-list">
+          <li *ngFor="let type of types">
+            {{ type.nom }}
+            <button class="btn btn-sm delete" (click)="deleteType(type.id!)">🗑️</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  

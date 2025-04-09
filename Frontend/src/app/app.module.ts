@@ -21,10 +21,22 @@ import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SpinnerComponent } from './shared/spinner.component';
 
+import { GestionMarketingModule } from './backoffice/gestion-marketing/gestion-marketing.module';
+
+import { ToastrModule } from 'ngx-toastr';
+import { ManageOffresComponent } from './backoffice/GestionMarketing/offres/manage-offres/manage-offres.component';
+import { SendMailComponent } from './backoffice/GestionMarketing/offres/send-mail/send-mail.component';
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
     SpinnerComponent,
+    
+    
+    
+    
   ],
   imports: [
     CommonModule,
@@ -38,6 +50,15 @@ import { SpinnerComponent } from './shared/spinner.component';
     FullComponent,
     NavigationComponent,
     SidebarComponent,
+    GestionMarketingModule,
+    
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-top-right',
+      closeButton: true,
+      progressBar: true
+    })
+    ,
   ],
   providers: [
     {
