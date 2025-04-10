@@ -29,6 +29,12 @@ import { EventHistoryComponent } from './pages/EventAdmin/event-history/event-hi
 import { EventRegistrationsComponent } from './pages/EventAdmin/event-registrations/event-registrations.component';
 import { EventAddComponent } from './pages/EventAdmin/add-event/add-event.component';
 import { EventUpdateComponent } from './pages/EventAdmin/update-event/update-event.component';
+import { UserReservationsComponent } from './pages/EventUser/user-reservations/user-reservations.component';
+import { AddReservationComponent } from './pages/EventUser/add-reservation/add-reservation.component';
+import { UpdateReservationComponent } from './pages/EventUser/update-reservation/update-reservation.component';
+
+import { EventUserListComponent } from './pages/EventUser/event-user-list/event-user-list.component';
+import { EventUSerDetailsComponent } from './pages/EventUser/event-user-details/event-user-details.component';
 
 
 
@@ -46,6 +52,11 @@ import { EventUpdateComponent } from './pages/EventAdmin/update-event/update-eve
     EventRegistrationsComponent,
     EventAddComponent,
     EventUpdateComponent,
+    UserReservationsComponent,
+    AddReservationComponent,
+    UpdateReservationComponent,
+    EventUSerDetailsComponent,
+    EventUserListComponent,
     
    
  

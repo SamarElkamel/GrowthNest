@@ -11,6 +11,11 @@ import { EventRegistrationsComponent } from './pages/EventAdmin/event-registrati
 import { EventHistoryComponent } from './pages/EventAdmin/event-history/event-history.component';
 import { EventAddComponent } from './pages/EventAdmin/add-event/add-event.component';
 import { EventDetailsComponent } from './pages/EventAdmin/event-details/event-details.component';
+import { EventUserListComponent } from './pages/EventUser/event-user-list/event-user-list.component';
+import { AddReservationComponent } from './pages/EventUser/add-reservation/add-reservation.component';
+import { EventUSerDetailsComponent } from './pages/EventUser/event-user-details/event-user-details.component';
+import { UpdateReservationComponent } from './pages/EventUser/update-reservation/update-reservation.component';
+import { UserReservationsComponent } from './pages/EventUser/user-reservations/user-reservations.component';
 
 export const Approutes: Routes = [
   // Front Office Routes (Public)
@@ -18,6 +23,13 @@ export const Approutes: Routes = [
     path: '',
     component: HomeComponent
   },
+  
+  {path: 'events/user', component:EventUserListComponent},
+  {path: 'events/user/add' , component:AddReservationComponent},
+  {path : 'events/user/reservations', component:UserReservationsComponent},
+  {path: 'events/user/:id',component:EventUSerDetailsComponent},
+  {path : 'events/user/update/:id' , component:UpdateReservationComponent},
+ 
 
   // Admin Routes (Protected)
   {
@@ -43,6 +55,10 @@ export const Approutes: Routes = [
       { path: 'events/:id', component: EventDetailsComponent},
       { path: 'events/update/:id', component: EventUpdateComponent },
       { path: 'events/registrations/:id', component: EventRegistrationsComponent },
+
+
+
+
      
     
     ]
@@ -50,6 +66,8 @@ export const Approutes: Routes = [
 
   // Fallback Route
   { path: '**', redirectTo: '' }
+  
+
 ];
 
 @NgModule({

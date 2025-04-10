@@ -1,0 +1,23 @@
+<!-- event-list.component.html -->
+<div class="container py-4">
+    <h2 class="mb-4">Available Events</h2>
+    
+    <div *ngIf="isLoading" class="alert alert-info">Loading events...</div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  
+    <div class="row" *ngIf="!isLoading && !error">
+      <div class="col-md-4 mb-3" *ngFor="let event of events">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title">{{ event.event?.title }}</h3>
+            <p class="card-text">{{ event.event?.description }}</p>
+            <p class="card-text">Date: {{ event.event?.date }}</p>
+            <p class="card-text">Reservations: {{ event.reservationCount }}</p>
+            <button class="btn btn-primary" (click)="viewEventDetails(event.event?.idEvent!)">
+              Event Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

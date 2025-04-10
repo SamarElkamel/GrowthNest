@@ -1,0 +1,47 @@
+<div class="container py-4">
+    <div *ngIf="isLoading" class="alert alert-info">Loading...</div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  
+    <div *ngIf="!isLoading && event" class="card">
+      <div class="card-body">
+        <h2 class="card-title">{{ event.title }}</h2>
+        <p class="card-text">{{ event.description }}</p>
+        <p class="card-text">Date: {{ event.date }}</p>
+        <p class="card-text">Location: {{ event.location }}</p>
+        <p class="card-text">Status: {{ event.status }}</p>
+  
+        <!-- Show "Add Reservation" button only if no reservation exists -->
+        <button 
+          *ngIf="!hasReservation" 
+          class="btn btn-primary" 
+          (click)="showAddReservationForm()"
+        >
+          Add Reservation
+        </button>
+  
+        <!-- Show "View Reservations" button if reservation exists -->
+        <button 
+          *ngIf="hasReservation" 
+          class="btn btn-info" 
+          (click)="goToReservations()"
+        >
+          View Your Reservations
+        </button>
+      </div>
+    </div>
+  
+    <div 
+      *ngIf="notification" 
+      class="alert alert-warning alert-dismissible fade show mt-3" 
+      role="alert"
+    >
+      {{ notification }}
+      <button type="button" class="btn-close" (click)="notification = null"></button>
+    </div>
+  
+    <app-add-reservation 
+      *ngIf="showAddForm && event" 
+      [event]="event!" 
+      (reservationAdded)="onReservationAdded()"
+    ></app-add-reservation>
+  </div>
