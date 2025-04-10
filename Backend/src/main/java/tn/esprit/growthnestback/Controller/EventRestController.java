@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.growthnestback.Entities.Event;
+import tn.esprit.growthnestback.Entities.EventWithReservationCount;
 import tn.esprit.growthnestback.Services.IEventServices;
 
 import java.util.List;
@@ -41,5 +42,10 @@ public class EventRestController {
     @GetMapping("/DisplayEventHistory")
     public List<Event> DisplayEventHistory(){
         return iEventServices.DisplayEventHistory();
+    }
+    @Operation(description = "Get available events with reservation counts")
+    @GetMapping("/available")
+    public List<EventWithReservationCount> getAvailableEventsWithReservationCount() {
+        return iEventServices.getAvailableEventsWithReservationCount();
     }
 }

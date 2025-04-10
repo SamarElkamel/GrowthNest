@@ -87,4 +87,8 @@ public class RegistrationServiceImpl implements IRegistrationServices{
     public List<Registration> DisplayRegistrationsByEvent(Long eventId) {
         return registrationRepository.findByEventId(eventId);
     }
+    @Override
+    public List<Registration> getUserReservations(Long userId) {
+        return registrationRepository.findByUserId(userId);
+    }
 }

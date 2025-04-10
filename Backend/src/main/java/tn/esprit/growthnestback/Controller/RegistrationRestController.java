@@ -49,4 +49,9 @@ public class RegistrationRestController {
     public List<Registration> DisplayByEvent(@PathVariable("eventId") Long eventId){
         return iRegistrationServices.DisplayRegistrationsByEvent(eventId);
     }
+    @Operation(description = "Get user's reservation history")
+    @GetMapping("/user/{userId}")
+    public List<Registration> getUserReservations(@PathVariable Long userId) {
+        return iRegistrationServices.getUserReservations(userId);
+    }
 }

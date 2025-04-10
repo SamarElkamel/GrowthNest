@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.growthnestback.Entities.Event;
 import tn.esprit.growthnestback.Entities.EventStatus;
+import tn.esprit.growthnestback.Entities.EventWithReservationCount;
 import tn.esprit.growthnestback.Repository.EventRepository;
 
 import java.util.Date;
@@ -61,6 +62,18 @@ public class EventServiceImpl implements IEventServices{
     @Override
     public List<Event> DisplayEventHistory() {
         return eventRepository.findByStatusIn(List.of(EventStatus.CANCELED, EventStatus.COMPLETED));
+    }
+    @Override
+    public List<EventWithReservationCount> getAvailableEventsWithReservationCount() {
+        List<EventStatus> availableStatuses = List.of(EventStatus.PLANNED, EventStatus.ONGOING);
+        List<Object[]> results = eventRepository.findAvailableEventsWithReservationCount(availableStatuses);
+
+        return results.stream()
+                .map(result -> new EventWithReservationCount(
+                        (Event) result[0],
+                        (Long) result[1]
+                ))
+                .toList();
     }
 
 }
