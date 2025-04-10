@@ -26,7 +26,7 @@ import { AddReclamationComponent } from './pages/Reclamation/add-reclamation/add
 import { DeleteReclamationComponent } from './pages/Reclamation/delete-reclamation/delete-reclamation.component';
 import { UpdateReclamationComponent } from './pages/Reclamation/update-reclamation/update-reclamation.component';
 import { DisplayReclamationComponent } from './pages/Reclamation/display-reclamation/display-reclamation.component';
-
+import { HeaderComponent } from './FrontOffice/header/header.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +37,8 @@ import { DisplayReclamationComponent } from './pages/Reclamation/display-reclama
     DeleteReclamationComponent,
     UpdateReclamationComponent,
     DisplayReclamationComponent,
+    HeaderComponent,
+    
   ],
   imports: [
     CommonModule,

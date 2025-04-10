@@ -11,6 +11,7 @@ import tn.esprit.growthnestback.Services.IDeliveryAgencyService;
 import java.util.List;
 
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/delivery-agency")
 @Tag(name = "Delivery Agency", description = "API for managing delivery agencies")

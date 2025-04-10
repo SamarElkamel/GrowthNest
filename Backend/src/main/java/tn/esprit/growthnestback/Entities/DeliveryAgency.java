@@ -28,7 +28,7 @@ public class DeliveryAgency {
 
     @NotBlank(message = "The phone number is required")
     @Pattern(regexp = "^\\d{8}$", message = "The phone number must contain exactly 8 digits")
-    int phoneNumber;
+    String phoneNumber;
 
     public Long getIdAgency() {
         return idAgency;
@@ -54,11 +54,11 @@ public class DeliveryAgency {
         this.address = address;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 }

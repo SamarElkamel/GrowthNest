@@ -1,20 +1,55 @@
+<button class="btn btn-primary" (click)="openModal()">Ajouter Réclamation</button>
+
 <h2>Liste des agences de livraison</h2>
 
-<table border="1">
+<table>
   <thead>
     <tr>
-      <th>ID</th>
-      <th>Nom de l'agence</th>
-      <th>Adresse</th>
-      <th>Téléphone</th>
+      <th>Agency name</th>
+      <th>Address</th>
+      <th>Phone number</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let agency of agencies">
-      <td>{{ agency.idAgency }}</td>
-      <td>{{ agency.agencyName }}</td>
-      <td>{{ agency.address }}</td>
-      <td>{{ agency.phoneNumber }}</td>
+      <td data-label="Agency name">{{ agency.agencyName }}</td>
+      <td data-label="Address">{{ agency.address }}</td>
+      <td data-label="Phone number	">{{ agency.phoneNumber }}</td>
     </tr>
   </tbody>
 </table>
+
+<div class="modal" tabindex="-1" style="display: block;" *ngIf="displayModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ajouter Réclamation</h5>
+        <button type="button" class="close" (click)="closeModal()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #reclamationForm="ngForm" (ngSubmit)="save()">
+          <div class="form-group">
+            <label for="type">Type</label>
+            <input type="text" id="type" class="form-control" [(ngModel)]="newReclamation.type" name="type" required minlength="3" placeholder="Entrez le type" #type="ngModel">
+            <div *ngIf="type.invalid && type.touched" class="alert alert-danger">
+              Le type est requis et doit contenir au moins 3 caractères.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" class="form-control" [(ngModel)]="newReclamation.description" name="description" required minlength="10" placeholder="Entrez la description" #description="ngModel"></textarea>
+            <div *ngIf="description.invalid && description.touched" class="alert alert-danger">
+              La description est requise et doit contenir entre 10 et 255 caractères.
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Annuler</button>
+        <button class="btn btn-primary" [disabled]="reclamationForm.invalid" (click)="save()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>

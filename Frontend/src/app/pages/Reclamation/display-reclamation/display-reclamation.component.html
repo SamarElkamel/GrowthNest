@@ -1,1 +1,62 @@
-<p>display-reclamation works!</p>
+<table class="table table-bordered table-striped">
+    <thead class="thead-light">
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th style="width: 120px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of reclamations">
+        <td>{{ r.type }}</td>
+        <td>{{ r.description }}</td>
+        <td>{{ r.reclamationDate | date:'short' }}</td>
+        <td>
+          <button class="btn btn-sm btn-info mr-1" (click)="openEditModal(r)">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="delete(r.reclamationId!)">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <!-- Modal pour éditer la réclamation -->
+  <div class="modal" tabindex="-1" style="display: block;" *ngIf="displayEditModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modifier Réclamation</h5>
+          <button type="button" class="close" (click)="closeEditModal()">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #reclamationForm="ngForm" (ngSubmit)="update()">
+            <div class="form-group">
+              <label for="type">Type</label>
+              <input type="text" id="type" class="form-control" [(ngModel)]="editingReclamation.type" name="type" required minlength="3" placeholder="Entrez le type" #type="ngModel">
+              <div *ngIf="type.invalid && type.touched" class="alert alert-danger">
+                Le type est requis et doit contenir au moins 3 caractères.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea id="description" class="form-control" [(ngModel)]="editingReclamation.description" name="description" required minlength="10" placeholder="Entrez la description" #description="ngModel"></textarea>
+              <div *ngIf="description.invalid && description.touched" class="alert alert-danger">
+                La description est requise et doit contenir entre 10 et 255 caractères.
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeEditModal()">Annuler</button>
+          <button class="btn btn-primary" [disabled]="reclamationForm.invalid" (click)="update()">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

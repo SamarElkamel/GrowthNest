@@ -9,6 +9,13 @@ export const ROUTES: RouteInfo[] = [
     class: '',
     extralink: false,
     submenu: []
+  }, {
+    path: '/reclamation',
+    title: 'Reclamations',
+    icon: 'bi bi-card-list',
+    class: '',
+    extralink: false,
+    submenu: []
   },
   {
     path: '/component/alert',

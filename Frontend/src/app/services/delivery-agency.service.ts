@@ -13,11 +13,11 @@ export interface DeliveryAgency {
   providedIn: 'root'
 })
 export class DeliveryAgencyService {
-  private apiUrl = 'http://localhost:8080/api/delivery-agencies'; 
+  private apiUrl = 'http://localhost:8080/Growthnest/delivery-agency';
 
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<DeliveryAgency[]> {
-    return this.http.get<DeliveryAgency[]>(this.apiUrl);
+    return this.http.get<DeliveryAgency[]>(`${this.apiUrl}/all`);
   }
 }

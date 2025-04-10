@@ -1,11 +1,14 @@
 import { Component, AfterViewInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 declare var $: any;
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  imports: [RouterModule]
 })
 export class HomeComponent implements AfterViewInit {
 
@@ -28,11 +31,11 @@ export class HomeComponent implements AfterViewInit {
         dots: true,
         appendDots: $('.wrap-slick1').find('.wrap-slick1-dots'),
         dotsClass: 'slick1-dots',
-       /* customPaging: function (slick: any, index: number): string {
-          const linkThumb = $(slick.$slides[index]).data('thumb');
-          const caption = $(slick.$slides[index]).data('caption');
-          return `<img src="${linkThumb}"><span class="caption-dots-slick1">${caption}</span>`;
-        }*/
+        /* customPaging: function (slick: any, index: number): string {
+           const linkThumb = $(slick.$slides[index]).data('thumb');
+           const caption = $(slick.$slides[index]).data('caption');
+           return `<img src="${linkThumb}"><span class="caption-dots-slick1">${caption}</span>`;
+         }*/
       });
 
       // Animate first slide manually
