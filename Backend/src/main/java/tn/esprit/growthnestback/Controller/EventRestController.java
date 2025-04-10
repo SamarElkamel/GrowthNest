@@ -37,4 +37,9 @@ public class EventRestController {
     public Event updateEvent(@RequestBody Event event){
         return iEventServices.updateEvent(event);
     }
+    @Operation(description = "Display Event History (Canceled/Completed)")
+    @GetMapping("/DisplayEventHistory")
+    public List<Event> DisplayEventHistory(){
+        return iEventServices.DisplayEventHistory();
+    }
 }

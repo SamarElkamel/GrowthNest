@@ -13,4 +13,9 @@ public interface RegistrationRepository extends JpaRepository<Registration,Long>
     @Query("SELECT r FROM Registration r WHERE r.user.id = :userId AND r.event.idEvent = :eventId")
     Optional<Registration> findByUserIdAndEventId(@Param("userId") Long userId, @Param("eventId") Long eventId);
 
+
+
+
+    @Query("SELECT r FROM Registration r WHERE r.event.idEvent = :eventId")
+    List<Registration> findByEventId(@Param("eventId") Long eventId);
 }

@@ -9,4 +9,5 @@ public interface IEventServices {
     public Event DisplayEvents(Long idE);
     public Event addEvent(Event event);
     public Event updateEvent(Event event);
+    public List<Event> DisplayEventHistory();
 }

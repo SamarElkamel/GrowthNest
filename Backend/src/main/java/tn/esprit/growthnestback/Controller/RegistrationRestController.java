@@ -44,4 +44,9 @@ public class RegistrationRestController {
     public void deleteRegistration(@PathVariable("idR") Long idR){
         iRegistrationServices.deleteRegistration(idR);
     }
+    @Operation(description = "Display Registrations By Event ID")
+    @GetMapping("/DisplayByEvent/{eventId}")
+    public List<Registration> DisplayByEvent(@PathVariable("eventId") Long eventId){
+        return iRegistrationServices.DisplayRegistrationsByEvent(eventId);
+    }
 }

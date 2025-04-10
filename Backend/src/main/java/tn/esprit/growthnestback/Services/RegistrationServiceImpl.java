@@ -83,4 +83,8 @@ public class RegistrationServiceImpl implements IRegistrationServices{
     public void deleteRegistration(Long idR) {
         registrationRepository.deleteById(idR);
     }
+    @Override
+    public List<Registration> DisplayRegistrationsByEvent(Long eventId) {
+        return registrationRepository.findByEventId(eventId);
+    }
 }

@@ -10,4 +10,5 @@ public interface IRegistrationServices {
     public Registration addRegistration(Registration registration);
     public Registration updateRegistration(Registration registration);
     public void deleteRegistration (Long idR);
+    public List<Registration> DisplayRegistrationsByEvent(Long eventId);
 }
