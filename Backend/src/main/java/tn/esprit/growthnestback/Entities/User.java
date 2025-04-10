@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -49,6 +50,7 @@ public class User implements UserDetails, Principal {
     @ManyToOne
     @JoinColumn(name="ID_ROLE", referencedColumnName="id")
     private Role role ;
+
 
 
     @Override

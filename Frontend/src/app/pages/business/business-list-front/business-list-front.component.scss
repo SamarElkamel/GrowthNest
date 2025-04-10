@@ -1,0 +1,46 @@
+// business-card.component.scss
+.business-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    margin: 1rem;
+    transition: transform 0.2s;
+  
+    &:hover {
+      transform: translateY(-2px);
+    }
+  
+    .card-content {
+      h3 {
+        margin: 0 0 0.5rem;
+        color: #2d3436;
+      }
+  
+      .description {
+        color: #636e72;
+        font-size: 0.9rem;
+        min-height: 60px;
+      }
+  
+      .footer {
+        border-top: 1px solid #eee;
+        padding-top: 1rem;
+        margin-top: 1rem;
+  
+        .view-products-btn {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+  
+          mat-icon {
+            font-size: 18px;
+            height: 18px;
+            width: 18px;
+          }
+        }
+      }
+    }
+  }

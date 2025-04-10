@@ -1,3 +1,4 @@
+
 package tn.esprit.growthnestback.Security;
 
 import lombok.RequiredArgsConstructor;
@@ -25,15 +26,15 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
-     private final JwtFilter jwtAuthFilter;
-     private final AuthenticationProvider authenticationProvider;
+    private final JwtFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;
 
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(withDefaults())
-               // .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**"))
+                // .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(
@@ -48,6 +49,8 @@ public class SecurityConfig {
                                         "/configuration/security",
                                         "/swagger-ui/**",
                                         "/webjars/**",
+                                "/business/**",
+                                "/Products/**",
                                         "/swagger-ui.html"
                                 )
                                 .permitAll()
@@ -69,14 +72,14 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedOrigins("http://localhost:4200") // frontend Angular
+                        .allowedMethods("*")
                         .allowedHeaders("*");
             }
         };
+    }
     }
 
 
 
 
-}

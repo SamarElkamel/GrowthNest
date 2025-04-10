@@ -1,0 +1,10 @@
+export enum CategorieBusiness {
+  CUISINE = 'CUISINE',
+  BIJOUX = 'BIJOUX',
+  MODE = 'MODE',
+  ARTISANAT = 'ARTISANAT',
+  BEAUTÉ = 'BEAUTE',
+  DÉCORATION = 'DECORATION',
+  SERVICES = 'SERVICES',
+  AUTRE = 'AUTRE'
+}

@@ -1,0 +1,70 @@
+<div class="form-container">
+    <form [formGroup]="businessForm" (ngSubmit)="onSubmit()">
+      <!-- Champ Nom -->
+      <div class="form-group">
+        <label>Nom</label>
+        <input 
+          type="text" 
+          formControlName="name"
+          placeholder="Entrez le nom"
+          class="form-control custom-input"
+          [class.is-invalid]="name.invalid && (name.dirty || name.touched)">
+        
+        <div *ngIf="name.invalid" class="invalid-feedback">
+          <div *ngIf="name.errors?.['required']">Le nom est obligatoire</div>
+          <div *ngIf="name.errors?.['minlength']">
+            Minimum 3 caractères (actuel : {{ name.errors?.['minlength']?.actualLength }})
+          </div>
+          <div *ngIf="name.errors?.['maxlength']">
+            Maximum 50 caractères (actuel : {{ name.errors?.['maxlength']?.actualLength }})
+          </div>
+        </div>
+      </div>
+  
+      <!-- Champ Description -->
+      <div class="form-group">
+        <label>Description</label>
+        <textarea 
+          formControlName="description"
+          placeholder="Entrez la description"
+          class="form-control custom-input"
+          [class.is-invalid]="description.invalid && (description.dirty || description.touched)"></textarea>
+        
+        <div *ngIf="description.invalid" class="invalid-feedback">
+          <div *ngIf="description.errors?.['required']">La description est obligatoire</div>
+          <div *ngIf="description.errors?.['minlength']">
+            Minimum 10 caractères (actuel : {{ description.errors?.['minlength']?.actualLength }})
+          </div>
+          <div *ngIf="description.errors?.['maxlength']">
+            Maximum 255 caractères (actuel : {{ description.errors?.['maxlength']?.actualLength }})
+          </div>
+        </div>
+      </div>
+  
+      <!-- Champ Catégorie -->
+      <div class="form-group">
+        <label>Catégorie</label>
+        <select 
+          formControlName="categorieBusiness"
+          class="form-control custom-input"
+          [class.is-invalid]="categorieBusiness.invalid && (categorieBusiness.dirty || categorieBusiness.touched)">
+          <option value="" disabled>Sélectionnez une catégorie</option>
+          <option *ngFor="let categorie of categories" [value]="categorie">
+            {{ categorie }}
+          </option>
+        </select>
+        
+        <div *ngIf="categorieBusiness.invalid" class="invalid-feedback">
+          La catégorie est obligatoire
+        </div>
+      </div>
+  
+      <button 
+        type="submit" 
+        class="btn btn-success w-100"
+        [disabled]="businessForm.invalid">
+        Ajouter
+      </button>
+    </form>
+  </div>
+  

@@ -1,0 +1,72 @@
+<!-- product-list.component.html -->
+<div class="bg0 m-t-23 p-b-140">
+    <div class="container">
+      <!-- Filtres et recherche (à adapter selon vos besoins) -->
+      <div class="flex-w flex-sb-m p-b-52">
+        <!-- ... conservez la structure des filtres ... -->
+      </div>
+  
+      <!-- Liste des produits -->
+      <div class="row isotope-grid">
+        <div *ngFor="let product of products" 
+             class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ">
+          <div class="block2">
+            <div class="block2-pic hov-img0">
+                <img src="assets/images/banner-01.jpg" 
+                [alt]="product?.name || 'Product image'"
+                class="img-responsive">
+                <!--<img [src]="product.image || 'assets/images/banner-01.jpg'" 
+                [alt]="product?.name || 'Product image'"
+                class="img-responsive">-->
+  
+              <a (click)="quickView(product)" 
+                 class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+                Quick View
+              </a>
+            </div>
+  
+            <div class="block2-txt flex-w flex-t p-t-14">
+              <div class="block2-txt-child1 flex-col-l">
+                <a routerLink="/products/{{product.idProduct}}" 
+                   class="stext-104 cl4 hov-cl1 trans-04 p-b-6">
+                  {{product.name}}
+                </a>
+                <span class="stext-105 cl3">
+                  {{product.price | currency:'USD':'symbol':'1.2-2'}}
+                </span>
+              </div>
+  
+              <div class="block2-txt-child2 flex-r p-t-3">
+                <a 
+                   class="btn-addwish-b2 dis-block pos-relative">
+                  <img class="icon-heart1 dis-block trans-04" 
+                       src="assets/images/icons/icon-heart-01.png" 
+                       alt="ICON">
+                  <img class="icon-heart2 dis-block trans-04 ab-t-l" 
+                       src="assets/images/icons/icon-heart-02.png" 
+                       alt="ICON">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- État vide -->
+      <div *ngIf="products.length === 0 && !isLoading" class="empty-state text-center p-t-50">
+        <mat-icon class="empty-icon">production_quantity_limits</mat-icon>
+        <h3 class="mtext-105 cl2 p-t-33">Aucun produit disponible</h3>
+      </div>
+  
+      <!-- Chargement -->
+      <div *ngIf="isLoading" class="text-center p-t-50">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+  
+      <!-- Erreur -->
+      <div *ngIf="errorMessage" class="text-center p-t-50">
+        <mat-icon>error_outline</mat-icon>
+        <p class="stext-102 cl6 p-t-10">{{errorMessage}}</p>
+      </div>
+    </div>
+  </div>

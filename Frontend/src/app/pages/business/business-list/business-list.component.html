@@ -1,0 +1,76 @@
+<div class="container dynamic-business-table">
+    <h2 class="table-title">📋 Liste des entreprises</h2>
+    
+    <div class="table-wrapper">
+      <div class="table-header">
+        <h3>Gestion des entreprises</h3>
+        <p>{{ businesses.length }} entreprises enregistrées</p>
+      </div>
+  
+      <div class="table-responsive">
+        <table class="business-table">
+          <thead>
+            <tr>
+              <th *ngFor="let column of columns" [class]="column.class">
+                {{ column.label }}
+              </th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            <tr *ngFor="let business of businesses; let i = index" 
+                [class.highlighted]="selectedRow === i"
+                (mouseenter)="selectedRow = i"
+                (mouseleave)="selectedRow = null">
+              
+              <td class="business-name">
+                {{ business.name }}
+              </td>
+              
+              <td>
+                <span class="category-badge" [ngClass]="getCategoryStyle(business.categorieBusiness)">
+                  {{ business.categorieBusiness }}
+                </span>
+              </td>
+              
+              <td class="business-description">
+                {{ business.description || 'Aucune description' }}
+              </td>
+              
+              <td class="actions">
+                <div class="action-buttons">
+                  <button class="btn-icon details" (click)="openDetailsDialog(business)" >
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn-icon delete"  (click)="deleteBusiness(business.idBusiness!)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                  <button class="btn-icon edit" >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            
+            <tr *ngIf="businesses.length === 0" class="no-results">
+              <td colspan="4">
+                <div class="empty-state">
+                  <i class="fas fa-building fa-3x"></i>
+                  <p>Aucune entreprise trouvée</p>
+                  <button class="btn-add" >
+                    <i class="fas fa-plus"></i> Ajouter une entreprise
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="table-footer" *ngIf="businesses.length > 0">
+        <div class="pagination-info">
+          Affichage de {{ businesses.length }} résultats
+        </div>
+      </div>
+    </div>
+  </div>

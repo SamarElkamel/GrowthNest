@@ -1,0 +1,520 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "OpenAPI definition",
+        "version": "v0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080/Growthnest",
+            "description": "Generated server url"
+        }
+    ],
+    "paths": {
+        "/business/updateBusiness": {
+            "put": {
+                "tags": [
+                    "gestion des business"
+                ],
+                "description": "modifier un business",
+                "operationId": "updateBusiness",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Business"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Business"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Products/updateProduct": {
+            "put": {
+                "tags": [
+                    "gestion des produits"
+                ],
+                "description": "modifier un produit",
+                "operationId": "UpdateProducts",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Products"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Products"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/business/addBusiness": {
+            "post": {
+                "tags": [
+                    "gestion des business"
+                ],
+                "description": "ajouter un business",
+                "operationId": "addBusiness",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Business"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Business"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "register",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/authenticate": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "authenticate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthenticationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Products/addProduct": {
+            "post": {
+                "tags": [
+                    "gestion des produits"
+                ],
+                "description": "ajouter un produit",
+                "operationId": "AddProducts",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Products"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Products"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/business/getBusinessById/{idB}": {
+            "get": {
+                "tags": [
+                    "gestion des business"
+                ],
+                "description": "afficher un business selon l'id ",
+                "operationId": "getBusinessById",
+                "parameters": [
+                    {
+                        "name": "idB",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Business"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/business/getAllBusiness": {
+            "get": {
+                "tags": [
+                    "gestion des business"
+                ],
+                "description": "afficher tous les business",
+                "operationId": "getAllBusiness",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Business"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/activate-account": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "confirm",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/Products/getProductById/{idP}": {
+            "get": {
+                "tags": [
+                    "gestion des produits"
+                ],
+                "description": "afficher un produit selon l'id",
+                "operationId": "GetProductById",
+                "parameters": [
+                    {
+                        "name": "idP",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Products"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Products/getAllProducts": {
+            "get": {
+                "tags": [
+                    "gestion des produits"
+                ],
+                "description": "afficher tous les produits",
+                "operationId": "GetAllProducts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Products"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/business/deleteBusiness/{idB}": {
+            "delete": {
+                "tags": [
+                    "gestion des business"
+                ],
+                "description": "supprimer un business",
+                "operationId": "deleteBusiness",
+                "parameters": [
+                    {
+                        "name": "idB",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/Products/deleteProduct/{idP}": {
+            "delete": {
+                "tags": [
+                    "gestion des produits"
+                ],
+                "description": "supprimer un produit",
+                "operationId": "deleteProductById",
+                "parameters": [
+                    {
+                        "name": "idP",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Business": {
+                "required": [
+                    "categorieBusiness",
+                    "description",
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "idBusiness": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "maxLength": 50,
+                        "minLength": 3,
+                        "type": "string"
+                    },
+                    "description": {
+                        "maxLength": 255,
+                        "minLength": 10,
+                        "type": "string"
+                    },
+                    "categorieBusiness": {
+                        "type": "string",
+                        "enum": [
+                            "CUISINE",
+                            "BIJOUX",
+                            "MODE",
+                            "ARTISANAT",
+                            "BEAUTÉ",
+                            "DÉCORATION",
+                            "SERVICES",
+                            "AUTRE"
+                        ]
+                    },
+                    "products": {
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Products"
+                        }
+                    }
+                }
+            },
+            "Products": {
+                "required": [
+                    "description",
+                    "name",
+                    "stock"
+                ],
+                "type": "object",
+                "properties": {
+                    "idProduct": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "maxLength": 30,
+                        "minLength": 2,
+                        "type": "string"
+                    },
+                    "description": {
+                        "maxLength": 500,
+                        "minLength": 10,
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "stock": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "business": {
+                        "$ref": "#/components/schemas/Business"
+                    }
+                }
+            },
+            "RegistrationRequest": {
+                "required": [
+                    "email",
+                    "firstName",
+                    "lastname",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "maxLength": 2147483647,
+                        "minLength": 8,
+                        "type": "string"
+                    }
+                }
+            },
+            "AuthenticationRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "maxLength": 2147483647,
+                        "minLength": 8,
+                        "type": "string"
+                    }
+                }
+            },
+            "AuthenticationResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
