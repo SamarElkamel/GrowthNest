@@ -8,13 +8,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Registration } from '../../models/registration';
+import { Event } from '../../models/event';
 
-export interface Display$Params {
+export interface DisplayEventHistory$Params {
 }
 
-export function display(http: HttpClient, rootUrl: string, params?: Display$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Registration>>> {
-  const rb = new RequestBuilder(rootUrl, display.PATH, 'get');
+export function displayEventHistory(http: HttpClient, rootUrl: string, params?: DisplayEventHistory$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Event>>> {
+  const rb = new RequestBuilder(rootUrl, displayEventHistory.PATH, 'get');
   if (params) {
   }
 
@@ -23,9 +23,9 @@ export function display(http: HttpClient, rootUrl: string, params?: Display$Para
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<Registration>>;
+      return r as StrictHttpResponse<Array<Event>>;
     })
   );
 }
 
-display.PATH = '/Registration/DisplayAllRegistration';
+displayEventHistory.PATH = '/Event/DisplayEventHistory';

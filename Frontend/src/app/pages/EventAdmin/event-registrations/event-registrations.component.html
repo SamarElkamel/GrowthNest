@@ -1,0 +1,52 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Event Registrations</h2>
+      <button class="btn btn-secondary" (click)="backToEvent()">
+        Back to Event
+      </button>
+    </div>
+  
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  
+    <div *ngIf="!loading && !error">
+      <div *ngIf="registrations.length === 0" class="alert alert-info">
+        No registrations found for this event.
+      </div>
+  
+      <div *ngIf="registrations.length > 0" class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>User</th>
+              <th>Reservation Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reg of registrations">
+              <td>
+                {{ reg.user?.firstname }}
+                <small class="text-muted d-block">{{ reg.user?.email }}</small>
+              </td>
+              <td>{{ reg.reservationDate | date:'medium' }}</td>
+              <td>
+                <span [ngClass]="{
+                  'badge bg-warning': reg.status === 'PENDING',
+                  'badge bg-success': reg.status === 'CONFIRMED',
+                  'badge bg-danger': reg.status === 'CANCELED'
+                }">
+                  {{ reg.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

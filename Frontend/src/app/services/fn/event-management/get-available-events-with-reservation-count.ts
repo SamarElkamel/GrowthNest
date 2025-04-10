@@ -8,13 +8,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Registration } from '../../models/registration';
+import { EventWithReservationCount } from '../../models/event-with-reservation-count';
 
-export interface Display$Params {
+export interface GetAvailableEventsWithReservationCount$Params {
 }
 
-export function display(http: HttpClient, rootUrl: string, params?: Display$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Registration>>> {
-  const rb = new RequestBuilder(rootUrl, display.PATH, 'get');
+export function getAvailableEventsWithReservationCount(http: HttpClient, rootUrl: string, params?: GetAvailableEventsWithReservationCount$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<EventWithReservationCount>>> {
+  const rb = new RequestBuilder(rootUrl, getAvailableEventsWithReservationCount.PATH, 'get');
   if (params) {
   }
 
@@ -23,9 +23,9 @@ export function display(http: HttpClient, rootUrl: string, params?: Display$Para
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<Registration>>;
+      return r as StrictHttpResponse<Array<EventWithReservationCount>>;
     })
   );
 }
 
-display.PATH = '/Registration/DisplayAllRegistration';
+getAvailableEventsWithReservationCount.PATH = '/Event/available';

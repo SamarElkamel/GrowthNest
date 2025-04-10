@@ -1,0 +1,35 @@
+<div class="container mt-4">
+    <h2>Add New Event</h2>
+    <div *ngIf="isLoading" class="alert alert-info">Adding event...</div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    <form (ngSubmit)="addEvent()" *ngIf="!isLoading">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" [(ngModel)]="event.title" name="title" required>
+      </div>
+      <div class="mb-3">
+        <label for="date" class="form-label">Date</label>
+        <input type="date" class="form-control" id="date" [(ngModel)]="event.date" name="date" required>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" [(ngModel)]="event.description" name="description"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input type="text" class="form-control" id="location" [(ngModel)]="event.location" name="location">
+      </div>
+      <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-select" id="status" [(ngModel)]="event.status" name="status">
+          <option value="PLANNED">Planned</option>
+          <option value="ONGOING">Ongoing</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="CANCELED">Canceled</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+        {{ isLoading ? 'Adding...' : 'Add Event' }}
+      </button>
+    </form>
+  </div>

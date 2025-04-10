@@ -1,0 +1,35 @@
+<div class="container mt-4">
+    <div *ngIf="isLoading" class="alert alert-info">Loading event details...</div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    <div *ngIf="event && !isLoading && !error">
+      <h2>{{ event.title }} Details</h2>
+      <div class="card">
+        <div class="card-body">
+          <p><strong>Date:</strong> {{ event.date }}</p>
+          <p><strong>Description:</strong> {{ event.description }}</p>
+          <p><strong>Location:</strong> {{ event.location }}</p>
+          <p><strong>Start Time:</strong> {{ event.startTime?.hour }}:{{ event.startTime?.minute }}</p>
+          <p><strong>End Time:</strong> {{ event.endTime?.hour }}:{{ event.endTime?.minute }}</p>
+          <p><strong>Status:</strong> {{ event.status }}</p>
+        </div>
+      </div>
+  
+      <h3 class="mt-4">Registrations</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Reservation Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reg of registrations">
+            <td>{{ reg.user?.username }}</td>
+            <td>{{ reg.reservationDate }}</td>
+            <td>{{ reg.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

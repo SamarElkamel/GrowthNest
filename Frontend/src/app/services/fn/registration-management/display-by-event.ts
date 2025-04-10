@@ -10,12 +10,14 @@ import { RequestBuilder } from '../../request-builder';
 
 import { Registration } from '../../models/registration';
 
-export interface Display$Params {
+export interface DisplayByEvent$Params {
+  eventId: number;
 }
 
-export function display(http: HttpClient, rootUrl: string, params?: Display$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Registration>>> {
-  const rb = new RequestBuilder(rootUrl, display.PATH, 'get');
+export function displayByEvent(http: HttpClient, rootUrl: string, params: DisplayByEvent$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Registration>>> {
+  const rb = new RequestBuilder(rootUrl, displayByEvent.PATH, 'get');
   if (params) {
+    rb.path('eventId', params.eventId, {});
   }
 
   return http.request(
@@ -28,4 +30,4 @@ export function display(http: HttpClient, rootUrl: string, params?: Display$Para
   );
 }
 
-display.PATH = '/Registration/DisplayAllRegistration';
+displayByEvent.PATH = '/Registration/DisplayByEvent/{eventId}';

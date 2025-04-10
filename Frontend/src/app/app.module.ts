@@ -23,14 +23,13 @@ import { SpinnerComponent } from 'src/app/BackOffice/shared/spinner.component';
 import { HomeComponent } from './FrontOffice/home/home.component';
 import { FooterComponent } from './FrontOffice/footer/footer.component';
 import { HeaderComponent } from 'src/app/FrontOffice/header/header.component';
-import { AddEventComponent } from './pages/Event/add-event/add-event.component';
-import { UpdateEventComponent } from './pages/Event/update-event/update-event.component';
-import { EventListComponent } from './pages/Event/display-all-event/display-all-event.component';
-import { EventDetailComponent } from './pages/Event/display-event-by-id/display-event-by-id.component';
-import { AddRegistrationComponent } from './pages/Reservation/add-reservation/add-reservation.component';
-import { UpdateRegistrationComponent } from './pages/Reservation/update-reservation/update-reservation.component';
-import { RegistrationListComponent } from './pages/Reservation/display-all-reservation/display-all-reservation.component';
-import { RegistrationDetailComponent } from './pages/Reservation/display-reservation-by-id/display-reservation-by-id.component';
+import { EventListComponent } from './pages/EventAdmin/event-list/event-list.component';
+import { EventDetailsComponent } from './pages/EventAdmin/event-details/event-details.component';
+import { EventHistoryComponent } from './pages/EventAdmin/event-history/event-history.component';
+import { EventRegistrationsComponent } from './pages/EventAdmin/event-registrations/event-registrations.component';
+import { EventAddComponent } from './pages/EventAdmin/add-event/add-event.component';
+import { EventUpdateComponent } from './pages/EventAdmin/update-event/update-event.component';
+
 
 
 
@@ -41,14 +40,14 @@ import { RegistrationDetailComponent } from './pages/Reservation/display-reserva
     HomeComponent,
     FooterComponent,
     HeaderComponent,
-    AddEventComponent,
-    UpdateEventComponent,
     EventListComponent,
-    EventDetailComponent,
-    AddRegistrationComponent,
-    UpdateRegistrationComponent,
-    RegistrationListComponent,
-    RegistrationDetailComponent,
+    EventDetailsComponent,
+    EventHistoryComponent,
+    EventRegistrationsComponent,
+    EventAddComponent,
+    EventUpdateComponent,
+    
+   
  
     
    

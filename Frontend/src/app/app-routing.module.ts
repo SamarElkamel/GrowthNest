@@ -2,15 +2,15 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { FullComponent } from 'src/app/layouts/full/full.component';
-import { EventListComponent } from './pages/Event/display-all-event/display-all-event.component';
-import { AddEventComponent } from './pages/Event/add-event/add-event.component';
-import { EventDetailComponent } from './pages/Event/display-event-by-id/display-event-by-id.component';
-import { UpdateEventComponent } from './pages/Event/update-event/update-event.component';
-import { RegistrationListComponent } from './pages/Reservation/display-all-reservation/display-all-reservation.component';
-import { AddRegistrationComponent } from './pages/Reservation/add-reservation/add-reservation.component';
-import { RegistrationDetailComponent } from './pages/Reservation/display-reservation-by-id/display-reservation-by-id.component';
-import { UpdateRegistrationComponent } from './pages/Reservation/update-reservation/update-reservation.component';
+
 import { HomeComponent } from './FrontOffice/home/home.component';
+import { EventListComponent } from './pages/EventAdmin/event-list/event-list.component';
+
+import { EventUpdateComponent } from './pages/EventAdmin/update-event/update-event.component';
+import { EventRegistrationsComponent } from './pages/EventAdmin/event-registrations/event-registrations.component';
+import { EventHistoryComponent } from './pages/EventAdmin/event-history/event-history.component';
+import { EventAddComponent } from './pages/EventAdmin/add-event/add-event.component';
+import { EventDetailsComponent } from './pages/EventAdmin/event-details/event-details.component';
 
 export const Approutes: Routes = [
   // Front Office Routes (Public)
@@ -38,13 +38,13 @@ export const Approutes: Routes = [
         loadChildren: () => import('src/app/BackOffice/component/component.module').then(m => m.ComponentsModule)
       },
       { path: 'events', component: EventListComponent },
-      { path: 'events/add', component: AddEventComponent },
-      { path: 'events/:id', component: EventDetailComponent },
-      { path: 'events/edit/:id', component: UpdateEventComponent },
-      { path: 'registrations', component: RegistrationListComponent },
-      { path: 'registrations/add', component: AddRegistrationComponent },
-      { path: 'registrations/:id', component: RegistrationDetailComponent },
-      { path: 'registrations/edit/:id', component: UpdateRegistrationComponent }
+      { path: 'events/add', component:EventAddComponent },
+      { path: 'events/history', component: EventHistoryComponent },
+      { path: 'events/:id', component: EventDetailsComponent},
+      { path: 'events/update/:id', component: EventUpdateComponent },
+      { path: 'events/registrations/:id', component: EventRegistrationsComponent },
+     
+    
     ]
   },
 

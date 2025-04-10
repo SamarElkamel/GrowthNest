@@ -218,6 +218,41 @@
                 }
             }
         },
+        "/Registration/user/{userId}": {
+            "get": {
+                "tags": [
+                    "Registration Management"
+                ],
+                "description": "Get user's reservation history",
+                "operationId": "getUserReservations",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Registration"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/Registration/DisplayRegistration/{idR}": {
             "get": {
                 "tags": [
@@ -250,6 +285,41 @@
                 }
             }
         },
+        "/Registration/DisplayByEvent/{eventId}": {
+            "get": {
+                "tags": [
+                    "Registration Management"
+                ],
+                "description": "Display Registrations By Event ID",
+                "operationId": "DisplayByEvent",
+                "parameters": [
+                    {
+                        "name": "eventId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Registration"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/Registration/DisplayAllRegistration": {
             "get": {
                 "tags": [
@@ -266,6 +336,54 @@
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/Registration"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Event/available": {
+            "get": {
+                "tags": [
+                    "Event Management"
+                ],
+                "description": "Get available events with reservation counts",
+                "operationId": "getAvailableEventsWithReservationCount",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventWithReservationCount"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Event/DisplayEventHistory": {
+            "get": {
+                "tags": [
+                    "Event Management"
+                ],
+                "description": "Display Event History (Canceled/Completed)",
+                "operationId": "DisplayEventHistory",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Event"
                                     }
                                 }
                             }
@@ -517,12 +635,6 @@
                     "name": {
                         "type": "string"
                     },
-                    "accountNonExpired": {
-                        "type": "boolean"
-                    },
-                    "credentialsNonExpired": {
-                        "type": "boolean"
-                    },
                     "username": {
                         "type": "string"
                     },
@@ -535,6 +647,12 @@
                     "lastModifiedDate": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "accountNonExpired": {
+                        "type": "boolean"
+                    },
+                    "credentialsNonExpired": {
+                        "type": "boolean"
                     },
                     "accountNonLocked": {
                         "type": "boolean"
@@ -588,6 +706,18 @@
                 "properties": {
                     "token": {
                         "type": "string"
+                    }
+                }
+            },
+            "EventWithReservationCount": {
+                "type": "object",
+                "properties": {
+                    "event": {
+                        "$ref": "#/components/schemas/Event"
+                    },
+                    "reservationCount": {
+                        "type": "integer",
+                        "format": "int64"
                     }
                 }
             }

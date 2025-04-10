@@ -5,6 +5,7 @@
 export { AuthenticationRequest } from './models/authentication-request';
 export { AuthenticationResponse } from './models/authentication-response';
 export { Event } from './models/event';
+export { EventWithReservationCount } from './models/event-with-reservation-count';
 export { GrantedAuthority } from './models/granted-authority';
 export { LocalTime } from './models/local-time';
 export { Registration } from './models/registration';

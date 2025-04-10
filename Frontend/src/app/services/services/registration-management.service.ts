@@ -17,8 +17,12 @@ import { deleteRegistration } from '../fn/registration-management/delete-registr
 import { DeleteRegistration$Params } from '../fn/registration-management/delete-registration';
 import { display } from '../fn/registration-management/display';
 import { Display$Params } from '../fn/registration-management/display';
+import { displayByEvent } from '../fn/registration-management/display-by-event';
+import { DisplayByEvent$Params } from '../fn/registration-management/display-by-event';
 import { displayRegistration } from '../fn/registration-management/display-registration';
 import { DisplayRegistration$Params } from '../fn/registration-management/display-registration';
+import { getUserReservations } from '../fn/registration-management/get-user-reservations';
+import { GetUserReservations$Params } from '../fn/registration-management/get-user-reservations';
 import { Registration } from '../models/registration';
 import { updateRegistration } from '../fn/registration-management/update-registration';
 import { UpdateRegistration$Params } from '../fn/registration-management/update-registration';
@@ -87,6 +91,35 @@ export class RegistrationManagementService extends BaseService {
     );
   }
 
+  /** Path part for operation `getUserReservations()` */
+  static readonly GetUserReservationsPath = '/Registration/user/{userId}';
+
+  /**
+   * Get user's reservation history
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getUserReservations()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUserReservations$Response(params: GetUserReservations$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Registration>>> {
+    return getUserReservations(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get user's reservation history
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getUserReservations$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUserReservations(params: GetUserReservations$Params, context?: HttpContext): Observable<Array<Registration>> {
+    return this.getUserReservations$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<Registration>>): Array<Registration> => r.body)
+    );
+  }
+
   /** Path part for operation `displayRegistration()` */
   static readonly DisplayRegistrationPath = '/Registration/DisplayRegistration/{idR}';
 
@@ -113,6 +146,35 @@ export class RegistrationManagementService extends BaseService {
   displayRegistration(params: DisplayRegistration$Params, context?: HttpContext): Observable<Registration> {
     return this.displayRegistration$Response(params, context).pipe(
       map((r: StrictHttpResponse<Registration>): Registration => r.body)
+    );
+  }
+
+  /** Path part for operation `displayByEvent()` */
+  static readonly DisplayByEventPath = '/Registration/DisplayByEvent/{eventId}';
+
+  /**
+   * Display Registrations By Event ID
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `displayByEvent()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  displayByEvent$Response(params: DisplayByEvent$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Registration>>> {
+    return displayByEvent(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Display Registrations By Event ID
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `displayByEvent$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  displayByEvent(params: DisplayByEvent$Params, context?: HttpContext): Observable<Array<Registration>> {
+    return this.displayByEvent$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<Registration>>): Array<Registration> => r.body)
     );
   }
 

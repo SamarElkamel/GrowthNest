@@ -17,7 +17,12 @@ import { display1 } from '../fn/event-management/display-1';
 import { Display1$Params } from '../fn/event-management/display-1';
 import { displayEvent } from '../fn/event-management/display-event';
 import { DisplayEvent$Params } from '../fn/event-management/display-event';
+import { displayEventHistory } from '../fn/event-management/display-event-history';
+import { DisplayEventHistory$Params } from '../fn/event-management/display-event-history';
 import { Event } from '../models/event';
+import { EventWithReservationCount } from '../models/event-with-reservation-count';
+import { getAvailableEventsWithReservationCount } from '../fn/event-management/get-available-events-with-reservation-count';
+import { GetAvailableEventsWithReservationCount$Params } from '../fn/event-management/get-available-events-with-reservation-count';
 import { updateEvent } from '../fn/event-management/update-event';
 import { UpdateEvent$Params } from '../fn/event-management/update-event';
 
@@ -85,6 +90,64 @@ export class EventManagementService extends BaseService {
     );
   }
 
+  /** Path part for operation `getAvailableEventsWithReservationCount()` */
+  static readonly GetAvailableEventsWithReservationCountPath = '/Event/available';
+
+  /**
+   * Get available events with reservation counts
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAvailableEventsWithReservationCount()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAvailableEventsWithReservationCount$Response(params?: GetAvailableEventsWithReservationCount$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<EventWithReservationCount>>> {
+    return getAvailableEventsWithReservationCount(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get available events with reservation counts
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAvailableEventsWithReservationCount$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAvailableEventsWithReservationCount(params?: GetAvailableEventsWithReservationCount$Params, context?: HttpContext): Observable<Array<EventWithReservationCount>> {
+    return this.getAvailableEventsWithReservationCount$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<EventWithReservationCount>>): Array<EventWithReservationCount> => r.body)
+    );
+  }
+
+  /** Path part for operation `displayEventHistory()` */
+  static readonly DisplayEventHistoryPath = '/Event/DisplayEventHistory';
+
+  /**
+   * Display Event History (Canceled/Completed)
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `displayEventHistory()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  displayEventHistory$Response(params?: DisplayEventHistory$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Event>>> {
+    return displayEventHistory(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Display Event History (Canceled/Completed)
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `displayEventHistory$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  displayEventHistory(params?: DisplayEventHistory$Params, context?: HttpContext): Observable<Array<Event>> {
+    return this.displayEventHistory$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<Event>>): Array<Event> => r.body)
+    );
+  }
+
   /** Path part for operation `displayEvent()` */
   static readonly DisplayEventPath = '/Event/DisplayEvent/{idE}';
 
@@ -142,9 +205,5 @@ export class EventManagementService extends BaseService {
       map((r: StrictHttpResponse<Array<Event>>): Array<Event> => r.body)
     );
   }
-  getAllEvents(): Observable<Event[]> {
-    return display1(this.http, this.rootUrl).pipe(
-      map((res: StrictHttpResponse<Event[]>) => res.body ?? [])
-    );
-  }
+
 }
