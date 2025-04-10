@@ -1,0 +1,168 @@
+// Color Variables
+$primary: #4361ee;
+$secondary: #6c757d;
+$success: #4cc9f0;
+$danger: #f72585;
+$light: #f8f9fa;
+$dark: #212529;
+$border-color: #e0e0e0;
+
+// Main Container
+.event-form-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+// Header Styles
+.form-header {
+  margin-bottom: 2rem;
+  text-align: center;
+  
+  h2 {
+    color: $primary;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+  }
+  
+  .subtitle {
+    color: rgba($dark, 0.6);
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+// Status Messages
+.status-message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  
+  &.loading {
+    background-color: rgba($primary, 0.1);
+    color: $primary;
+  }
+  
+  &.error {
+    background-color: rgba($danger, 0.1);
+    color: $danger;
+  }
+}
+
+// Form Styles
+.event-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $dark;
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+    
+    &::placeholder {
+      color: rgba($dark, 0.4);
+    }
+  }
+  
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Form Actions
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  
+  button {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-cancel {
+    background: white;
+    border: 1px solid $border-color;
+    color: $secondary;
+    
+    &:hover {
+      background: rgba($secondary, 0.05);
+    }
+  }
+  
+  .btn-submit {
+    background: $primary;
+    color: white;
+    border: none;
+    
+    &:hover:not(:disabled) {
+      background: darken($primary, 8%);
+      transform: translateY(-1px);
+    }
+    
+    &:disabled {
+      background: lighten($primary, 20%);
+      cursor: not-allowed;
+    }
+  }
+}
+// Back Button Styles
+.back-button {
+    background: none;
+    border: none;
+    color: $primary;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: darken($primary, 15%);
+      text-decoration: underline;
+    }
+    
+  }

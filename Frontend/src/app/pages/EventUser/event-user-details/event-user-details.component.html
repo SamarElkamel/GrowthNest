@@ -1,47 +1,183 @@
-<div class="container py-4">
-    <div *ngIf="isLoading" class="alert alert-info">Loading...</div>
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+<!-- Breadcrumb -->
+<div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+      <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
+        Home
+        <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+      </a>
   
-    <div *ngIf="!isLoading && event" class="card">
-      <div class="card-body">
-        <h2 class="card-title">{{ event.title }}</h2>
-        <p class="card-text">{{ event.description }}</p>
-        <p class="card-text">Date: {{ event.date }}</p>
-        <p class="card-text">Location: {{ event.location }}</p>
-        <p class="card-text">Status: {{ event.status }}</p>
+      <a href="/events" class="stext-109 cl8 hov-cl1 trans-04">
+        Events
+        <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+      </a>
   
-        <!-- Show "Add Reservation" button only if no reservation exists -->
-        <button 
-          *ngIf="!hasReservation" 
-          class="btn btn-primary" 
-          (click)="showAddReservationForm()"
-        >
-          Add Reservation
-        </button>
+      <span class="stext-109 cl4" *ngIf="event">
+        {{ event.title }}
+      </span>
+    </div>
+  </div>
   
-        <!-- Show "View Reservations" button if reservation exists -->
-        <button 
-          *ngIf="hasReservation" 
-          class="btn btn-info" 
-          (click)="goToReservations()"
-        >
-          View Your Reservations
-        </button>
+  <!-- Content page -->
+  <section class="bg0 p-t-52 p-b-20">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-lg-9 p-b-80">
+          <div class="p-r-45 p-r-0-lg">
+            <!-- Loading State -->
+            <div *ngIf="isLoading" class="text-center p-t-50 p-b-50">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <p class="mtext-112 cl2 p-t-20">Loading event details...</p>
+            </div>
+            
+            <!-- Error State -->
+            <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+              {{ error }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+  
+            <!-- Event Content -->
+            <div *ngIf="!isLoading && event">
+              <!-- Event Image -->
+              <div class="wrap-pic-w how-pos5-parent">
+                <img [src]="event.imageUrl || 'assets/images/aa.jpg'" 
+                     alt="IMG-EVENT" 
+                     class="img-fluid w-100"
+                     style="height: 400px; object-fit: cover;">
+  
+                <div class="flex-col-c-m size-123 bg9 how-pos5">
+                  <span class="ltext-107 cl2 txt-center">
+                    {{ event.date | date: 'dd' }}
+                  </span>
+                  <span class="stext-109 cl3 txt-center">
+                    {{ event.date | date: 'MMM yyyy' }}
+                  </span>
+                </div>
+              </div>
+  
+              <div class="p-t-32">
+                <!-- Event Meta -->
+                <span class="flex-w flex-m stext-111 cl2 p-b-19">
+                  <span>
+                    <i class="zmdi zmdi-pin mr-2"></i>
+                    {{ event.location || 'Location not specified' }}
+                    <span class="cl12 m-l-4 m-r-6">|</span>
+                  </span>
+                  <span>
+                    <i class="zmdi zmdi-time mr-2"></i>
+                    {{ event.date | date: 'mediumDate' }} at {{ event.date | date: 'shortTime' }}
+                    <span class="cl12 m-l-4 m-r-6">|</span>
+                  </span>
+                  <span>
+                    <i class="zmdi zmdi-label mr-2"></i>
+                    {{ event.status || 'Status not specified' }}
+                  </span>
+                </span>
+  
+                <!-- Event Title -->
+                <h4 class="ltext-109 cl2 p-b-28">
+                  {{ event.title }}
+                </h4>
+  
+                <!-- Event Description -->
+                <p class="stext-117 cl6 p-b-26" style="white-space: pre-line;">
+                  {{ event.description }}
+                </p>
+  
+                <!-- Reservation Buttons -->
+                <div class="flex-w flex-t p-t-30">
+                  <button *ngIf="!hasReservation" 
+                          class="flex-c-m stext-101 cl0 size-125 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-10"
+                          (click)="showAddReservationForm()">
+                    Add Reservation
+                  </button>
+  
+                  <button *ngIf="hasReservation" 
+                          class="flex-c-m stext-101 cl0 size-125 bg1 bor2 hov-btn1 p-lr-15 trans-04"
+                          (click)="goToReservations()">
+                    View Your Reservations
+                  </button>
+                </div>
+              </div>
+  
+              <!-- Notification -->
+              <div *ngIf="notification" 
+                   class="alert alert-warning alert-dismissible fade show mt-4" 
+                   role="alert">
+                {{ notification }}
+                <button type="button" class="close" (click)="notification = null">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+  
+              <!-- Add Reservation Form -->
+              <app-add-reservation 
+                *ngIf="showAddForm && event" 
+                [event]="event" 
+                (reservationAdded)="onReservationAdded()"
+              ></app-add-reservation>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Sidebar -->
+        <div class="col-md-4 col-lg-3 p-b-80">
+          <div class="side-menu">
+            <!-- Search -->
+            <div class="bor17 of-hidden pos-relative">
+              <input class="stext-103 cl2 plh4 size-116 p-l-28 p-r-55" 
+                     type="text" 
+                     placeholder="Search events...">
+              <button class="flex-c-m size-122 ab-t-r fs-18 cl4 hov-cl1 trans-04">
+                <i class="zmdi zmdi-search"></i>
+              </button>
+            </div>
+  
+            <!-- Categories -->
+            <div class="p-t-55">
+              <h4 class="mtext-112 cl2 p-b-33">Event Categories</h4>
+              <ul>
+                <li class="bor18">
+                  <a href="#" class="dis-block stext-115 cl6 hov-cl1 trans-04 p-tb-8 p-lr-4">
+                    Workshops
+                  </a>
+                </li>
+                <li class="bor18">
+                  <a href="#" class="dis-block stext-115 cl6 hov-cl1 trans-04 p-tb-8 p-lr-4">
+                    Seminars
+                  </a>
+                </li>
+                <li class="bor18">
+                  <a href="#" class="dis-block stext-115 cl6 hov-cl1 trans-04 p-tb-8 p-lr-4">
+                    Conferences
+                  </a>
+                </li>
+              </ul>
+            </div>
+  
+            <!-- Upcoming Events (Placeholder) -->
+            <div class="p-t-65">
+              <h4 class="mtext-112 cl2 p-b-33">Upcoming Events</h4>
+              <div class="flex-w flex-t p-b-30">
+                <div class="wrap-pic-w size-214 hov-ovelay1 m-r-20">
+                  <img src="assets/images/aa.jpg" alt="UPCOMING EVENT">
+                </div>
+                <div class="size-215 flex-col-t p-t-8">
+                  <a href="#" class="stext-116 cl8 hov-cl1 trans-04">
+                    Event Title
+                  </a>
+                  <span class="stext-116 cl6 p-t-4">
+                    <i class="zmdi zmdi-calendar mr-2"></i>
+                    Jan 01, 2023
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  
-    <div 
-      *ngIf="notification" 
-      class="alert alert-warning alert-dismissible fade show mt-3" 
-      role="alert"
-    >
-      {{ notification }}
-      <button type="button" class="btn-close" (click)="notification = null"></button>
-    </div>
-  
-    <app-add-reservation 
-      *ngIf="showAddForm && event" 
-      [event]="event!" 
-      (reservationAdded)="onReservationAdded()"
-    ></app-add-reservation>
-  </div>
+  </section>

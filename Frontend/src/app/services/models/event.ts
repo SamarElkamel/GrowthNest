@@ -15,4 +15,5 @@ export interface Event {
   startTime?: LocalTime;
   status?: 'PLANNED' | 'ONGOING' | 'COMPLETED' | 'CANCELED';
   title?: string;
+  imageUrl?: string; // Add this
 }

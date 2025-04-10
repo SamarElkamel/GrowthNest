@@ -1,35 +1,83 @@
-<div class="container mt-4">
-    <h2>Update Event</h2>
-    <div *ngIf="isLoading" class="alert alert-info">Loading event...</div>
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-    <form (ngSubmit)="updateEvent()" *ngIf="!isLoading && !error">
-      <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <input type="text" class="form-control" id="title" [(ngModel)]="event.title" name="title" required>
-      </div>
-      <div class="mb-3">
-        <label for="date" class="form-label">Date</label>
-        <input type="date" class="form-control" id="date" [(ngModel)]="event.date" name="date" required>
-      </div>
-      <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea class="form-control" id="description" [(ngModel)]="event.description" name="description"></textarea>
-      </div>
-      <div class="mb-3">
-        <label for="location" class="form-label">Location</label>
-        <input type="text" class="form-control" id="location" [(ngModel)]="event.location" name="location">
-      </div>
-      <div class="mb-3">
-        <label for="status" class="form-label">Status</label>
-        <select class="form-select" id="status" [(ngModel)]="event.status" name="status">
-          <option value="PLANNED">Planned</option>
-          <option value="ONGOING">Ongoing</option>
-          <option value="COMPLETED">Completed</option>
-          <option value="CANCELED">Canceled</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-success" [disabled]="isLoading">
-        {{ isLoading ? 'Updating...' : 'Update' }}
-      </button>
-    </form>
+<div class="glass-form-container">
+  <!-- Floating Header -->
+  <div class="form-header">
+    <button class="soft-back-btn" routerLink="/admin/events">
+      <span class="material-symbols-outlined"></span>
+      back
+    </button>
+    <h2 class="soft-glow">Update Event</h2>
+    <p class="soft-subtitle">Edit your event details</p>
   </div>
+
+  <!-- Status Indicators -->
+  <div *ngIf="isLoading" class="soft-status loading">
+    <div class="pulse-loader"></div>
+    <span>Updating event...</span>
+  </div>
+  <div *ngIf="error" class="soft-status error">
+    <span class="material-symbols-outlined">error</span>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- Glass Morphism Form -->
+  <form (ngSubmit)="updateEvent()" *ngIf="!isLoading && !error" class="glass-form">
+    <!-- Title Field -->
+    <div class="form-group">
+      <label>Event Title</label>
+      <div class="input-wrapper">
+        <input type="text" [(ngModel)]="event.title" name="title" required>
+        <div class="input-glow"></div>
+      </div>
+    </div>
+
+    <!-- Date/Status Row -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date</label>
+        <div class="input-wrapper">
+          <input type="date" [(ngModel)]="event.date" name="date" required>
+          <div class="input-glow"></div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Status</label>
+        <div class="input-wrapper">
+          <select [(ngModel)]="event.status" name="status">
+            <option value="PLANNED">Planned</option>
+            <option value="ONGOING">Ongoing</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELED">Canceled</option>
+          </select>
+          <div class="input-glow"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Location Field -->
+    <div class="form-group">
+      <label>Location</label>
+      <div class="input-wrapper">
+        <input type="text" [(ngModel)]="event.location" name="location">
+        <div class="input-glow"></div>
+      </div>
+    </div>
+
+    <!-- Description Field -->
+    <div class="form-group">
+      <label>Description</label>
+      <div class="input-wrapper">
+        <textarea [(ngModel)]="event.description" name="description" rows="4"></textarea>
+        <div class="input-glow"></div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="soft-submit-btn" [disabled]="isLoading">
+      <span class="btn-content">
+        {{ isLoading ? 'Updating...' : 'Confirm Changes' }}
+      </span>
+      <span class="btn-glow"></span>
+    </button>
+  </form>
+</div>

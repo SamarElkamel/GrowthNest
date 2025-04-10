@@ -1,35 +1,83 @@
-<div class="container mt-4">
-    <h2>Add New Event</h2>
-    <div *ngIf="isLoading" class="alert alert-info">Adding event...</div>
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-    <form (ngSubmit)="addEvent()" *ngIf="!isLoading">
-      <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <input type="text" class="form-control" id="title" [(ngModel)]="event.title" name="title" required>
+<div class="event-form-container">
+  <!-- Header with Back Button -->
+  <div class="form-header">
+    <button class="back-button" routerLink="/admin/events">
+      &larr; Back to Events
+    </button>
+    <h2>Create New Event</h2>
+    <p class="subtitle">Fill in the details to schedule a new event</p>
+  </div>
+
+  <!-- Status Messages -->
+  <div *ngIf="isLoading" class="status-message loading">
+    Saving your event...
+  </div>
+  <div *ngIf="error" class="status-message error">
+    {{ error }}
+  </div>
+
+  <!-- Event Form -->
+  <form (ngSubmit)="addEvent(form)" #form="ngForm" *ngIf="!isLoading" class="event-form">
+    <!-- Title Field -->
+    <div class="form-group">
+      <label for="title">Event Title</label>
+      <input type="text" id="title" [(ngModel)]="event.title" name="title" required 
+             placeholder="Enter event title" #title="ngModel">
+      <div *ngIf="title.invalid && (title.dirty || title.touched)" class="validation-error">
+        <div *ngIf="title.errors?.['required']">Event title is required</div>
       </div>
-      <div class="mb-3">
-        <label for="date" class="form-label">Date</label>
-        <input type="date" class="form-control" id="date" [(ngModel)]="event.date" name="date" required>
+    </div>
+
+    <!-- Date and Status Row -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" [(ngModel)]="event.date" name="date" required
+               [min]="minDate" (change)="validateDate()" #dateInput="ngModel">
+        <div *ngIf="dateError" class="validation-error">
+          {{ dateError }}
+        </div>
+        <div *ngIf="dateInput.invalid && (dateInput.dirty || dateInput.touched)" class="validation-error">
+          <div *ngIf="dateInput.errors?.['required']">Event date is required</div>
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea class="form-control" id="description" [(ngModel)]="event.description" name="description"></textarea>
-      </div>
-      <div class="mb-3">
-        <label for="location" class="form-label">Location</label>
-        <input type="text" class="form-control" id="location" [(ngModel)]="event.location" name="location">
-      </div>
-      <div class="mb-3">
-        <label for="status" class="form-label">Status</label>
-        <select class="form-select" id="status" [(ngModel)]="event.status" name="status">
+      
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" [(ngModel)]="event.status" name="status" required
+                (change)="validateStatus()" #statusSelect="ngModel">
           <option value="PLANNED">Planned</option>
           <option value="ONGOING">Ongoing</option>
           <option value="COMPLETED">Completed</option>
           <option value="CANCELED">Canceled</option>
         </select>
+        <div *ngIf="statusError" class="validation-error">
+          {{ statusError }}
+        </div>
+        <div *ngIf="statusSelect.invalid && (statusSelect.dirty || statusSelect.touched)" class="validation-error">
+          <div *ngIf="statusSelect.errors?.['required']">Status is required</div>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary" [disabled]="isLoading">
-        {{ isLoading ? 'Adding...' : 'Add Event' }}
+    </div>
+
+    <!-- Location Field -->
+    <div class="form-group">
+      <label for="location">Location</label>
+      <input type="text" id="location" [(ngModel)]="event.location" name="location" 
+             placeholder="Where will it take place?">
+    </div>
+
+    <!-- Description Field -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" [(ngModel)]="event.description" name="description" 
+                rows="4" placeholder="Tell attendees about the event..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit" [disabled]="isLoading || form.invalid || dateError || statusError">
+        {{ isLoading ? 'Creating Event...' : 'Create Event' }}
       </button>
-    </form>
-  </div>
+    </div>
+  </form>
+</div>

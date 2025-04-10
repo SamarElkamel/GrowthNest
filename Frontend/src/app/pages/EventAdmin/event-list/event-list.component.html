@@ -1,32 +1,59 @@
-<div class="container mt-4">
+<div class="event-management-container">
+  <!-- Header Section -->
+  <div class="management-header">
     <h2>Event Management</h2>
-    <div *ngIf="isLoading" class="alert alert-info">Loading events...</div>
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-    <table class="table table-striped" *ngIf="!isLoading && !error">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Date</th>
-          <th>Location</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let event of events">
-          <td>{{ event.title }}</td>
-          <td>{{ event.date }}</td>
-          <td>{{ event.location }}</td>
-          <td>{{ event.status }}</td>
-          <td>
-            <button class="btn btn-info btn-sm me-2" (click)="viewDetails(event.idEvent!)">Details</button>
-            <button class="btn btn-warning btn-sm" (click)="updateEvent(event)">Update</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="d-flex justify-content-between" *ngIf="!isLoading">
-      <button class="btn btn-primary" (click)="addEvent()">Add Event</button>
-      <button class="btn btn-secondary" (click)="viewHistory()">View History</button>
+  </div>
+
+  <!-- Action Buttons (separate line) -->
+  <div class="action-buttons">
+    <button class="btn-primary" (click)="addEvent()">Add Event</button>
+    <button class="btn-secondary" (click)="viewHistory()">View History</button>
+  </div>
+
+  <!-- Status Messages -->
+  <div *ngIf="isLoading" class="status-message loading">Loading events...</div>
+  <div *ngIf="error" class="status-message error">{{ error }}</div>
+
+  <!-- Events Table -->
+  <div class="card" *ngIf="!isLoading && !error">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of events">
+            <td class="event-title">{{ event.title }}</td>
+            <td>{{ event.date | date:'mediumDate' }}</td>
+            <td>{{ event.location }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="'status-' + event.status">
+                {{ event.status }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="btn-text info" (click)="viewDetails(event.idEvent!)">Details</button>
+              <button class="btn-text warning" (click)="updateEvent(event)">Update</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="!isLoading">
+    <ngb-pagination
+      [maxSize]="5"
+      [boundaryLinks]="true"
+      (pageChange)="loadEvents()"
+      aria-label="Event pagination"
+    ></ngb-pagination>
+  </div>
+</div>

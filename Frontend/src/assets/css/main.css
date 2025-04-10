@@ -210,14 +210,19 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 
 .header-v2 .container-menu-desktop {
   height: 84px;
+  color: white;
 }
 
 .header-v3 .container-menu-desktop {
   height: auto;
+  color: white;
+
 }
 
 .header-v4 .container-menu-desktop {
   height: 124px;
+  color: white;
+
 }
 
 
@@ -272,7 +277,8 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 .wrap-menu-desktop {
   position: fixed;
   z-index: 1100;
-  background-color: transparent;
+  background-color: white;
+  ;
   width: 100%;
   height: 84px;
   top: 40px;
