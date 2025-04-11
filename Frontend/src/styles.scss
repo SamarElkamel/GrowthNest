@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-@import '@fortawesome/fontawesome-free/css/all.css';ng
+@import '@fortawesome/fontawesome-free/css/all.css';
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
+:root {
+    --shadow-elevation-high: 0 16px 32px rgba(0, 0, 0, 0.1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }

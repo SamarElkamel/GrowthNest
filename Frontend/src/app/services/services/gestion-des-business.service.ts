@@ -4,8 +4,8 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -22,15 +22,18 @@ import { getBusinessById } from '../fn/gestion-des-business/get-business-by-id';
 import { GetBusinessById$Params } from '../fn/gestion-des-business/get-business-by-id';
 import { updateBusiness } from '../fn/gestion-des-business/update-business';
 import { UpdateBusiness$Params } from '../fn/gestion-des-business/update-business';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class GestionDesBusinessService extends BaseService {
   private refreshList$ = new Subject<void>();
-  constructor(config: ApiConfiguration, http: HttpClient) {
+  
+  constructor(config: ApiConfiguration, http: HttpClient,private router: Router) {
     super(config, http);
   }
 
   /** Path part for operation `updateBusiness()` */
+
   static readonly UpdateBusinessPath = '/business/updateBusiness';
 
   /**
@@ -58,7 +61,7 @@ export class GestionDesBusinessService extends BaseService {
       map((r: StrictHttpResponse<Business>): Business => r.body)
     );
   }
-
+private currentBusiness = new BehaviorSubject<Business | null>(null);
   /** Path part for operation `addBusiness()` */
   static readonly AddBusinessPath = '/business/addBusiness';
 
@@ -73,6 +76,16 @@ export class GestionDesBusinessService extends BaseService {
   addBusiness$Response(params: AddBusiness$Params, context?: HttpContext): Observable<StrictHttpResponse<Business>> {
     return addBusiness(this.http, this.rootUrl, params, context);
   }
+  
+  
+  // Ajoutez ces méthodes
+  getCurrentBusiness(): Observable<Business | null> {
+    return this.currentBusiness.asObservable();
+  }
+  
+  navigateToBusinessDetails(idBusiness: number): void {
+    this.router.navigate([`/admin/my-business/${idBusiness}`]);
+  }
 
   /**
    * ajouter un business
@@ -82,9 +95,21 @@ export class GestionDesBusinessService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addBusiness(params: AddBusiness$Params, context?: HttpContext): Observable<Business> {
+  /*addBusiness(params: AddBusiness$Params, context?: HttpContext): Observable<Business> {
     return this.addBusiness$Response(params, context).pipe(
       map((r: StrictHttpResponse<Business>): Business => r.body)
+    );
+  }*/
+  addBusiness(params: AddBusiness$Params): Observable<Business> {
+    return this.addBusiness$Response(params).pipe(
+      map((r: StrictHttpResponse<Business>) => r.body),
+      tap({
+        next: (newBusiness) => {
+          this.currentBusiness.next(newBusiness);
+          
+        },
+        error: (err) => console.error('Erreur création business:', err)
+      })
     );
   }
 
@@ -187,6 +212,7 @@ export class GestionDesBusinessService extends BaseService {
   getRefreshObservable(): Observable<void> {
     return this.refreshList$.asObservable();
   }
+
 
 
 }

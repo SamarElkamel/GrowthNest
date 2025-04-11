@@ -177,7 +177,7 @@ export class GestionDesProduitsService extends BaseService {
     );
   }
   // Nouveaux paths
-static readonly AddBusinessProductPath = '/business/{businessId}/products';
+static readonly AddBusinessProductPath = '/Products/business/{businessId}';
 static readonly GetProductsByBusinessPath =  '/Products/business/{businessId}';
 
 /**

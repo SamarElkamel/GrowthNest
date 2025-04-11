@@ -1,64 +1,66 @@
-<div class="container">
-    <h4 class="font-medium mb-4">Liste des entreprises</h4>
-  
-    <!-- Grid des entreprises -->
-    <div class="row">
-      <!-- Carte Entreprise -->
-      <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto" *ngFor="let business of businesses">
-        <div class="block1 wrap-pic-w card h-100 shadow-sm parallax100">
-          <img src="assets/images/banner-01.jpg"
-               class="card-img-top"
-               alt="Business Image"
-               style="height: 200px; object-fit: cover;">
-  
-          <div class="card-body d-flex flex-column">
-            <div class="flex-grow-1">
-              <h5 class="card-title ltext-102 mb-3 js-name-b2">
-                {{ business.name }}
-              </h5>
-  
-              <div class="d-flex align-items-center mb-2">
-                <span class="badge bg-info me-2">
-                  {{ business.categorieBusiness || 'Non catégorisé' }}
-                </span>
-              </div>
-  
-              <p class="card-text text-dark mb-4">
-                {{ business.description || 'Aucune description disponible' }}
-              </p>
-            </div>
-  
-            <!-- Action Détails -->
-            <div class="d-grid mt-auto">
-              <button class="btn btn-outline-primary btn-sm js-addwish-b2">
-                <i class="fas fa-eye me-2"></i>Ajouter à la wishlist
-              </button>
-              <button class="btn btn-outline-secondary btn-sm mt-2"
-                      [routerLink]="['/business-details', business.idBusiness]">
-                <i class="fas fa-info-circle me-2"></i>Détails
-              </button>
-              <div class="footer">
-                <button mat-raised-button 
-                        color="primary"
-                        (click)="viewProducts(business.idBusiness)"
-                        class="view-products-btn">
-                  <mat-icon>visibility</mat-icon>
-                  Voir les produits
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Message si aucune entreprise -->
-      <div class="col-12" *ngIf="businesses.length === 0">
-        <div class="text-center py-5 bg-light rounded-3">
-          <i class="fas fa-building fa-3x text-info mb-3"></i>
-          <h4 class="text-info mb-3">Aucune entreprise disponible</h4>
-          <p class="text-muted">Commencez par ajouter votre première entreprise</p>
-        </div>
+<!-- HTML -->
+<div class="business-list-container">
+  <!-- Hero Banner -->
+  <div class="hero-banner parallax" style="background-image: url('assets/images/banner-10.jpg');">
+    <div class="banner-overlay">
+      <div class="banner-content">
+        <h1 class="banner-title">Découvrez nos entreprises partenaires</h1>
+        <p class="banner-subtitle">Des professionnels à votre service</p>
       </div>
     </div>
   </div>
-  
+
+  <!-- Business Grid -->
+  <div class="container business-grid">
+    <h2 class="section-title">Liste des entreprises</h2>
+    
+    <div class="grid">
+      <div class="business-card" *ngFor="let business of businesses">
+        <div class="card-header">
+          <img src="assets/images/banner-07.jpg" 
+               alt="{{ business.name }}"
+               class="business-image">
+          <div class="business-category">{{ business.categorieBusiness || 'Général' }}</div>
+        </div>
+
+        <div class="card-body">
+          <h3 class="business-name">{{ business.name }}</h3>
+          
+          <div class="rating">
+            <mat-icon *ngFor="let star of [1,2,3,4,5]" 
+                      [class.filled]="star <= 4">
+              {{ star <= 4 ? 'star' : 'star_border' }}
+            </mat-icon>
+          </div>
+
+          <p class="business-description">
+            {{ business.description || 'Description non disponible' }}
+          </p>
+        </div>
+
+        <div class="card-actions">
+          <button mat-stroked-button 
+                  color="primary"
+                  [routerLink]="['/business-details', business.idBusiness]">
+            <mat-icon>info</mat-icon>
+            Détails
+          </button>
+          
+          <button mat-raised-button 
+                  color="accent"
+                  (click)="viewProducts(business.idBusiness)">
+            <mat-icon>storefront</mat-icon>
+            Voir produits
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="businesses.length === 0">
+      <mat-icon class="empty-icon">business</mat-icon>
+      <h3>Aucune entreprise disponible</h3>
+      <p>Revenez plus tard pour découvrir nos nouvelles partenaires</p>
+    </div>
+  </div>
+</div>

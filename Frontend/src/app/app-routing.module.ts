@@ -7,6 +7,7 @@ import { AddBusinessComponent } from './pages/business/add-business/add-business
 import { HomeComponent } from './FrontOffice/home/home.component';
 import { BusinessListFrontComponent } from './pages/business/business-list-front/business-list-front.component';
 import { BusinessproductsComponent } from './pages/products/businessproducts/businessproducts.component';
+import { BusinessDetailBComponent } from './pages/business/business-detail-b/business-detail-b.component';
 
 export const Approutes: Routes = [
 
@@ -32,8 +33,12 @@ export const Approutes: Routes = [
       component: FullComponent,
     children: [
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-
-      {
+      { 
+        path: 'my-business/:idBusiness', 
+        component: BusinessDetailBComponent
+        
+      },
+      
         path: 'dashboard',
         loadChildren: () => import('./backoffice/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
@@ -47,7 +52,9 @@ export const Approutes: Routes = [
       },
       { path: 'listBusiness', component: BusinessListComponent },
       { path: 'businesses/add', component: AddBusinessComponent },
+     
     ]
+    
   },
   {
     path: '**',

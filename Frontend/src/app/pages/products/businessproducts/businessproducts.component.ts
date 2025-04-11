@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Products } from 'src/app/services/models';
 import { GestionDesProduitsService } from 'src/app/services/services/gestion-des-produits.service';
+import { QuickViewProductFComponent } from '../quick-view-product-f/quick-view-product-f.component';
 
 @Component({
   selector: 'app-businessproducts',
@@ -15,7 +17,8 @@ export class BusinessproductsComponent {
   errorMessage?: string;
   constructor(
     private route: ActivatedRoute,
-    private produitsService: GestionDesProduitsService
+    private produitsService: GestionDesProduitsService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -44,8 +47,15 @@ export class BusinessproductsComponent {
       // Implémentez la logique d'ajout au panier
     }
   
-    quickView(product: Products) {
-      // Implémentez la modal de visualisation rapide
+    openQuickView(product: Products) {
+      if (product.idProduct) {
+        this.dialog.open(QuickViewProductFComponent, {
+          data: { productId: product.idProduct },
+          width: '800px',
+          panelClass: 'quick-view-dialog'
+        });
+      }
     }
+    
 
 }

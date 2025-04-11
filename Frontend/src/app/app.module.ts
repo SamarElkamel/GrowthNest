@@ -34,7 +34,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BusinessproductsComponent } from './pages/products/businessproducts/businessproducts.component';
-
+import { QuickViewProductFComponent } from './pages/products/quick-view-product-f/quick-view-product-f.component';
+import { BusinessDetailBComponent } from './pages/business/business-detail-b/business-detail-b.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,6 +50,8 @@ import { BusinessproductsComponent } from './pages/products/businessproducts/bus
     HeaderComponent,
     BusinessDetailCardComponent,
     BusinessproductsComponent,
+    QuickViewProductFComponent,
+    BusinessDetailBComponent,
   
   ],
   imports: [
@@ -69,6 +73,7 @@ import { BusinessproductsComponent } from './pages/products/businessproducts/bus
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule
   
   ],
   providers: [

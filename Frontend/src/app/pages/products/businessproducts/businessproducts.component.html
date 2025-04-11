@@ -1,3 +1,14 @@
+<div class="business-list-container">
+  <!-- Hero Banner -->
+  <div class="hero-banner parallax" style="background-image: url('assets/images/banner-10.jpg');">
+    <div class="banner-overlay">
+      <div class="banner-content">
+        <h1 class="banner-title">Découvrez nos entreprises partenaires</h1>
+        <p class="banner-subtitle">Des professionnels à votre service</p>
+      </div>
+    </div>
+  </div>
+
 <!-- product-list.component.html -->
 <div class="bg0 m-t-23 p-b-140">
     <div class="container">
@@ -19,7 +30,7 @@
                 [alt]="product?.name || 'Product image'"
                 class="img-responsive">-->
   
-              <a (click)="quickView(product)" 
+              <a (click)="openQuickView(product)" 
                  class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
                 Quick View
               </a>

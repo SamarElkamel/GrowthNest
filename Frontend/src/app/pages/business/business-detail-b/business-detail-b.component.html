@@ -1,0 +1,25 @@
+<!-- business-details.component.html -->
+<div *ngIf="business" class="business-details">
+    <div class="business-details__header">
+      <h2 class="business-details__title">{{ business.name }}</h2>
+      <button class="business-details__edit-btn" mat-raised-button color="accent" 
+              routerLink="/update-business/{{business.idBusiness}}">
+        <mat-icon>edit</mat-icon>
+        Modifier
+      </button>
+    </div>
+  
+    <p class="business-details__description">{{ business.description }}</p>
+    <span class="business-details__category mat-elevation-z1">
+        {{ business.categorieBusiness }}
+      </span>
+
+  
+    <div class="business-details__actions">
+      <button class="business-details__action-btn" mat-raised-button color="primary" 
+              routerLink="/add-product/{{business.idBusiness}}">
+        <mat-icon>add_circle</mat-icon>
+        Ajouter des produits
+      </button>
+    </div>
+  </div>

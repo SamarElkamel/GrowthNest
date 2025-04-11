@@ -32,4 +32,4 @@ export function addBusinessProduct(
   );
 }
 
-addBusinessProduct.PATH = '/business/{businessId}/products';
+addBusinessProduct.PATH = '/Products/business/{businessId}';

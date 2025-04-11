@@ -21,7 +21,11 @@ export function getProductById(http: HttpClient, rootUrl: string, params: GetPro
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ 
+      responseType: 'json', // ← Changé de 'blob' à 'json'
+      accept: 'application/json', // ← Spécifier le type attendu
+      context 
+    })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
