@@ -1,7 +1,9 @@
 package tn.esprit.growthnestback.Services;
 
 import tn.esprit.growthnestback.Entities.OrderDetails;
+import tn.esprit.growthnestback.dto.OrderResponseDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IOrderDetailsService {
@@ -11,4 +13,5 @@ public interface IOrderDetailsService {
     OrderDetails getOrderDetail(Long id);
     List<OrderDetails> getAllOrderDetails();
     List<OrderDetails> getOrderDetailsByOrderId(Long orderId);
-}
+
+    }

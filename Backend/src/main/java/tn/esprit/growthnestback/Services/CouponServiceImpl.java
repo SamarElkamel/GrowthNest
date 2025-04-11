@@ -11,8 +11,11 @@ import tn.esprit.growthnestback.Entities.User;
 import tn.esprit.growthnestback.Repository.CouponRepository;
 import tn.esprit.growthnestback.Repository.ProductRepository;
 import tn.esprit.growthnestback.Repository.UserRepository;
+import tn.esprit.growthnestback.dto.CouponAnalyticsDTO;
+import tn.esprit.growthnestback.dto.CouponsResponseDTO;
 import tn.esprit.growthnestback.dto.CreateCouponRequestDTO;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -72,5 +75,59 @@ public class CouponServiceImpl implements ICouponService{
             System.out.println("✅ No expired coupons to deactivate at this time.");
         }
     }
+    @Override
+    public List<CouponsResponseDTO> getAllCoupons() {
+        return couponRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
 
+    @Override
+    public void toggleCoupon(Long id) {
+        Coupons coupon = couponRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Coupon not found"));
+        coupon.setActive(!coupon.isActive());
+        couponRepository.save(coupon);
+    }
+
+    @Override
+    public void deleteCoupon(Long id) {
+        couponRepository.deleteById(id);
+    }
+
+    private CouponsResponseDTO mapToResponse(Coupons coupon) {
+        return new CouponsResponseDTO(
+                coupon.getId(),
+                coupon.getCode(),
+                coupon.getDiscountPercentage(),
+                coupon.getExpiryDate(),
+                coupon.isActive(),
+                coupon.isGlobal(),
+                coupon.getOwner().getName(),
+                coupon.getMaxUses(),
+                coupon.getUsageCount(),
+                coupon.getApplicableProducts().stream()
+                        .map(Product::getName)
+                        .toList()
+        );
+    }
+    @Override
+    public List<Coupons> findAll() {
+        return couponRepository.findAll();
+    }
+    public CouponAnalyticsDTO mapToAnalyticsDTO(Coupons coupon) {
+        return new CouponAnalyticsDTO(
+                coupon.getCode(),
+                coupon.getUsageCount(),
+                coupon.getMaxUses(),
+                coupon.getMaxUses() - coupon.getUsageCount(),
+                coupon.getExpiryDate().isBefore(LocalDateTime.now())
+        );
+    }
+    @Override
+    public List<CouponAnalyticsDTO> getAnalytics() {
+        return couponRepository.findAll().stream()
+                .map(this::mapToAnalyticsDTO)
+                .toList();
+    }
 }

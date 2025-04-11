@@ -16,6 +16,8 @@ import tn.esprit.growthnestback.dto.OrderItemDTO;
 import tn.esprit.growthnestback.dto.OrderResponseDTO;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -146,5 +148,41 @@ public class OrderServiceImp implements IOrderService {
                 cart.getDiscountAmount() != null ? cart.getDiscountAmount() : 0.0
         );
     }
+    @Override
+    public List<OrderResponseDTO> getAllOrdersAsAdmin(String status, Long userId, LocalDate fromDate, LocalDate toDate) {
+        return orderRepository.findAll().stream()
+                .filter(order -> status == null || order.getStatus().name().equalsIgnoreCase(status))
+                .filter(order -> userId == null || order.getUser().getId().equals(userId))
+                .filter(order -> {
+                    if (fromDate != null && toDate != null) {
+                        LocalDate orderDate = order.getOrderDate().toLocalDate();
+                        return (orderDate.isEqual(fromDate) || orderDate.isAfter(fromDate)) &&
+                                (orderDate.isEqual(toDate) || orderDate.isBefore(toDate));
+                    }
+                    return true;
+                })
+                .map(this::mapOrderToDTO)
+                .toList();
+    }
+    @Override
+    @Transactional
+    public void updateStatus(Long orderId, String newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        order.setStatus(OrderStatus.valueOf(newStatus));
+        System.out.println("Updating order ID " + orderId + " to status " + newStatus);
+
+        orderRepository.save(order);
+    }
+
+    @Override
+    public List<OrderResponseDTO> getFilteredOrders(OrderStatus status, LocalDateTime start, LocalDateTime end) {
+        List<Order> filteredOrders = orderRepository.findFilteredOrders(status, start, end);
+        return filteredOrders.stream()
+                .map(this::mapOrderToDTO)
+                .toList();
+    }
+
+
 
 }

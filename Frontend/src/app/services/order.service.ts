@@ -19,10 +19,10 @@ export class OrderService {
     if (fromDate) params = params.set('fromDate', fromDate);
     if (toDate) params = params.set('toDate', toDate);
 
-    return this.http.get<OrderResponse[]>(`${this.baseUrl}/admin/orders`, { params });
+    return this.http.get<OrderResponse[]>(`${this.baseUrl}/admin`, { params });
   }
   getFilteredOrders(params: any): Observable<OrderResponse[]> {
-    return this.http.get<OrderResponse[]>(`${this.baseUrl}/admin/filtersOrders`, { params });
+    return this.http.get<OrderResponse[]>(`${this.baseUrl}/admin/orders`, { params });
   }
   updateOrderStatus(orderId: number, status: string): Observable<any> {
     return this.http.patch(`${this.baseUrl}/admin/orders/${orderId}/status`, { status });

@@ -30,7 +30,7 @@ import { OrderDetailsModalComponent } from './order-details-modals/order-details
     TableComponent
   ],
   declarations: [
-    OrderDetailsModalComponent
+    
   ],
 })
 export class ComponentsModule { }

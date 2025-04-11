@@ -21,4 +21,11 @@ export interface Coupon {
     maxUses: number;
     usageCount?: number;
   }
+  export interface CouponAnalytics {
+    code: string;
+    countUsers: number;
+    maxUses: number;
+    remainingUses: number;
+    expired: boolean;
+  }
   

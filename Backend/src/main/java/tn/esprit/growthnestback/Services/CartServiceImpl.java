@@ -251,6 +251,17 @@ public class CartServiceImpl implements ICartService {
 
         return mapOrderToDTO(cart);
     }
+    public OrderResponseDTO checkoutCartUser(Long userId, String deliveryAddress, String paymentMethod) {
+        Order cart = orderRepository.findByUserIdAndStatus(userId, OrderStatus.CART)
+                .orElseThrow(() -> new EntityNotFoundException("No active cart to checkout"));
+
+        cart.setStatus(OrderStatus.PENDING);
+        cart.setDeliveryAddress(deliveryAddress);
+        cart.setPaymentMethod(paymentMethod);
+
+        orderRepository.save(cart);
+        return mapOrderToDTO(cart);
+    }
 
 }
 

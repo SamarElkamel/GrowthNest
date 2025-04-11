@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Coupon } from 'src/app/models/coupons.mode';
+import { Coupon, CouponAnalytics } from 'src/app/models/coupons.mode';
 import { CouponService } from 'src/app/services/coupon.service';
 
 @Component({
@@ -9,13 +9,24 @@ import { CouponService } from 'src/app/services/coupon.service';
 })
 export class CouponListComponent implements OnInit {
   coupons: Coupon[] = [];
-
+  analyticsList: CouponAnalytics[] = [];
   constructor(private couponService: CouponService) {}
 
   ngOnInit(): void {
     this.loadCoupons();
-  }
+    this.fetchCouponAnalytics();
 
+  }
+  fetchCouponAnalytics() {
+    this.couponService.getCouponAnalytics().subscribe({
+      next: (data) => {
+        this.analyticsList = data;
+      },
+      error: (err) => {
+        console.error('Error fetching analytics', err);
+      }
+    });
+  }
   loadCoupons() {
     this.couponService.getAll().subscribe(res => this.coupons = res);
   }

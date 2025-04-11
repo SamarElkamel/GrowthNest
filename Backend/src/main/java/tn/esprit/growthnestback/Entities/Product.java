@@ -14,7 +14,7 @@ public class Product {
 
     private String name;
     private BigDecimal price;
-
+    private int stock;
     public Long getId() {
         return id;
     }
@@ -47,5 +47,5 @@ public class Product {
         this.stock = stock;
     }
 
-    private int stock;
+
 }

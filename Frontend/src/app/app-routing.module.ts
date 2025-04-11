@@ -7,6 +7,8 @@ import { CouponFormComponent } from './pages/Orders/coupon-form/coupon-form.comp
 import { HomeComponent } from './FrontOffice/home/home.component';
 import { FrontLayoutComponent } from './layouts/front-layout/front-layout.component';
 import { BackLayoutComponent } from './layouts/back-layout/back-layout.component';
+import { CartPageComponent } from './pages/cart-page/cart-page.component';
+import { ProduitsComponent } from './pages/produits/produits.component';
 
 export const Approutes: Routes = [
   // FrontOffice layout
@@ -14,7 +16,13 @@ export const Approutes: Routes = [
     path: '',
     component: FrontLayoutComponent,
     children: [
-      { path: '', component: HomeComponent }, // public home
+      { path: '', component: HomeComponent }, 
+      { path: '', component: HomeComponent },
+      { path: 'cart', component: CartPageComponent },
+      {path: 'produits', component: ProduitsComponent},
+
+
+      // public home
       //{ path: 'about', loadChildren: () => import('./FrontOffice/about/about.module').then(m => m.AboutModule) },
       // add other public-facing modules here
     ]
@@ -36,7 +44,7 @@ export const Approutes: Routes = [
       },
       { path: 'orders', component: OrderListComponent },
       { path: 'coupon', component: CouponListComponent },
-      { path: 'couponForm', component: CouponFormComponent }
+      { path: 'coupons/create', component: CouponFormComponent },
     ]
   },
 

@@ -11,4 +11,5 @@ public interface CouponRepository extends JpaRepository<Coupons, Long> {
     Optional<Coupons> findByCodeIgnoreCase (String code);
     List<Coupons> findAllByActiveTrueAndExpiryDateBefore(LocalDateTime now);
 
+     List<Coupons> findAll();
 }

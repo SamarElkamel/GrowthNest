@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.growthnestback.Services.CartServiceImpl;
-import tn.esprit.growthnestback.dto.CreateOrderRequestDTO;
-import tn.esprit.growthnestback.dto.OrderResponseDTO;
+import tn.esprit.growthnestback.dto.*;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -32,26 +31,24 @@ public class CartRestController {
     // Update quantity of a specific product
     @PatchMapping("/item/{productId}")
     public ResponseEntity<OrderResponseDTO> updateItemQuantity(
-            @RequestParam Long userId,
             @PathVariable Long productId,
-            @RequestParam int quantity
-    ) {
-        return ResponseEntity.ok(cartService.updateItemQuantity(userId, productId, quantity));
+            @RequestBody UpdateItemDTO request    ) {
+        return ResponseEntity.ok(cartService.updateItemQuantity(request.userId(), productId, request.quantity() ));
     }
 
     // Remove item from cart
     @DeleteMapping("/item/{productId}")
     public ResponseEntity<OrderResponseDTO> removeItemFromCart(
-            @RequestParam Long userId,
+            @RequestBody CartUserDTO request ,
             @PathVariable Long productId
     ) {
-        return ResponseEntity.ok(cartService.removeItemFromCart(userId, productId));
+        return ResponseEntity.ok(cartService.removeItemFromCart(request.userId(), productId));
     }
 
     // Cancel entire cart
     @DeleteMapping
-    public ResponseEntity<Void> cancelCart(@RequestParam Long userId) {
-        cartService.cancelCart(userId);
+    public ResponseEntity<Void> cancelCart(@RequestBody CartUserDTO request) {
+        cartService.cancelCart(request.userId());
         return ResponseEntity.noContent().build();
     }
 
@@ -62,10 +59,18 @@ public class CartRestController {
     }
     @PostMapping("/apply-coupon")
     public ResponseEntity<OrderResponseDTO> applyCouponToCart(
-            @RequestParam Long userId,
-            @RequestParam String code
+            @RequestBody ApplyCouponDTO request
+
     ) {
-        return ResponseEntity.ok(cartService.applyCouponToCart(userId, code));
+        return ResponseEntity.ok(cartService.applyCouponToCart(request.userId(), request.couponCode()));
+    }
+    @PostMapping("/checkoutUser")
+    public ResponseEntity<OrderResponseDTO> checkoutCartUser(@RequestBody CheckoutDTO request) {
+        return ResponseEntity.ok(cartService.checkoutCartUser(
+                request.userId(),
+                request.deliveryAddress(),
+                request.paymentMethod()
+        ));
     }
 
 }
