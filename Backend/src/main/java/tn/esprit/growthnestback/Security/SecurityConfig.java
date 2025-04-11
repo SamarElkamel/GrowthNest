@@ -53,7 +53,7 @@ public class SecurityConfig {
                                         "/Growthnest/api/reacts/**"
 
                                 ).permitAll()
-                                .requestMatchers("/post/addPost").authenticated()
+                                .requestMatchers("/Growthnest/post/addPost").hasAnyRole("USER", "ADMIN")
                                 .anyRequest().authenticated()
                 )
 

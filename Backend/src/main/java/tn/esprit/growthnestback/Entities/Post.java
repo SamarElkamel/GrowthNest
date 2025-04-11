@@ -34,9 +34,9 @@ public class Post {
     }
     boolean validated = false;
     @Column(nullable = true)
-    String videoUrl;
+    String video;
     @Column(nullable = true)
-    String imageUrl;
+    String image;
 
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)

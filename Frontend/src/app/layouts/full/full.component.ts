@@ -2,8 +2,9 @@ import { CommonModule } from "@angular/common";
 import { Component, OnInit, HostListener } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
 import { NgbCollapseModule } from "@ng-bootstrap/ng-bootstrap";
-import { NavigationComponent } from "src/app/shared/header/navigation.component";
-import { SidebarComponent } from "src/app/shared/sidebar/sidebar.component";
+import { NavigationComponent } from "src/app/backoffice/shared/header/navigation.component";
+import { SidebarComponent } from "src/app/backoffice/shared/sidebar/sidebar.component";
+
 
 //declare var $: any;
 
@@ -36,7 +37,7 @@ export class FullComponent implements OnInit {
     this.handleSidebar();
   }
 
-  @HostListener("window:resize", ["$event"])
+  @HostListener("window:resize", ["$post"])
   onResize() {
     this.handleSidebar();
   }

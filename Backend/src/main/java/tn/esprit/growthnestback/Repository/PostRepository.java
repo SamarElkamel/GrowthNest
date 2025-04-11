@@ -10,6 +10,9 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    List<Post> findPostsByTags(Tags tags);
+
+    List<Post> findByTags(Tags tag);
+    List<Post> findByValidatedTrue();
+    List<Post> findByValidatedFalse();
 
 }
