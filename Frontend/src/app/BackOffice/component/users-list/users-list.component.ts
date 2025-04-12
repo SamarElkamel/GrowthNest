@@ -13,10 +13,10 @@ export class UserListComponent implements OnInit {
   displayedUsers: User[] = []; 
 
   roles = [
-    { name: 'User' },
-    { name: 'Business Owner' },
-    { name: 'Marketing Agent' },
-  ]; // Hardcoded roles, replace with your actual data source.
+    { name: 'USER' },
+    { name: 'BuisnessOwner' },
+    { name: 'MarketingAgent' },
+  ]; 
 
   query: string = '';
   itemsPerPage: number = 3; 
@@ -95,21 +95,21 @@ export class UserListComponent implements OnInit {
   onFilterChange(): void {
     let filteredUsers = this.usersInitiaux;
 
-    // Filter based on selected user state
+
     if (this.selectedUserState) {
       filteredUsers = filteredUsers.filter(user => 
         user.enabled === (this.selectedUserState === 'enabled')
       );
     }
 
-    // Filter based on selected account state
+ 
     if (this.selectedAccountState) {
       filteredUsers = filteredUsers.filter(user => 
         user.accountLocked === (this.selectedAccountState === 'locked')
       );
     }
 
-    // Filter based on selected role
+
     if (this.selectedRole) {
       filteredUsers = filteredUsers.filter(user => 
         user.role?.name === this.selectedRole

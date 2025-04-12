@@ -33,6 +33,10 @@ public class RegistrationRequest {
     private String password;
     private String image;
     private RoleName role;
+    @NotNull(message = "Date of birth is mandatory")
+    @PastOrPresent(message = "Date of birth cannot be in the future")
+    private LocalDate dateOfBirth;
+
 
 
 }

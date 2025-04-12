@@ -1,6 +1,7 @@
 package tn.esprit.growthnestback.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.security.auth.Subject;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -49,6 +51,10 @@ public class User implements UserDetails, Principal {
     @ManyToOne
     @JoinColumn(name="ID_ROLE", referencedColumnName="id")
     private Role role;
+
+    @Column(name = "date_of_birth")
+    @PastOrPresent(message = "Date of birth cannot be in the future")
+    private LocalDate dateOfBirth;
 
     @Override
     public String getName() {
@@ -177,5 +183,13 @@ public class User implements UserDetails, Principal {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

@@ -10,9 +10,17 @@ import { AuthenticationService } from 'src/app/services/services';
 })
 export class RegisterComponent implements OnInit {
 
-  registerRequest: RegistrationRequest = { email: '', firstName: '', image: '', lastname: '', password: '', role: '' };
-  previewUrl: string | ArrayBuffer | null = null;
+  registerRequest: RegistrationRequest = {
+    email: '',
+    firstName: '',
+    image: '',
+    lastname: '',
+    password: '',
+    role: '',
+    dateOfBirth: '',
+  };
 
+  previewUrl: string | ArrayBuffer | null = null;
   errorMsg: Array<string> = [];
   isMarketingAgent = false;
 
@@ -22,25 +30,21 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const storedRole = localStorage.getItem('selectedRole');
-    if (storedRole) {
-      this.registerRequest.role = storedRole;
-      this.isMarketingAgent = storedRole === 'MarketingAgent'; // Uppercase match with backend enum
-      this.updateFormFieldsBasedOnRole();
-    } else {
-      this.router.navigate(['/select-role']); // Redirect if role was not selected
-    }
+    this.registerRequest.role = ''; // No role selected initially
+  }
+
+  onRoleChange() {
+    this.isMarketingAgent = this.registerRequest.role === 'MarketingAgent';
+    this.updateFormFieldsBasedOnRole();
   }
 
   updateFormFieldsBasedOnRole() {
     if (this.isMarketingAgent) {
-      // Change form labels for marketing agent
-      this.registerRequest.firstName = '';  // Clear firstName as it's not used
-      this.registerRequest.lastname = '';   // Clear lastName as it's not used
+      this.registerRequest.firstName = '';
+      this.registerRequest.lastname = '';
     } else {
-      // Reset for regular user/other roles
-      this.registerRequest.firstName = '';  // Make sure this is set if it's empty
-      this.registerRequest.lastname = '';   // Same for lastname
+      this.registerRequest.firstName = '';
+      this.registerRequest.lastname = '';
     }
   }
 
@@ -50,6 +54,11 @@ export class RegisterComponent implements OnInit {
 
   register() {
     this.errorMsg = [];
+
+    if (!this.registerRequest.role) {
+      this.errorMsg.push("Please select a role.");
+      return;
+    }
 
     this.authService.register({
       body: this.registerRequest

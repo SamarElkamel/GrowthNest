@@ -22,4 +22,5 @@ export interface User {
   password?: string;
   role?: Role;
   username?: string;
+  dateOfBirth: string;
 }

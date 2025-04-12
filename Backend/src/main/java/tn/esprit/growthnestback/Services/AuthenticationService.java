@@ -50,6 +50,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .image(request.getImage())
+                .dateOfBirth(request.getDateOfBirth())
                 .accountLocked(false)
                 .enabled(false)
                 .role(userRole)

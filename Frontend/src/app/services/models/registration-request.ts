@@ -8,5 +8,6 @@ export interface RegistrationRequest {
   lastname?: string;
   image?: string;
   password: string;
-  role: string; 
+  role: string;
+  dateOfBirth: string; 
 }
