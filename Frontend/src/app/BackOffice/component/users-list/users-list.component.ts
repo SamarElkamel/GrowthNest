@@ -36,7 +36,7 @@ export class UserListComponent implements OnInit {
         if (data && data.length) {
           const filtered = data.filter(user => user.email.toLowerCase() !== 'admin@gmail.com');
           this.users = filtered; 
-          this.usersInitiaux = filtered; // stocker uniquement les users sans admin
+          this.usersInitiaux = filtered; 
           this.paginate(); 
         } else {
           console.error("No users found in the response.");

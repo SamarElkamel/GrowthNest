@@ -65,7 +65,7 @@ export class UserManagementService extends BaseService {
           map((r: StrictHttpResponse<Array<User>>): Array<User> => r.body),
           catchError((error) => {
             console.error('Error in service method:', error);
-            return of([]);  // Return an empty array on error to prevent app crashes
+            return of([]);  
           })
         );
       }

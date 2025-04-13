@@ -24,6 +24,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
 import { SelectRoleComponent } from './pages/select-role/select-role.component';
+import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { SelectRoleComponent } from './pages/select-role/select-role.component';
     RegisterComponent,
     ActivateAccountComponent,
     SelectRoleComponent,
+    ForgetPasswordComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     CommonModule,

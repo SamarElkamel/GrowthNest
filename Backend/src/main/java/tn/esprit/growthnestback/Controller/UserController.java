@@ -10,6 +10,7 @@ import tn.esprit.growthnestback.Services.UserService;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -48,8 +49,51 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        boolean sent = userService.sendResetPasswordLink(email);
+
+        if (sent) {
+            return ResponseEntity.ok(Map.of("message", "Password reset link sent to email."));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "User not found."));
+        }
+    }
+
+    @GetMapping("/reset-password")
+    public ResponseEntity<String> validateResetToken(@RequestParam("token") String token) {
+        boolean isValid = userService.isResetTokenValid(token);
+
+        if (isValid) {
+            return ResponseEntity.ok("Token is valid");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
+        }
+    }
+
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        String newPassword = request.get("newPassword");
+
+        System.out.println("Received token: " + token);
+
+        boolean passwordReset = userService.resetPassword(token, newPassword);
+
+        if (passwordReset) {
+            return ResponseEntity.ok("Password has been reset.");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token.");
+        }
+    }
 
 }
+
+
+
+
 
 
 

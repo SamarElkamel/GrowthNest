@@ -10,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import java.security.Principal;
@@ -39,6 +41,7 @@ public class User implements UserDetails, Principal {
     private String password;
     private boolean accountLocked;
     private boolean enabled;
+    private LocalDateTime resetTokenExpiration;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -51,6 +54,9 @@ public class User implements UserDetails, Principal {
     @ManyToOne
     @JoinColumn(name="ID_ROLE", referencedColumnName="id")
     private Role role;
+
+    @Column(name = "reset_token")
+    private String resetToken;
 
     @Column(name = "date_of_birth")
     @PastOrPresent(message = "Date of birth cannot be in the future")
@@ -192,4 +198,22 @@ public class User implements UserDetails, Principal {
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+        this.resetTokenExpiration = LocalDateTime.now().plusHours(1);
+    }
+
+    public void setResetTokenExpiration(LocalDateTime resetTokenExpiration) {
+        this.resetTokenExpiration = resetTokenExpiration;
+    }
+
+    public LocalDateTime getResetTokenExpiration() {
+        return resetTokenExpiration;
+    }
+
 }
