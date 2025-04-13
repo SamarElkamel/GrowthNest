@@ -33,11 +33,10 @@ export class UserListComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getAllUsers().subscribe({
       next: (data) => {
-        console.log('Received data:', data); 
         if (data && data.length) {
           const filtered = data.filter(user => user.email.toLowerCase() !== 'admin@gmail.com');
           this.users = filtered; 
-          this.usersInitiaux = data; 
+          this.usersInitiaux = filtered; // stocker uniquement les users sans admin
           this.paginate(); 
         } else {
           console.error("No users found in the response.");
@@ -83,19 +82,17 @@ export class UserListComponent implements OnInit {
   onInputChange(): void {
     if (this.query === '') {
       this.users = this.usersInitiaux;
-      this.paginate();
     } else {
       this.users = this.usersInitiaux.filter(user => 
         user.firstname.toLowerCase().includes(this.query.toLowerCase()) || 
         user.email.toLowerCase().includes(this.query.toLowerCase())
       );
-      this.paginate(); 
     }
+    this.paginate(); 
   }
 
   onFilterChange(): void {
     let filteredUsers = this.usersInitiaux;
-
 
     if (this.selectedUserState) {
       filteredUsers = filteredUsers.filter(user => 
@@ -103,13 +100,11 @@ export class UserListComponent implements OnInit {
       );
     }
 
- 
     if (this.selectedAccountState) {
       filteredUsers = filteredUsers.filter(user => 
         user.accountLocked === (this.selectedAccountState === 'locked')
       );
     }
-
 
     if (this.selectedRole) {
       filteredUsers = filteredUsers.filter(user => 
@@ -121,22 +116,21 @@ export class UserListComponent implements OnInit {
     this.paginate();
   }
 
-  toggleLock(user: User): void {
-  if (user.id == null) {
-    console.error('User ID is undefined');
-    return;
-  }
-
-  const newStatus = !user.accountLocked;
-
-  this.userService.toggleAccountLock(user.id, newStatus).subscribe({
-    next: () => {
-      user.accountLocked = newStatus;
-    },
-    error: (err) => {
-      console.error('Error updating account lock state:', err);
+  toggleLock(user: User) {
+    if (user.id !== undefined) {
+      this.userService.toggleLockState(user.id).subscribe(
+        (updatedUser) => {
+          const index = this.displayedUsers.findIndex(u => u.id === updatedUser.id);
+          if (index !== -1) {
+            this.displayedUsers[index] = updatedUser;
+          }
+        },
+        (error) => {
+          console.error('Error toggling lock state', error);
+        }
+      );
+    } else {
+      console.error('User ID is undefined');
     }
-  });
-}
-
+  }
 }

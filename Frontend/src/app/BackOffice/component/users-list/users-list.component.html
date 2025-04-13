@@ -11,10 +11,10 @@
         placeholder="Search users"
         class="form-control search-input"
       />
-      <i class="bi bi-search ms-2 search-icon"></i> <!-- Add search icon -->
+      <i class="bi bi-search ms-2 search-icon"></i>
     </div>
 
-    <!-- Filter Section with more elegant layout -->
+    <!-- Filter Section -->
     <div class="filters mb-4 d-flex justify-content-between flex-wrap">
       <!-- User State Filter -->
       <div class="filter-item mb-2 mb-md-0">
@@ -57,6 +57,7 @@
             <th class="text-dark font-medium fs-4">User State</th>
             <th class="text-dark font-medium fs-4">Account State</th>
             <th class="text-dark font-medium fs-4">Role</th>
+            <th class="text-dark font-medium fs-4">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -71,9 +72,7 @@
               </div>
             </td>
             <td class="fs-4">{{ user.createdDate | date:'medium' }}</td>
-            
-            <td class="fs-4">{{ user.dateOfBirth | date:'dd-MM-yyyy' }}
-            </td> 
+            <td class="fs-4">{{ user.dateOfBirth | date:'dd-MM-yyyy' }}</td> 
             <td>
               <span class="badge" [ngClass]="{
                 'bg-danger': !user.enabled,
@@ -89,12 +88,32 @@
             <td>
               {{ user.role?.name || 'No role assigned' }}
             </td>
+            <!-- Smaller Lock/Unlock Button -->
+            <td>
+              <button 
+                class="btn btn-outline-dark btn-sm px-2 py-1 small-button"
+                [ngClass]="{
+                  'btn-outline-danger': user?.accountLocked, 
+                  'btn-outline-success': !user?.accountLocked
+                }"
+                (click)="toggleLock(user)">
+                <i 
+                  class="bi me-1" 
+                  [ngClass]="{
+                    'bi-lock': user?.accountLocked, 
+                    'bi-unlock': !user?.accountLocked
+                  }"
+                  style="font-size: 0.8rem;"
+                ></i>
+                <span style="font-size: 0.75rem;">{{ user?.accountLocked ? 'Unlock' : 'Lock' }}</span>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-  
+    <!-- Pagination -->
     <div *ngIf="users.length > 0" class="pagination">
       <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
       <span *ngFor="let page of pages">
@@ -104,6 +123,7 @@
       </span>
       <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
     </div>
+
     <p *ngIf="users.length === 0">No users available.</p>
   </div>
 </div>

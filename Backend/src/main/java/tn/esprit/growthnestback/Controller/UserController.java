@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "http://localhost:4200")
 @Tag(name = "User Management")
 public class UserController {
     private final UserService userService;
@@ -37,5 +38,20 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
         }
     }
+
+    @PatchMapping("/{userId}/lock")
+    public ResponseEntity<?> toggleLockState(@PathVariable Long userId) {
+        User user = userService.toggleLockState(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        return ResponseEntity.ok(user);
+    }
+
+
 }
+
+
+
+
 

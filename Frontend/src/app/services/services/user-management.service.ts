@@ -21,42 +21,14 @@ export class UserManagementService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getAllUsers()` */
+ 
   static readonly GetAllUsersPath = '/users';
+  private apiUrl = 'http://localhost:8080/Growthnest/users';
 
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAllUsers()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  /*getAllUsers$Response(params?: GetAllUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<User>>> {
-    return getAllUsers(this.http, this.rootUrl, params, context);
-  }
+  ;
 
-  
+ 
 
-  getAllUsers(params?: GetAllUsers$Params, context?: HttpContext): Observable<Array<User>> {
-    return this.getAllUsers$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<User>>): Array<User> => r.body)
-    );
-  }*/
-
-  /*  getAllUsers$Response(params?: GetAllUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<User>>> {
-      return getAllUsers(this.http, this.rootUrl, params, context).pipe(
-        map((r: StrictHttpResponse<any>) => {
-          if (r.body instanceof Blob) {
-            // Convert Blob to JSON text and then parse it
-            return r.body.text().then(text => JSON.parse(text));
-          }
-          return r.body; // If it's not a Blob, just return the response body
-        }),
-        catchError((error) => {
-          console.error('Error fetching users:', error);
-          throw error;
-        })
-      );
-    }*/
       
       getAllUsers$Response(params?: GetAllUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<User>>> {
         return getAllUsers(this.http, this.rootUrl, params, context).pipe(
@@ -98,9 +70,14 @@ export class UserManagementService extends BaseService {
         );
       }
 
-      toggleAccountLock(userId: number, locked: boolean) {
-        return this.http.put(`/api/users/${userId}/lock`, { locked }); 
+     
+   
+      
+      toggleLockState(userId: number) {
+        return this.http.patch<User>(`${this.apiUrl}/${userId}/lock`, {});
       }
+      
+      
       
       
 }
