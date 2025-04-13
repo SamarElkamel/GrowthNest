@@ -97,5 +97,10 @@ export class UserManagementService extends BaseService {
           })
         );
       }
+
+      toggleAccountLock(userId: number, locked: boolean) {
+        return this.http.put(`/api/users/${userId}/lock`, { locked }); 
+      }
+      
       
 }

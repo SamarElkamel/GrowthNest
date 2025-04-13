@@ -35,7 +35,8 @@ export class UserListComponent implements OnInit {
       next: (data) => {
         console.log('Received data:', data); 
         if (data && data.length) {
-          this.users = data; 
+          const filtered = data.filter(user => user.email.toLowerCase() !== 'admin@gmail.com');
+          this.users = filtered; 
           this.usersInitiaux = data; 
           this.paginate(); 
         } else {
@@ -119,4 +120,23 @@ export class UserListComponent implements OnInit {
     this.users = filteredUsers;
     this.paginate();
   }
+
+  toggleLock(user: User): void {
+  if (user.id == null) {
+    console.error('User ID is undefined');
+    return;
+  }
+
+  const newStatus = !user.accountLocked;
+
+  this.userService.toggleAccountLock(user.id, newStatus).subscribe({
+    next: () => {
+      user.accountLocked = newStatus;
+    },
+    error: (err) => {
+      console.error('Error updating account lock state:', err);
+    }
+  });
+}
+
 }
