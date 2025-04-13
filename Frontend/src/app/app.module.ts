@@ -37,6 +37,16 @@ import { BusinessproductsComponent } from './pages/products/businessproducts/bus
 import { QuickViewProductFComponent } from './pages/products/quick-view-product-f/quick-view-product-f.component';
 import { BusinessDetailBComponent } from './pages/business/business-detail-b/business-detail-b.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AddProductComponent } from './pages/products/add-product/add-product.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { UpdateProductDialogComponent } from './pages/products/update-product-dialog/update-product-dialog.component';
+import { UpdateBusinessDialogComponent } from './pages/business/update-business-dialog/update-business-dialog.component';
+import { MatSelectModule } from '@angular/material/select';
+import { BusinessDetailsComponent } from './pages/business/business-details/business-details.component';
+import { RatingComponent } from './pages/business/rating/rating.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,6 +62,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     BusinessproductsComponent,
     QuickViewProductFComponent,
     BusinessDetailBComponent,
+    AddProductComponent,
+    UpdateProductDialogComponent,
+    UpdateBusinessDialogComponent,
+    BusinessDetailsComponent,
+    RatingComponent,
+   
+    
   
   ],
   imports: [
@@ -73,7 +90,12 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatFormFieldModule, // Pour mat-form-field
+    MatInputModule, // Pour mat-input et textarea
+    MatCardModule,
+    MatTableModule,
+    MatSelectModule,
   
   ],
   providers: [

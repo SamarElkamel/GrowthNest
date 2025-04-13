@@ -48,7 +48,9 @@ export class AddBusinessComponent {
           description: this.businessForm.value.description,
           categorieBusiness: this.businessForm.value.categorieBusiness,
           logo: this.businessForm.value.logo,
-          idBusiness:this.businessForm.value.idBusiness
+          idBusiness:this.businessForm.value.idBusiness,
+          averageRating: 0.0, // Default for new business
+          ratingCount: 0
         }
       };
       this.businessService.addBusiness(businessData).subscribe({

@@ -1,9 +1,13 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
-import { Business } from 'src/app/services/models';
-import { GestionDesBusinessService } from 'src/app/services/services';
+import { Business, Products } from 'src/app/services/models';
+import { GestionDesBusinessService, GestionDesProduitsService } from 'src/app/services/services';
+import { UpdateBusinessDialogComponent } from '../update-business-dialog/update-business-dialog.component'; // Ajouté
+import { UpdateProductDialogComponent } from '../../products/update-product-dialog/update-product-dialog.component';
 
 @Component({
   selector: 'app-business-detail-b',
@@ -18,15 +22,20 @@ import { GestionDesBusinessService } from 'src/app/services/services';
     ])
   ]
 })
-
-export class BusinessDetailBComponent implements OnInit{
+export class BusinessDetailBComponent implements OnInit, OnDestroy {
   business?: Business;
+  products: Products[] = [];
   isLoading = true;
-  private destroy$ = new Subject<void>(); // Pour gérer la désinscription
+  isLoadingProducts = false;
+  displayedColumns: string[] = ['name', 'description', 'price', 'stock', 'image', 'update', 'delete'];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
-    private businessService: GestionDesBusinessService
+    private businessService: GestionDesBusinessService,
+    private productService: GestionDesProduitsService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +44,7 @@ export class BusinessDetailBComponent implements OnInit{
       this.loadBusiness(+id);
     } else {
       console.error('ID du business non fourni');
-      this.isLoading = false; // Pas d'ID, on arrête le chargement
+      this.isLoading = false;
     }
   }
 
@@ -47,20 +56,125 @@ export class BusinessDetailBComponent implements OnInit{
       .subscribe({
         next: (res) => {
           this.business = res;
-          this.isLoading = false; // Données chargées, on arrête le spinner
+          this.isLoading = false;
         },
         error: (err) => {
           console.error('Erreur lors du chargement du business', err);
-          this.isLoading = false; // En cas d'erreur, on arrête le spinner
+          this.isLoading = false;
+          this.snackBar.open('Erreur lors du chargement du business', 'Fermer', { duration: 3000 });
         }
       });
   }
 
+  loadProducts(): void {
+    if (!this.business?.idBusiness) return;
+
+    this.isLoadingProducts = true;
+    this.productService
+      .getProductsByBusiness({ businessId: this.business.idBusiness })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (products) => {
+          this.products = products;
+          this.isLoadingProducts = false;
+        },
+        error: (err) => {
+          console.error('Erreur lors du chargement des produits', err);
+          this.snackBar.open('Erreur lors du chargement des produits', 'Fermer', { duration: 3000 });
+          this.isLoadingProducts = false;
+        }
+      });
+  }
+
+  deleteProduct(idP: number): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+      this.isLoadingProducts = true;
+      this.productService.deleteProductById({ idP }).subscribe({
+        next: () => {
+          this.products = this.products.filter(p => p.idProduct !== idP);
+          this.snackBar.open('Produit supprimé avec succès', 'Fermer', { duration: 3000 });
+          this.isLoadingProducts = false;
+        },
+        error: (err) => {
+          console.error('Erreur de suppression', err);
+          this.snackBar.open('Erreur lors de la suppression du produit', 'Fermer', { duration: 3000 });
+          this.isLoadingProducts = false;
+        }
+      });
+    }
+  }
+
+  updateProduct(product: Products): void {
+    const dialogRef = this.dialog.open(UpdateProductDialogComponent, {
+      width: '400px',
+      data: product,
+      autoFocus: true, // Focus automatique sur le premier champ du dialogue
+      restoreFocus: true
+    });
+
+    dialogRef.afterClosed().subscribe((updatedProduct: Products | undefined) => {
+      if (updatedProduct) {
+        this.isLoadingProducts = true;
+        this.productService.updateProducts({ body: updatedProduct }).pipe(
+          takeUntil(this.destroy$)
+        ).subscribe({
+          next: (result) => {
+            const index = this.products.findIndex(p => p.idProduct === result.idProduct);
+            if (index !== -1) {
+              this.products[index] = result;
+              this.products = [...this.products];
+            }
+            this.snackBar.open('Produit mis à jour avec succès', 'Fermer', { duration: 3000 });
+            this.isLoadingProducts = false;
+          },
+          error: (err) => {
+            console.error('Erreur lors de la mise à jour du produit', err);
+            this.snackBar.open('Erreur lors de la mise à jour du produit', 'Fermer', { duration: 3000 });
+            this.isLoadingProducts = false;
+          }
+        });
+      }
+    });
+  }
+
+  updateBusiness(): void {
+    if (!this.business) return;
+  
+    const dialogRef = this.dialog.open(UpdateBusinessDialogComponent, {
+      width: '400px',
+      data: this.business,
+      autoFocus: true, // Focus automatique sur le premier champ du dialogue
+      restoreFocus: true
+    });
+  
+    dialogRef.afterClosed().subscribe((updatedBusiness: Business | undefined) => {
+      if (updatedBusiness) {
+        console.log('Business envoyé :', updatedBusiness);
+        this.isLoading = true;
+        this.businessService.updateBusiness({ body: updatedBusiness }).pipe(
+          takeUntil(this.destroy$)
+        ).subscribe({
+          next: (result) => {
+            this.business = result;
+            this.snackBar.open('Business mis à jour avec succès', 'Fermer', { duration: 3000 });
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error('Erreur détaillée :', err); // Ajoute ce log
+            this.snackBar.open('Erreur lors de la mise à jour du business : ' + err.statusText, 'Fermer', { duration: 3000 });
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+  }
+
+  getImageUrl(imagePath: string): string {
+    return `http://localhost:8080${imagePath}`;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
-    this.destroy$.complete(); // Nettoie l'abonnement
+    this.destroy$.complete();
   }
-  
-  
- 
 }

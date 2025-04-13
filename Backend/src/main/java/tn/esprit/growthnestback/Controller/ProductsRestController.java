@@ -2,14 +2,21 @@ package tn.esprit.growthnestback.Controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.growthnestback.Entities.Products;
 import tn.esprit.growthnestback.Services.IProductsService;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Validated
@@ -45,14 +52,23 @@ public class ProductsRestController {
     public void deleteProductById(@PathVariable("idP") Long id) {
         iProductsService.DeleteProduct(id);
     }
-    @PostMapping("/business/{businessId}")
-    /**
+   /* @PostMapping("/business/{businessId}")
+
      * 🔹 Créer un produit pour un small business
-     */
+
     public Products AddBusinessProduct(@PathVariable("businessId") Long businessId, @RequestBody Products products) {
         return iProductsService.createProduct(businessId, products);
 
-    }
+    }*/
+   @PostMapping("/business/{businessId}")
+   /**
+    * 🔹 Créer un produit pour un small business
+    */
+   public Products AddBusinessProduct(@PathVariable("businessId") Long businessId, @RequestBody Products products) {
+       return iProductsService.createProduct(businessId, products);
+
+   }
+
     /**
      * 🔹 Obtenir tous les produits d’un small business
      */

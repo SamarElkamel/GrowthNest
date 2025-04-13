@@ -1,5 +1,6 @@
 package tn.esprit.growthnestback.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +14,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -33,10 +33,19 @@ public class Business {
     CategorieBusiness categorieBusiness;
   // @NotBlank(message = "Le logo est obligatoire")
     String logo;
+    @Column(name = "average_rating", nullable = false)
+    private Double averageRating = 0.0;
+
+    @Column(name = "rating_count", nullable = false)
+    private Integer ratingCount = 0;
 
     @OneToMany(mappedBy = "business",cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     Set<Products> Products;
+    public Business() {
+        this.averageRating = 0.0;
+        this.ratingCount = 0;
+    }
 
     public Long getIdBusiness() {
         return idBusiness;
@@ -78,11 +87,37 @@ public class Business {
         logo = logo;
     }*/
 
+
+
     public Set<Products> getProducts() {
         return Products;
     }
-
+    @JsonIgnore
     public void setProducts(Set<Products> products) {
         Products = products;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public Integer getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(Integer ratingCount) {
+        this.ratingCount = ratingCount;
     }
 }

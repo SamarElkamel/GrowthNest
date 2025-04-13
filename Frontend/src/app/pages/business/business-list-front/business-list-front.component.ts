@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { Business } from 'src/app/services/models';
+import { Business, CategorieBusiness } from 'src/app/services/models';
 import { GestionDesBusinessService } from 'src/app/services/services';
 
 declare var $: any;
@@ -14,7 +14,17 @@ declare var swal: any;
 
 export class BusinessListFrontComponent {
   
-   businesses: Business[] = [];
+   
+   businesses: any[] = [];
+  filteredBusinesses: any[] = [];
+  categories: string[] = Object.values(CategorieBusiness);
+  selectedCategory: string = '';
+  searchQuery: string = '';
+  sortBy: string = 'default';
+  showFilter: boolean = false;
+  showSearch: boolean = false;
+  loading: boolean = true;
+  error: string | null = null;
    @Input() business: any;
  
 
@@ -91,11 +101,80 @@ export class BusinessListFrontComponent {
         console.error('Error loading businesses', error);
       }
     }*/
-      loadBusinesses() {
+      loadBusinesses(): void {
         this.businessService.getAllBusiness().subscribe({
-          next: (businesses) => this.businesses = businesses,
-          error: (err) => console.error('Error:', err)
+          next: (data) => {
+            this.businesses = data;
+            this.filteredBusinesses = [...this.businesses];
+            this.loading = false;
+            this.applyFilters();
+          },
+          error: (err) => {
+            this.error = 'Erreur lors du chargement des entreprises.';
+            this.loading = false;
+            console.error(err);
+          }
         });
+      }
+    
+      filterByCategory(category: string): void {
+        this.selectedCategory = category;
+        this.applyFilters();
+      }
+    
+      searchBusinesses(): void {
+        this.applyFilters();
+      }
+    
+      sortBusinesses(sortOption: string): void {
+        this.sortBy = sortOption;
+        this.applyFilters();
+      }
+    
+      applyFilters(): void {
+        let result = [...this.businesses];
+    
+        // Filter by category
+        if (this.selectedCategory) {
+          result = result.filter(business => 
+            business.categorieBusiness === this.selectedCategory
+          );
+        }
+    
+        // Search by name
+        if (this.searchQuery) {
+          result = result.filter(business => 
+            business.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+          );
+        }
+    
+        // Sort
+        switch (this.sortBy) {
+          case 'name':
+            result.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+          case 'rating':
+            result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+            break;
+          default:
+            break;
+        }
+    
+        this.filteredBusinesses = result;
+      }
+    
+      toggleFilter(): void {
+        this.showFilter = !this.showFilter;
+        if (this.showFilter) {
+          this.showSearch = false;
+        }
+      }
+    
+      toggleSearch(): void {
+        this.showSearch = !this.showSearch;
+        if (this.showSearch) {
+          this.showFilter = false;
+        }
       }
       
     
@@ -114,12 +193,6 @@ export class BusinessListFrontComponent {
       onBusinessClick(businessId: number): void {
         this.router.navigate(['/business', businessId, 'products']);
       }
-      viewProducts(businessId: number): void {
-        if (businessId) {
-          this.router.navigate(['/business', businessId, 'products']);
-        } else {
-          console.error('ID Business non trouvé dans l\'objet:', this.business);
-        }
-      } 
+      
 
 }

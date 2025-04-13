@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Modifier le business</h2>
+<mat-dialog-content>
+  <form [formGroup]="businessForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Nom</mat-label>
+      <input matInput formControlName="name">
+      <mat-error *ngIf="name?.hasError('required')">Le nom est obligatoire</mat-error>
+      <mat-error *ngIf="name?.hasError('minlength')">Le nom doit avoir au moins 3 caractères</mat-error>
+      <mat-error *ngIf="name?.hasError('maxlength')">Le nom ne peut pas dépasser 50 caractères</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="description">
+      <mat-error *ngIf="description?.hasError('required')">La description est obligatoire</mat-error>
+      <mat-error *ngIf="description?.hasError('minlength')">La description doit avoir au moins 10 caractères</mat-error>
+      <mat-error *ngIf="description?.hasError('maxlength')">La description ne peut pas dépasser 255 caractères</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Catégorie</mat-label>
+      <mat-select formControlName="categorieBusiness">
+        <mat-option *ngFor="let category of categorieBusinessOptions" [value]="category">
+          {{ category }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="categorieBusiness?.hasError('required')">La catégorie est obligatoire</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="businessForm.invalid">Sauvegarder</button>
+</mat-dialog-actions>

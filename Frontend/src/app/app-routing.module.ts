@@ -8,6 +8,8 @@ import { HomeComponent } from './FrontOffice/home/home.component';
 import { BusinessListFrontComponent } from './pages/business/business-list-front/business-list-front.component';
 import { BusinessproductsComponent } from './pages/products/businessproducts/businessproducts.component';
 import { BusinessDetailBComponent } from './pages/business/business-detail-b/business-detail-b.component';
+import { AddProductComponent } from './pages/products/add-product/add-product.component';
+import { BusinessDetailsComponent } from './pages/business/business-details/business-details.component';
 
 export const Approutes: Routes = [
 
@@ -25,6 +27,7 @@ export const Approutes: Routes = [
       component: BusinessListFrontComponent,
       title: 'Liste des small business'
     },
+    { path: 'business-details/:idB', component: BusinessDetailsComponent,title: 'business details' },
    
   
     // BackOffice
@@ -38,6 +41,8 @@ export const Approutes: Routes = [
         component: BusinessDetailBComponent
         
       },
+      { path: 'add-product/:idBusiness', component: AddProductComponent },
+      {
       
         path: 'dashboard',
         loadChildren: () => import('./backoffice/dashboard/dashboard.module').then(m => m.DashboardModule)

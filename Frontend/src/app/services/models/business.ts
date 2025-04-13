@@ -10,5 +10,8 @@ export interface Business {
   idBusiness: number;
   name: string;
   logo: string;
+  averageRating: number;
+  ratingCount: number;
   products?: Array<Products>;
+
 }

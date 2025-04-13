@@ -10,5 +10,6 @@ public interface IBusinessService {
     public Business addBusiness(Business business);
     public Business updateBusiness(Business business);
     public void deleteBusiness(Long id);
-
+    public void addRating(Long businessId, Integer ratingValue);
+    public Integer getUserRating(Long businessId);
 }

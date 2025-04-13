@@ -1,52 +1,161 @@
+/* Conteneur principal */
 .form-container {
-    max-width: 500px;
-    margin: 50px auto;
-    padding: 30px;
-    border: 2px solid #000; // cadre noir
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-  
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-  
-      .form-group {
-        display: flex;
-        flex-direction: column;
-  
-        label {
-          font-weight: bold;
-          margin-bottom: 5px;
-        }
-  
-        input,
-        textarea,
-        select {
-          border: 1px solid #000 !important; // bord noir
-          border-radius: 5px;
-          padding: 8px 10px;
-          font-size: 14px;
-  
-          &::placeholder {
-            color: #aaa;
-            font-style: italic;
-          }
-        }
-  
-        .invalid-feedback {
-          color: red;
-          font-size: 0.875em;
-          margin-top: 5px;
-        }
-      }
-  
-      button {
-        width: 100%;
-        padding: 10px;
-        font-weight: bold;
-      }
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Formulaire */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Groupe de champs */
+.form-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 6px;
+    transition: color 0.3s ease;
+  }
+
+  .form-control {
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+
+    &.custom-input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.2);
+      background: #fff;
+    }
+
+    &.is-invalid {
+      border-color: #dc3545;
+      background: #fff5f5;
     }
   }
-  
+
+  textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  select.form-control {
+    appearance: none; /* Supprime le style par défaut */
+    background: #fafafa url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="gray"><polyline points="0,0 6,6 12,0"/></svg>') no-repeat right 10px center;
+    padding-right: 30px; /* Espace pour la flèche */
+    cursor: pointer;
+
+    &:focus {
+      background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#007bff"><polyline points="0,0 6,6 12,0"/></svg>') no-repeat right 10px center;
+    }
+
+    &.is-invalid {
+      background: #fff5f5 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#dc3545"><polyline points="0,0 6,6 12,0"/></svg>') no-repeat right 10px center;
+    }
+  }
+
+  .invalid-feedback {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #dc3545;
+    line-height: 1.4;
+
+    div {
+      display: block;
+    }
+  }
+}
+
+/* Bouton */
+.btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+
+  &.btn-success {
+    background: linear-gradient(90deg, #28a745, #218838);
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(90deg, #218838, #1e7e34);
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      background: #b3d7b3;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+
+  &.w-100 {
+    width: 100%;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .form-container {
+    max-width: 100%;
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .form-group {
+    label {
+      font-size: 13px;
+    }
+
+    .form-control {
+      font-size: 14px;
+      padding: 10px 12px;
+    }
+
+    .invalid-feedback {
+      font-size: 11px;
+    }
+  }
+
+  .btn {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+}

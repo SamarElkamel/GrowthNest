@@ -44,4 +44,12 @@ public class BusinessRestController {
     public void deleteBusiness(@PathVariable("idB") Long idB){
         iBusinessService.deleteBusiness(idB);
     }
+    @PostMapping("/{businessId}/rate")
+    public void rateBusiness(@PathVariable Long businessId, @RequestBody Integer ratingValue) {
+        iBusinessService.addRating(businessId, ratingValue);
+    }
+    @GetMapping("/{businessId}/user-rating")
+    public Integer getUserRating(@PathVariable Long businessId) {
+        return iBusinessService.getUserRating(businessId);
+    }
 }
