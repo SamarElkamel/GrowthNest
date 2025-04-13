@@ -54,6 +54,12 @@ export class EventAddComponent {
       return;
     }
 
+    // Only PLANNED and ONGOING are allowed
+    if (this.event.status !== 'PLANNED' && this.event.status !== 'ONGOING') {
+      this.statusError = 'Status must be Planned or Ongoing for new events';
+      return;
+    }
+
     if (!this.event.date) {
       // Can't validate status without date
       return;
@@ -63,13 +69,8 @@ export class EventAddComponent {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    if (this.event.status === 'COMPLETED' || this.event.status === 'CANCELED') {
-      if (selectedDate >= today) {
-        this.statusError = 'Completed/Canceled events must have a past date';
-      } else {
-        this.statusError = null;
-      }
-    } else if (selectedDate < today) {
+    // For PLANNED or ONGOING, date must be today or future
+    if (selectedDate < today) {
       this.statusError = 'Planned/Ongoing events must have today or a future date';
     } else {
       this.statusError = null;

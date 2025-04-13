@@ -2,7 +2,7 @@
   <!-- Header with Back Button -->
   <div class="form-header">
     <button class="back-button" routerLink="/admin/events">
-      &larr; Back to Events
+      ← Back to Events
     </button>
     <h2>Create New Event</h2>
     <p class="subtitle">Fill in the details to schedule a new event</p>
@@ -48,8 +48,6 @@
                 (change)="validateStatus()" #statusSelect="ngModel">
           <option value="PLANNED">Planned</option>
           <option value="ONGOING">Ongoing</option>
-          <option value="COMPLETED">Completed</option>
-          <option value="CANCELED">Canceled</option>
         </select>
         <div *ngIf="statusError" class="validation-error">
           {{ statusError }}
