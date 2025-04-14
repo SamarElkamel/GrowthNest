@@ -31,6 +31,17 @@ public class Event {
     LocalTime endTime;
     String location;
 
+
+    public Integer getNumberOfPlaces() {
+        return numberOfPlaces;
+    }
+
+    public void setNumberOfPlaces(Integer numberOfPlaces) {
+        this.numberOfPlaces = numberOfPlaces;
+    }
+
+    Integer numberOfPlaces;
+
     public String getHistory() {
         return history;
     }

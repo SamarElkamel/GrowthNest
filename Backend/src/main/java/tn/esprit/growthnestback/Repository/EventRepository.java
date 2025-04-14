@@ -15,5 +15,7 @@ public interface EventRepository extends JpaRepository<Event,Long> {
     @Query("SELECT e, COUNT(r) FROM Event e LEFT JOIN Registration r ON e.idEvent = r.event.idEvent " +
             "WHERE e.status IN :statuses GROUP BY e.idEvent")
     List<Object[]> findAvailableEventsWithReservationCount(@Param("statuses") List<EventStatus> statuses);
+    @Query("SELECT COUNT(r) FROM Registration r WHERE r.event.idEvent = :eventId AND r.status = 'CONFIRMED'")
+    Long countConfirmedRegistrationsByEventId(@Param("eventId") Long eventId);
 
 }

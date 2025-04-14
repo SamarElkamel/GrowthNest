@@ -1,6 +1,7 @@
 package tn.esprit.growthnestback.Services;
 
 import tn.esprit.growthnestback.Entities.Registration;
+import tn.esprit.growthnestback.Entities.ReservationStatus;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface IRegistrationServices {
     public void deleteRegistration (Long idR);
     public List<Registration> DisplayRegistrationsByEvent(Long eventId);
     List<Registration> getUserReservations(Long userId);
+    Registration updateRegistrationStatus(Long registrationId, ReservationStatus newStatus);
 }

@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import tn.esprit.growthnestback.Entities.Registration;
+import tn.esprit.growthnestback.Entities.ReservationStatus;
 import tn.esprit.growthnestback.Entities.User;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface RegistrationRepository extends JpaRepository<Registration,Long>
     List<Registration> findByEventId(@Param("eventId") Long eventId);
     @Query("SELECT r FROM Registration r WHERE r.user.id = :userId ORDER BY r.reservationDate DESC")
     List<Registration> findByUserId(@Param("userId") Long userId);
+    @Query("SELECT COUNT(r) FROM Registration r WHERE r.event.idEvent = :eventId AND r.status IN (:statuses)")
+    long countByEventIdAndStatuses(@Param("eventId") Long eventId, @Param("statuses") List<ReservationStatus> statuses);
 }

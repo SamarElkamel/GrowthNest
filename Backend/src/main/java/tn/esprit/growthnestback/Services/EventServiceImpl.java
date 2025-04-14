@@ -36,6 +36,11 @@ public class EventServiceImpl implements IEventServices{
 
     @Override
     public Event addEvent(Event event) {
+        // Validate numberOfPlaces
+        if (event.getNumberOfPlaces() != null && event.getNumberOfPlaces() <= 0) {
+            throw new IllegalArgumentException("Number of places must be positive");
+        }
+
         if (event.getStatus() == null) {
             event.setStatus(event.getDate().after(new Date())
                     ? EventStatus.PLANNED

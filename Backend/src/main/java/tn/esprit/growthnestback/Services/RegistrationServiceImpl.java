@@ -42,37 +42,7 @@ public class RegistrationServiceImpl implements IRegistrationServices{
         return registrationRepository.findById(idR).get();
     }
 
-    @Override
-    public Registration addRegistration(Registration registration) {
 
-        Long userId = registration.getUser().getId();
-        Long eventId = registration.getEvent().getIdEvent();
-
-        // Step 1: Check if registration already exists
-        Optional<Registration> existingRegistration =
-                registrationRepository.findByUserIdAndEventId(userId, eventId);
-
-        if (existingRegistration.isPresent()) {
-            // You can return existing or throw exception depending on logic
-            return existingRegistration.get(); // or throw new RuntimeException("Already registered");
-        }
-
-        // Step 2: Fetch user and event from DB
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
-
-        // Step 3: Create and save new registration
-        Registration newRegistration = new Registration();
-        newRegistration.setUser(user);
-        newRegistration.setEvent(event);
-        newRegistration.setStatus(ReservationStatus.CONFIRMED);
-        newRegistration.setReservationDate(new Date());
-
-        return registrationRepository.save(newRegistration);
-    }
 
     @Override
     public Registration updateRegistration(Registration registration) {
@@ -90,5 +60,69 @@ public class RegistrationServiceImpl implements IRegistrationServices{
     @Override
     public List<Registration> getUserReservations(Long userId) {
         return registrationRepository.findByUserId(userId);
+    }
+    @Override
+    public Registration addRegistration(Registration registration) {
+        Long userId = registration.getUser().getId();
+        Long eventId = registration.getEvent().getIdEvent();
+
+        // Step 1: Check if registration already exists
+        Optional<Registration> existingRegistration =
+                registrationRepository.findByUserIdAndEventId(userId, eventId);
+        if (existingRegistration.isPresent()) {
+            throw new RuntimeException("User is already registered for this event");
+        }
+
+        // Step 2: Fetch user and event from DB
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+
+        // Step 3: Check available places (CONFIRMED and PENDING)
+        if (event.getNumberOfPlaces() != null) {
+            List<ReservationStatus> statuses = List.of(ReservationStatus.CONFIRMED, ReservationStatus.PENDING);
+            long registrationCount = registrationRepository.countByEventIdAndStatuses(eventId, statuses);
+            if (registrationCount >= event.getNumberOfPlaces()) {
+                throw new RuntimeException("No available places for this event");
+            }
+        }
+
+        // Step 4: Create and save new registration with PENDING status
+        Registration newRegistration = new Registration();
+        newRegistration.setUser(user);
+        newRegistration.setEvent(event);
+        newRegistration.setStatus(ReservationStatus.PENDING); // Initial status
+        newRegistration.setReservationDate(new Date());
+
+        return registrationRepository.save(newRegistration);
+    }
+@Override
+    // New method for admin to confirm/cancel registration
+    public Registration updateRegistrationStatus(Long registrationId, ReservationStatus newStatus) {
+        Registration registration = registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new EntityNotFoundException("Registration not found"));
+
+        // Validate status transition
+        if (registration.getStatus() != ReservationStatus.PENDING) {
+            throw new RuntimeException("Can only update status of PENDING registrations");
+        }
+        if (newStatus != ReservationStatus.CONFIRMED && newStatus != ReservationStatus.CANCELED) {
+            throw new RuntimeException("Invalid status transition");
+        }
+
+        // Check available places for confirmation
+        if (newStatus == ReservationStatus.CONFIRMED) {
+            Event event = registration.getEvent();
+            if (event.getNumberOfPlaces() != null) {
+                Long confirmedCount = eventRepository.countConfirmedRegistrationsByEventId(event.getIdEvent());
+                if (confirmedCount >= event.getNumberOfPlaces()) {
+                    throw new RuntimeException("No available places to confirm this registration");
+                }
+            }
+        }
+
+        registration.setStatus(newStatus);
+        return registrationRepository.save(registration);
     }
 }

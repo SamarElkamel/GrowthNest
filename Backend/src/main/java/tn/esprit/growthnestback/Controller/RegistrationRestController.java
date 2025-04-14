@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.growthnestback.Entities.Registration;
+import tn.esprit.growthnestback.Entities.ReservationStatus;
 import tn.esprit.growthnestback.Services.IRegistrationServices;
 
 import java.util.List;
@@ -53,5 +54,12 @@ public class RegistrationRestController {
     @GetMapping("/user/{userId}")
     public List<Registration> getUserReservations(@PathVariable Long userId) {
         return iRegistrationServices.getUserReservations(userId);
+    }
+    @Operation(description = "Admin confirm or cancel registration")
+    @PutMapping("/updateStatus/{idR}")
+    public Registration updateRegistrationStatus(
+            @PathVariable("idR") Long idR,
+            @RequestParam ReservationStatus status) {
+        return iRegistrationServices.updateRegistrationStatus(idR, status);
     }
 }
