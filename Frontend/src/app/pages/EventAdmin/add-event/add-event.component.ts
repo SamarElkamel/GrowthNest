@@ -11,7 +11,8 @@ import { NgForm } from '@angular/forms';
 })
 export class EventAddComponent {
   event: Event = {
-    status: 'PLANNED' // Default status
+    status: 'PLANNED', // Default status
+    numberOfPlaces: undefined // Initialize numberOfPlaces
   };
   isLoading = false;
   error: string | null = null;
@@ -54,14 +55,12 @@ export class EventAddComponent {
       return;
     }
 
-    // Only PLANNED and ONGOING are allowed
     if (this.event.status !== 'PLANNED' && this.event.status !== 'ONGOING') {
       this.statusError = 'Status must be Planned or Ongoing for new events';
       return;
     }
 
     if (!this.event.date) {
-      // Can't validate status without date
       return;
     }
 
@@ -69,7 +68,6 @@ export class EventAddComponent {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // For PLANNED or ONGOING, date must be today or future
     if (selectedDate < today) {
       this.statusError = 'Planned/Ongoing events must have today or a future date';
     } else {
@@ -78,14 +76,16 @@ export class EventAddComponent {
   }
 
   addEvent(form: NgForm) {
-    // Trigger validation for all fields
     form.form.markAllAsTouched();
     
-    // Run validations
     this.validateDate();
     this.validateStatus();
 
-    // Don't submit if there are validation errors
+    // Validate numberOfPlaces
+    if (this.event.numberOfPlaces !== undefined && this.event.numberOfPlaces < 1) {
+      form.form.controls['numberOfPlaces'].setErrors({ min: true });
+    }
+
     if (form.invalid || this.dateError || this.statusError) {
       return;
     }

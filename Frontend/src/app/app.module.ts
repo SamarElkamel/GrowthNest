@@ -34,7 +34,8 @@ import { AddReservationComponent } from './pages/EventUser/add-reservation/add-r
 import { UpdateReservationComponent } from './pages/EventUser/update-reservation/update-reservation.component';
 
 import { EventUserListComponent } from './pages/EventUser/event-user-list/event-user-list.component';
-import { EventUSerDetailsComponent } from './pages/EventUser/event-user-details/event-user-details.component';
+import { EventUserDetailsComponent } from './pages/EventUser/event-user-details/event-user-details.component';
+import { ManageEventRegistrationsComponent } from './pages/EventAdmin/manage-event-registrations/manage-event-registrations.component';
 
 
 
@@ -55,8 +56,9 @@ import { EventUSerDetailsComponent } from './pages/EventUser/event-user-details/
     UserReservationsComponent,
     AddReservationComponent,
     UpdateReservationComponent,
-    EventUSerDetailsComponent,
+    EventUserDetailsComponent,
     EventUserListComponent,
+    ManageEventRegistrationsComponent,
     
    
  

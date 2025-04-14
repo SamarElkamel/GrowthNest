@@ -26,11 +26,42 @@ import { GetUserReservations$Params } from '../fn/registration-management/get-us
 import { Registration } from '../models/registration';
 import { updateRegistration } from '../fn/registration-management/update-registration';
 import { UpdateRegistration$Params } from '../fn/registration-management/update-registration';
+import { updateRegistrationStatus } from '../fn/registration-management/update-registration-status';
+import { UpdateRegistrationStatus$Params } from '../fn/registration-management/update-registration-status';
 
 @Injectable({ providedIn: 'root' })
 export class RegistrationManagementService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `updateRegistrationStatus()` */
+  static readonly UpdateRegistrationStatusPath = '/Registration/updateStatus/{idR}';
+
+  /**
+   * Admin confirm or cancel registration
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateRegistrationStatus()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  updateRegistrationStatus$Response(params: UpdateRegistrationStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<Registration>> {
+    return updateRegistrationStatus(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Admin confirm or cancel registration
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateRegistrationStatus$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  updateRegistrationStatus(params: UpdateRegistrationStatus$Params, context?: HttpContext): Observable<Registration> {
+    return this.updateRegistrationStatus$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Registration>): Registration => r.body)
+    );
   }
 
   /** Path part for operation `updateRegistration()` */

@@ -9,13 +9,10 @@ import { Router } from '@angular/router';
 })
 export class EventUserListComponent implements OnInit {
   events: EventWithReservationCount[] = [];
+  filteredEvents: EventWithReservationCount[] = [];
   isLoading = true;
   error: string | null = null;
-
-  // Minimal additions for template compatibility
-  filteredEvents: EventWithReservationCount[] = [];
-  categories: string[] = []; // Empty array since we won't use filtering
-  featuredEvent: EventWithReservationCount | null = null;
+  searchQuery: string = '';
 
   constructor(
     private eventService: EventManagementService,
@@ -31,9 +28,9 @@ export class EventUserListComponent implements OnInit {
     this.eventService.getAvailableEventsWithReservationCount().subscribe(
       (response) => {
         this.events = response;
-        this.filteredEvents = [...this.events]; // For template compatibility
-        this.setFeaturedEvent(); // For template compatibility
+        this.filteredEvents = [...this.events];
         this.isLoading = false;
+        console.log('Loaded events:', this.events);
       },
       (error) => {
         console.error('Error loading events', error);
@@ -47,24 +44,22 @@ export class EventUserListComponent implements OnInit {
     this.router.navigate(['/events/user', id]);
   }
 
-  // Minimal additions for template compatibility
-  private setFeaturedEvent(): void {
-    if (this.events.length > 0) {
-      this.featuredEvent = this.events[0]; // Just use first event as featured
+  filterEvents() {
+    if (!this.searchQuery) {
+      this.filteredEvents = [...this.events];
+      return;
     }
+    const query = this.searchQuery.toLowerCase();
+    this.filteredEvents = this.events.filter(event => 
+      event.event?.title?.toLowerCase().includes(query)
+    );
   }
-  searchQuery: string = '';
 
-filterEvents() {
-  if (!this.searchQuery) {
-    this.filteredEvents = [...this.events];
-    return;
+  getRemainingPlaces(event: EventWithReservationCount): number {
+    if (!event.event?.numberOfPlaces) {
+      return Infinity;
+    }
+    const remaining = event.event.numberOfPlaces - (event.reservationCount || 0);
+    return Math.max(0, remaining);
   }
-  
-  const query = this.searchQuery.toLowerCase();
-  this.filteredEvents = this.events.filter(event => 
-    event.event?.title?.toLowerCase().includes(query)
-  );
-}
-
 }

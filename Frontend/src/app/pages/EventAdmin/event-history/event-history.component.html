@@ -2,7 +2,7 @@
   <!-- Header Section with Back Button -->
   <div class="history-header">
     <button class="back-button" routerLink="/admin/events">
-      &larr; Back
+      ← Back
     </button>
     <h2>Event History</h2>
     <p class="subtitle">Past events and their details</p>
@@ -25,6 +25,7 @@
             <th>Event Title</th>
             <th>Date</th>
             <th>Location</th>
+            <th>Places</th> <!-- New column -->
             <th>Status</th>
           </tr>
         </thead>
@@ -33,6 +34,7 @@
             <td class="event-title">{{ event.title }}</td>
             <td>{{ event.date | date:'mediumDate' }}</td>
             <td>{{ event.location }}</td>
+            <td>{{ event.numberOfPlaces || 'Unlimited' }}</td> <!-- Display numberOfPlaces -->
             <td>
               <span class="status-badge" [ngClass]="'status-' + event.status">
                 {{ event.status }}

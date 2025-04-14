@@ -5,15 +5,16 @@ import { EventManagementService } from '../../../services/services/event-managem
 import { RegistrationManagementService } from '../../../services/services/registration-management.service';
 
 @Component({
-  selector: 'app-event-registrations',
-  templateUrl: './event-registrations.component.html',
-  styleUrls: ['./event-registrations.component.scss']
+  selector: 'app-manage-event-registrations',
+  templateUrl: './manage-event-registrations.component.html',
+  styleUrls: ['./manage-event-registrations.component.scss']
 })
-export class EventRegistrationsComponent implements OnInit {
+export class ManageEventRegistrationsComponent implements OnInit {
   registrations: Registration[] = [];
   event: Event | null = null;
   loading = true;
   error: string | null = null;
+  successMessage: string | null = null;
   isUpdating = false;
   eventId?: number;
 
@@ -41,7 +42,7 @@ export class EventRegistrationsComponent implements OnInit {
         this.event = response;
       },
       error: (err) => {
-        console.error('Error loading event', err);
+        console.error('Error loading event:', err);
         this.error = 'Failed to load event details';
       }
     });
@@ -55,28 +56,35 @@ export class EventRegistrationsComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
+        console.error('Error loading registrations:', err);
         this.error = 'Failed to load registrations';
         this.loading = false;
-        console.error(err);
       }
     });
   }
 
   updateRegistrationStatus(registrationId: number, status: 'CONFIRMED' | 'CANCELED'): void {
+    if (this.isUpdating) return;
+
     this.isUpdating = true;
     this.error = null;
+    this.successMessage = null;
 
     this.registrationService.updateRegistrationStatus({ idR: registrationId, status }).subscribe({
       next: () => {
         this.isUpdating = false;
+        this.successMessage = `Registration ${status.toLowerCase()} successfully`;
         if (this.eventId) {
-          this.loadRegistrations(this.eventId); // Refresh registrations
+          this.loadRegistrations(this.eventId);
         }
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
       },
       error: (err) => {
-        this.error = `Failed to update registration status to ${status}`;
         this.isUpdating = false;
-        console.error(err);
+        this.error = `Failed to update registration to ${status}: ${err.error?.message || 'Unknown error'}`;
+        console.error('Error updating registration:', err);
       }
     });
   }
@@ -92,6 +100,6 @@ export class EventRegistrationsComponent implements OnInit {
     const confirmedAndPending = this.registrations.filter(
       reg => reg.status === 'CONFIRMED' || reg.status === 'PENDING'
     ).length;
-    return this.event.numberOfPlaces - confirmedAndPending;
+    return Math.max(0, this.event.numberOfPlaces - confirmedAndPending);
   }
 }

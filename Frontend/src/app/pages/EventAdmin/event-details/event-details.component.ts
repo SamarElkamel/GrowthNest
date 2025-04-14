@@ -58,4 +58,14 @@ export class EventDetailsComponent implements OnInit {
       }
     );
   }
+
+  get remainingPlaces(): number {
+    if (!this.event || this.event.numberOfPlaces === undefined) {
+      return Infinity;
+    }
+    const confirmedAndPending = this.registrations.filter(
+      reg => reg.status === 'CONFIRMED' || reg.status === 'PENDING'
+    ).length;
+    return Math.max(0, this.event.numberOfPlaces - confirmedAndPending);
+  }
 }

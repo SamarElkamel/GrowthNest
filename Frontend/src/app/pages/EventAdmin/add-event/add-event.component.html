@@ -65,6 +65,16 @@
              placeholder="Where will it take place?">
     </div>
 
+    <!-- Number of Places Field -->
+    <div class="form-group">
+      <label for="numberOfPlaces">Number of Places</label>
+      <input type="number" id="numberOfPlaces" [(ngModel)]="event.numberOfPlaces" name="numberOfPlaces" 
+             min="1" placeholder="Enter maximum number of attendees" #numberOfPlaces="ngModel">
+      <div *ngIf="numberOfPlaces.invalid && (numberOfPlaces.dirty || numberOfPlaces.touched)" class="validation-error">
+        <div *ngIf="numberOfPlaces.errors?.['min']">Number of places must be at least 1</div>
+      </div>
+    </div>
+
     <!-- Description Field -->
     <div class="form-group">
       <label for="description">Description</label>

@@ -45,6 +45,19 @@
         <div class="orb-value">{{ event.location || 'Virtual' }}</div>
         <div class="orb-aura"></div>
       </div>
+
+      <!-- Number of Places -->
+      <div class="soft-detail-orb">
+        <div class="orb-icon">👥</div>
+        <div class="orb-label">Capacity</div>
+        <div class="orb-value">
+          {{ event.numberOfPlaces || 'Unlimited' }}
+          <ng-container *ngIf="event.numberOfPlaces">
+            ({{ remainingPlaces }} remaining)
+          </ng-container>
+        </div>
+        <div class="orb-aura"></div>
+      </div>
     </div>
 
     <!-- Description -->
@@ -86,6 +99,12 @@
             No attendees yet
           </div>
         </div>
+      </div>
+
+      <div class="registrations-actions">
+        <button class="btn-primary" [routerLink]="['/admin/events', event.idEvent, 'manage-registrations']">
+          <i class="bi bi-people me-2"></i>Manage Registrations
+        </button>
       </div>
     </div>
   </div>

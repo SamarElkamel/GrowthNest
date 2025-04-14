@@ -2,8 +2,8 @@
   <!-- Floating Header -->
   <div class="form-header">
     <button class="soft-back-btn" routerLink="/admin/events">
-      
-      ← back to Events
+      <span class="material-symbols-outlined"></span>
+      ← back to Events 
     </button>
     <h2 class="soft-glow">Update Event</h2>
     <p class="soft-subtitle">Edit your event details</p>
@@ -62,7 +62,7 @@
           </select>
           <div class="input-glow"></div>
         </div>
-        <div *ngIf="statusError" class="validation-error">
+        <div *ngIf="statusError" class="validation-warning">
           {{ statusError }}
         </div>
         <div *ngIf="statusSelect.invalid && (statusSelect.dirty || statusSelect.touched)" class="validation-error">
@@ -80,6 +80,19 @@
       </div>
     </div>
 
+    <!-- Number of Places Field -->
+    <div class="form-group">
+      <label>Number of Places</label>
+      <div class="input-wrapper">
+        <input type="number" [(ngModel)]="event.numberOfPlaces" name="numberOfPlaces" 
+               min="1" #numberOfPlaces="ngModel">
+        <div class="input-glow"></div>
+      </div>
+      <div *ngIf="numberOfPlaces.invalid && (numberOfPlaces.dirty || numberOfPlaces.touched)" class="validation-error">
+        <div *ngIf="numberOfPlaces.errors?.['min']">Number of places must be at least 1</div>
+      </div>
+    </div>
+
     <!-- Description Field -->
     <div class="form-group">
       <label>Description</label>
@@ -91,7 +104,7 @@
 
     <!-- Submit Button -->
     <button type="submit" class="soft-submit-btn" 
-            [disabled]="isLoading || form.invalid || dateError || statusError">
+            [disabled]="isLoading || form.invalid || dateError">
       <span class="btn-content">
         {{ isLoading ? 'Updating...' : 'Confirm Changes' }}
       </span>

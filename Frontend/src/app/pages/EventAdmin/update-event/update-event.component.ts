@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Event } from '../../../services/models';
-import { EventManagementService } from '../../../services/services/event-management.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { Event } from '../../../services/models';
+import { EventManagementService } from '../../../services/services/event-management.service';
 
 @Component({
   selector: 'app-event-update',
@@ -11,7 +11,8 @@ import { NgForm } from '@angular/forms';
 })
 export class EventUpdateComponent implements OnInit {
   event: Event = {
-    status: 'PLANNED' // Default status
+    status: 'PLANNED',
+    numberOfPlaces: undefined // Initialize numberOfPlaces
   };
   isLoading = true;
   error: string | null = null;
@@ -24,7 +25,6 @@ export class EventUpdateComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    // Set minimum date to today for the date picker
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0];
   }
@@ -42,9 +42,12 @@ export class EventUpdateComponent implements OnInit {
   loadEvent(eventId: number) {
     this.eventService.displayEvent({ idE: eventId }).subscribe(
       (response) => {
-        this.event = response;
+        this.event = {
+          ...response,
+          date: this.formatDateForInput(response.date),
+          numberOfPlaces: response.numberOfPlaces // Ensure numberOfPlaces is loaded
+        };
         this.isLoading = false;
-        // Validate initially loaded data
         this.validateDate();
         this.validateStatus();
       },
@@ -56,6 +59,18 @@ export class EventUpdateComponent implements OnInit {
     );
   }
 
+  private formatDateForInput(date: string | Date | undefined): string | undefined {
+    if (!date) {
+      return undefined;
+    }
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      console.warn('Invalid date received:', date);
+      return undefined;
+    }
+    return parsedDate.toISOString().split('T')[0];
+  }
+
   validateDate(): void {
     if (!this.event.date) {
       this.dateError = 'Event date is required';
@@ -64,16 +79,17 @@ export class EventUpdateComponent implements OnInit {
 
     const selectedDate = new Date(this.event.date);
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time part for accurate comparison
+    today.setHours(0, 0, 0, 0);
 
-    if (selectedDate < today) {
-      this.dateError = 'Event date must be today or in the future';
+    if (this.event.status === 'PLANNED' || this.event.status === 'ONGOING') {
+      if (selectedDate < today) {
+        this.dateError = 'Planned/Ongoing events must have today or a future date';
+      } else {
+        this.dateError = null;
+      }
     } else {
       this.dateError = null;
     }
-
-    // Cross-validate with status
-    this.validateStatus();
   }
 
   validateStatus(): void {
@@ -83,7 +99,7 @@ export class EventUpdateComponent implements OnInit {
     }
 
     if (!this.event.date) {
-      // Can't validate status without date
+      this.statusError = null;
       return;
     }
 
@@ -92,35 +108,46 @@ export class EventUpdateComponent implements OnInit {
     today.setHours(0, 0, 0, 0);
 
     if (this.event.status === 'COMPLETED' || this.event.status === 'CANCELED') {
-      if (selectedDate >= today) {
-        this.statusError = 'Completed/Canceled events must have a past date';
+      if (selectedDate > today) {
+        this.statusError = 'Warning: Completed/Canceled events typically have a past date';
       } else {
         this.statusError = null;
       }
-    } else if (selectedDate < today) {
-      this.statusError = 'Planned/Ongoing events must have today or a future date';
+    } else if (this.event.status === 'PLANNED' || this.event.status === 'ONGOING') {
+      if (selectedDate < today) {
+        this.statusError = 'Planned/Ongoing events must have today or a future date';
+      } else {
+        this.statusError = null;
+      }
     } else {
       this.statusError = null;
     }
   }
 
   updateEvent(form: NgForm) {
-    // Trigger validation for all fields
     form.form.markAllAsTouched();
-
-    // Run validations
     this.validateDate();
     this.validateStatus();
 
-    // Don't submit if there are validation errors
-    if (form.invalid || this.dateError || this.statusError) {
+    // Validate numberOfPlaces
+    if (this.event.numberOfPlaces !== undefined && this.event.numberOfPlaces < 1) {
+      form.form.controls['numberOfPlaces'].setErrors({ min: true });
+    }
+
+    if (form.invalid || this.dateError) {
       return;
     }
 
     this.isLoading = true;
     this.error = null;
 
-    this.eventService.updateEvent({ body: this.event }).subscribe(
+    const eventToUpdate = {
+      ...this.event,
+      date: this.event.date,
+      numberOfPlaces: this.event.numberOfPlaces // Ensure numberOfPlaces is included
+    };
+
+    this.eventService.updateEvent({ body: eventToUpdate }).subscribe(
       () => {
         this.isLoading = false;
         this.router.navigate(['/admin/events']);

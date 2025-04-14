@@ -11,6 +11,51 @@
         }
     ],
     "paths": {
+        "/Registration/updateStatus/{idR}": {
+            "put": {
+                "tags": [
+                    "Registration Management"
+                ],
+                "description": "Admin confirm or cancel registration",
+                "operationId": "updateRegistrationStatus",
+                "parameters": [
+                    {
+                        "name": "idR",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PENDING",
+                                "CONFIRMED",
+                                "CANCELED"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Registration"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/Registration/updateRegistration": {
             "put": {
                 "tags": [
@@ -502,6 +547,10 @@
                     "location": {
                         "type": "string"
                     },
+                    "numberOfPlaces": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "history": {
                         "type": "string"
                     },
@@ -648,13 +697,13 @@
                         "type": "string",
                         "format": "date-time"
                     },
+                    "accountNonLocked": {
+                        "type": "boolean"
+                    },
                     "accountNonExpired": {
                         "type": "boolean"
                     },
                     "credentialsNonExpired": {
-                        "type": "boolean"
-                    },
-                    "accountNonLocked": {
                         "type": "boolean"
                     }
                 }

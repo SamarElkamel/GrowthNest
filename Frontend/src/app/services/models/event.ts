@@ -11,9 +11,9 @@ export interface Event {
   history?: string;
   idEvent?: number;
   location?: string;
+  numberOfPlaces?: number;
   registrations?: Array<Registration>;
   startTime?: LocalTime;
   status?: 'PLANNED' | 'ONGOING' | 'COMPLETED' | 'CANCELED';
   title?: string;
-  imageUrl?: string; // Add this
 }

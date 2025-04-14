@@ -1,121 +1,65 @@
-<!-- user-reservations.component.html -->
-<div class="bg0 p-t-75 p-b-85">
-    <div class="container">
-      <!-- Breadcrumb -->
-      <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-b-30 p-lr-0-lg">
-        <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
-          Home
-          <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
-        </a>
-  
-        <span class="stext-109 cl4">
-          Your Reservations
-        </span>
-      </div>
-  
-      <!-- Loading State -->
-      <div *ngIf="isLoading" class="text-center p-t-100 p-b-100">
-        <div class="spinner-grow text-dark" role="status" style="width: 3rem; height: 3rem;">
-          <span class="sr-only">Loading...</span>
-        </div>
-        <h4 class="mtext-112 cl2 p-t-30">
-          Loading Your Reservations...
-        </h4>
-      </div>
-      
-      <!-- Error State -->
-      <div *ngIf="error" class="w-full p-b-50">
-        <div class="alert alert-danger alert-dismissible fade show bor12 p-l-30 p-r-25 p-t-25 p-b-25" role="alert">
-          <span class="mtext-112 cl2">
-            <i class="zmdi zmdi-alert-circle m-r-10"></i>
-            {{ error }}
-          </span>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span class="cl2" aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      </div>
-  
-      <!-- Reservations List -->
-      <div *ngIf="!isLoading && !error" class="row">
-        <div class="col-lg-10 col-xl-8 m-lr-auto m-b-50">
-          <div class="bor10 p-lr-40 p-t-30 p-b-40 m-lr-0-xl p-lr-15-sm">
-            <h3 class="mtext-105 cl2 p-b-30 txt-center">
-              <i class="zmdi zmdi-calendar-note m-r-15"></i>
-              Your Event Reservations
-            </h3>
-  
-            <div class="wrap-table-shopping-cart p-t-20">
-              <table class="table-shopping-cart">
-                <thead>
-                  <tr class="table_head bg6">
-                    <th class="column-1 p-l-30">Event</th>
-                    <th class="column-2">Title</th>
-                    <th class="column-3">Date</th>
-                    <th class="column-4 p-r-20">Status</th>
-                    <th class="column-5 p-r-30">Action</th>
-                  </tr>
-                </thead>
-  
-                <tbody>
-                  <tr class="table_row p-t-20 p-b-20" *ngFor="let reservation of reservations">
-                    <td class="column-1 p-l-30">
-                      <div class="how-itemcart1">
-                        <img [src]="reservation.event?.imageUrl || 'assets/images/aa.jpg'" 
-                            alt="EVENT" class="img-thumbnail" style="width: 90px; height: 90px; object-fit: cover;">
-                      </div>
-                    </td>
-                    <td class="column-2">
-                      <span class="stext-115 cl6">
-                        {{ reservation.event?.title }}
-                      </span>
-                    </td>
-                    <td class="column-3">
-                      <span class="stext-115 cl3">
-                        {{ reservation.reservationDate | date: 'mediumDate' }}
-                      </span>
-                    </td>
-                    <td class="column-4 p-r-20">
-                      <span class="stext-115" 
-                            [ngClass]="{
-                              'cl1': reservation.status === 'CONFIRMED',
-                              'cl3': reservation.status === 'PENDING',
-                              'cl10': reservation.status === 'CANCELED'
-                            }">
-                        {{ reservation.status }}
-                      </span>
-                    </td>
-                    <td class="column-5 p-l-20 p-r-30">
-                      <button class="flex-c-m stext-101 cl0 size-102 bg10 bor2 hov-btn3 p-lr-15 trans-04"
-                              (click)="deleteReservation(reservation.idRegist!)"
-                              style="background-color: #000;">
-                        <i class="zmdi zmdi-delete m-r-8"></i> 
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Empty State -->
-        <div *ngIf="reservations.length === 0" class="col-12 text-center p-t-100 p-b-100">
-          <div class="bor10 p-lr-40 p-t-45 p-b-40 m-lr-0-xl">
-            <img src="assets/images/empty-cart.png" alt="No reservations" style="max-width: 180px;">
-            <h4 class="mtext-105 cl2 p-t-30 p-b-10">
-              No Reservations Found
-            </h4>
-            <p class="stext-117 cl6 p-b-30">
-              You haven't made any reservations yet. Browse our events to get started!
-            </p>
-            <a href="/events" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-              <i class="zmdi zmdi-search m-r-8"></i>
-              Browse Events
-            </a>
-          </div>
-        </div>
-      </div>
+<div class="container mt-4">
+  <h2>Your Reservations</h2>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center p-t-50 p-b-50">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <p>Loading reservations...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = null" aria-label="Close"></button>
+  </div>
+
+  <!-- Reservations -->
+  <div *ngIf="!isLoading && !error">
+    <div *ngIf="reservations.length === 0" class="alert alert-info">
+      You have no reservations.
+    </div>
+
+    <div *ngIf="reservations.length > 0" class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Event</th>
+            <th>Reservation Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reservation of reservations">
+            <td>
+              {{ reservation.event?.title || 'Unknown Event' }}
+              <small class="text-muted d-block">{{ reservation.event?.date | date:'mediumDate' }}</small>
+            </td>
+            <td>{{ reservation.reservationDate | date:'medium' }}</td>
+            <td>
+              <span [ngClass]="{
+                'badge bg-warning': reservation.status === 'PENDING',
+                'badge bg-success': reservation.status === 'CONFIRMED',
+                'badge bg-danger': reservation.status === 'CANCELED'
+              }">
+                {{ reservation.status }}
+              </span>
+            </td>
+            <td>
+              <button *ngIf="reservation.status !== 'CANCELED'" 
+                      class="btn btn-sm btn-danger" 
+                      (click)="deleteReservation(reservation.idRegist!)">
+                Delete
+              </button>
+              <span *ngIf="reservation.status === 'CANCELED'" class="text-muted">
+                No actions available
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
+</div>
