@@ -85,3 +85,46 @@
     .p-r-85 { padding-right: 15px; }
     .p-l-85 { padding-left: 15px; }
   }
+  .qr-code-section {
+    text-align: center;
+  
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+  
+    .qr-code-img {
+      width: 200px;
+      height: 200px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+  }
+  .qr-code-section {
+  text-align: center;
+
+  h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .qr-code-img {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+}
+
+.hov-img0 img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.bg-img1 {
+  background-size: cover;
+  background-position: center;
+}

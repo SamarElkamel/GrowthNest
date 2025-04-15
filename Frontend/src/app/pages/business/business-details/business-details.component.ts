@@ -13,6 +13,7 @@ export interface Business {
   image1?: string;
   averageRating: number;
   ratingCount: number;
+  instagramPageName?: string;
 }
 
 @Component({
@@ -22,8 +23,10 @@ export interface Business {
 })
 export class BusinessDetailsComponent implements OnInit {
   business: Business | null = null;
+  qrCodeUrl: string | null = null;
   loading = true;
   error: string | null = null;
+  baseUrl: string = 'http://localhost:8080/Growthnest';
 
   constructor(
     private router: Router,
@@ -53,11 +56,25 @@ export class BusinessDetailsComponent implements OnInit {
       next: (data) => {
         this.business = data;
         this.loading = false;
+        // Load QR Code after business details
+        this.loadQRCode(idB);
       },
       error: (err) => {
         this.error = 'Erreur lors du chargement des détails de l\'entreprise.';
         this.loading = false;
         console.error(err);
+      }
+    });
+  }
+
+  loadQRCode(businessId: number): void {
+    this.businessService.getQRCodeForBusiness({ id: businessId, width: 200, height: 200 }).subscribe({
+      next: (blob) => {
+        this.qrCodeUrl = URL.createObjectURL(blob);
+      },
+      error: (err) => {
+        this.qrCodeUrl = null; // Ensure QR Code doesn’t display
+        console.error('Erreur lors du chargement du QR Code:', err);
       }
     });
   }
@@ -75,5 +92,15 @@ export class BusinessDetailsComponent implements OnInit {
     } else {
       console.error('ID Business non trouvé:', this.business);
     }
+  }
+
+  getLogoUrl(logo: string | undefined): string {
+    return logo ? `${this.baseUrl}${logo}` : 'assets/images/banner-07.jpg';
+  }
+
+  onImageError(event: Event, business: Business): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'assets/images/banner-07.jpg';
+    business.image1 = ''; // Clear image1 to prevent repeated attempts
   }
 }

@@ -5,7 +5,7 @@
 import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -28,17 +28,95 @@ import { RequestBuilder } from '../request-builder';
 @Injectable({ providedIn: 'root' })
 export class GestionDesBusinessService extends BaseService {
   private refreshList$ = new Subject<void>();
-  
-  constructor(config: ApiConfiguration, http: HttpClient,private router: Router) {
+  private currentBusiness = new BehaviorSubject<Business | null>(null);
+
+  constructor(config: ApiConfiguration, http: HttpClient, private router: Router) {
     super(config, http);
   }
 
-  /** Path part for operation `updateBusiness()` */
+  /** Path part for operation `uploadLogo()` */
+  static readonly UploadLogoPath = '/business/upload-logo';
 
+  /**
+   * Uploader un logo
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `uploadLogo()` instead.
+   *
+   * This method sends `image/*` and handles request body of type `File`.
+   */
+  uploadLogo$Response(params: { body: File }, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+    const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.UploadLogoPath, 'post');
+    if (params) {
+      rb.body(params.body, params.body.type || 'image/jpeg');
+    }
+
+    return this.http.request(
+      rb.build({
+        responseType: 'text',
+        accept: 'text/plain',
+        context,
+      })
+    ).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => r as StrictHttpResponse<string>)
+    );
+  }
+
+  /**
+   * Uploader un logo
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `uploadLogo$Response()` instead.
+   *
+   * This method sends `image/*` and handles request body of type `File`.
+   */
+  uploadLogo(params: { body: File }, context?: HttpContext): Observable<string> {
+    return this.uploadLogo$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
+    );
+  }
+
+  /** Path part for operation `addBusiness()` */
+  static readonly AddBusinessPath = '/business/addBusiness';
+
+  /**
+   * Ajouter un business
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `addBusiness()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  addBusiness$Response(params: AddBusiness$Params, context?: HttpContext): Observable<StrictHttpResponse<Business>> {
+    return addBusiness(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Ajouter un business
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `addBusiness$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  addBusiness(params: AddBusiness$Params, context?: HttpContext): Observable<Business> {
+    return this.addBusiness$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Business>) => r.body),
+      tap({
+        next: (newBusiness) => {
+          this.currentBusiness.next(newBusiness);
+        },
+        error: (err) => console.error('Erreur création business:', err),
+      })
+    );
+  }
+
+  /** Path part for operation `updateBusiness()` */
   static readonly UpdateBusinessPath = '/business/updateBusiness';
 
   /**
-   * modifier un business
+   * Modifier un business
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `updateBusiness()` instead.
@@ -50,7 +128,7 @@ export class GestionDesBusinessService extends BaseService {
   }
 
   /**
-   * modifier un business
+   * Modifier un business
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `updateBusiness$Response()` instead.
@@ -62,63 +140,12 @@ export class GestionDesBusinessService extends BaseService {
       map((r: StrictHttpResponse<Business>): Business => r.body)
     );
   }
-private currentBusiness = new BehaviorSubject<Business | null>(null);
-  /** Path part for operation `addBusiness()` */
-  static readonly AddBusinessPath = '/business/addBusiness';
-
-  /**
-   * ajouter un business
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addBusiness()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  addBusiness$Response(params: AddBusiness$Params, context?: HttpContext): Observable<StrictHttpResponse<Business>> {
-    return addBusiness(this.http, this.rootUrl, params, context);
-  }
-  
-  
-  // Ajoutez ces méthodes
-  getCurrentBusiness(): Observable<Business | null> {
-    return this.currentBusiness.asObservable();
-  }
-  
-  navigateToBusinessDetails(idBusiness: number): void {
-    this.router.navigate([`/admin/my-business/${idBusiness}`]);
-  }
-
-  /**
-   * ajouter un business
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addBusiness$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  /*addBusiness(params: AddBusiness$Params, context?: HttpContext): Observable<Business> {
-    return this.addBusiness$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Business>): Business => r.body)
-    );
-  }*/
-  addBusiness(params: AddBusiness$Params): Observable<Business> {
-    return this.addBusiness$Response(params).pipe(
-      map((r: StrictHttpResponse<Business>) => r.body),
-      tap({
-        next: (newBusiness) => {
-          this.currentBusiness.next(newBusiness);
-          
-        },
-        error: (err) => console.error('Erreur création business:', err)
-      })
-    );
-  }
 
   /** Path part for operation `getBusinessById()` */
   static readonly GetBusinessByIdPath = '/business/getBusinessById/{idB}';
 
   /**
-   * afficher un business selon l'id
+   * Afficher un business selon l'id
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getBusinessById()` instead.
@@ -130,7 +157,7 @@ private currentBusiness = new BehaviorSubject<Business | null>(null);
   }
 
   /**
-   * afficher un business selon l'id
+   * Afficher un business selon l'id
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getBusinessById$Response()` instead.
@@ -147,7 +174,7 @@ private currentBusiness = new BehaviorSubject<Business | null>(null);
   static readonly GetAllBusinessPath = '/business/getAllBusiness';
 
   /**
-   * afficher tous les business
+   * Afficher tous les business
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getAllBusiness()` instead.
@@ -159,7 +186,7 @@ private currentBusiness = new BehaviorSubject<Business | null>(null);
   }
 
   /**
-   * afficher tous les business
+   * Afficher tous les business
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getAllBusiness$Response()` instead.
@@ -176,7 +203,7 @@ private currentBusiness = new BehaviorSubject<Business | null>(null);
   static readonly DeleteBusinessPath = '/business/deleteBusiness/{idB}';
 
   /**
-   * supprimer un business
+   * Supprimer un business
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `deleteBusiness()` instead.
@@ -188,7 +215,7 @@ private currentBusiness = new BehaviorSubject<Business | null>(null);
   }
 
   /**
-   * supprimer un business
+   * Supprimer un business
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `deleteBusiness$Response()` instead.
@@ -200,21 +227,11 @@ private currentBusiness = new BehaviorSubject<Business | null>(null);
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
-   /**
-   * Déclenche une actualisation de la liste
-   */
-   triggerRefresh(): void {
-    this.refreshList$.next();
-  }
+
+  /** Path part for operation `rateBusiness()` */
+  static readonly RateBusinessPath = '/business/{businessId}/rate';
 
   /**
-   * Observable pour écouter les demandes d'actualisation
-   */
-  getRefreshObservable(): Observable<void> {
-    return this.refreshList$.asObservable();
-  }
-
-/**
    * Rate a business
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -222,41 +239,50 @@ private currentBusiness = new BehaviorSubject<Business | null>(null);
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-rateBusiness$Response(params: { businessId: number; ratingValue: number }, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-  const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.RateBusinessPath, 'post');
-  if (params) {
-    rb.path('businessId', params.businessId, {});
-    rb.body(params.ratingValue, 'application/json');
+  rateBusiness$Response(params: { businessId: number; ratingValue: number }, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.RateBusinessPath, 'post');
+    if (params) {
+      rb.path('businessId', params.businessId, {});
+      rb.body(params.ratingValue, 'application/json');
+    }
+
+    return this.http.request(
+      rb.build({
+        responseType: 'json',
+        accept: 'application/json',
+        context,
+      })
+    ).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => r as StrictHttpResponse<void>)
+    );
   }
 
-  return this.http.request(
-    rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context
-    })
-  ).pipe(
-    filter((r: any) => r instanceof HttpResponse),
-    map((r: HttpResponse<any>) => r as StrictHttpResponse<void>)
-  );
-}
+  /**
+   * Rate a business
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `rateBusiness$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  rateBusiness(params: { businessId: number; ratingValue: number }, context?: HttpContext): Observable<void> {
+    return this.rateBusiness$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
 
-/**
- * Rate a business
- *
- * This method provides access only to the response body.
- * To access the full response (for headers, for example), `rateBusiness$Response()` instead.
- *
- * This method sends `application/json` and handles request body of type `application/json`.
- */
-rateBusiness(params: { businessId: number; ratingValue: number }, context?: HttpContext): Observable<void> {
-  return this.rateBusiness$Response(params, context).pipe(
-    map((r: StrictHttpResponse<void>): void => r.body)
-  );
-}
-static readonly RateBusinessPath = '/business/{businessId}/rate';
-static readonly GetUserRatingPath = '/business/{businessId}/user-rating';
+  /** Path part for operation `getUserRating()` */
+  static readonly GetUserRatingPath = '/business/{businessId}/user-rating';
 
+  /**
+   * Get user rating for a business
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getUserRating()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
   getUserRating$Response(params: { businessId: number }, context?: HttpContext): Observable<StrictHttpResponse<number | null>> {
     const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.GetUserRatingPath, 'get');
     if (params) {
@@ -266,7 +292,7 @@ static readonly GetUserRatingPath = '/business/{businessId}/user-rating';
       rb.build({
         responseType: 'json',
         accept: 'application/json',
-        context
+        context,
       })
     ).pipe(
       filter((r: any) => r instanceof HttpResponse),
@@ -274,10 +300,89 @@ static readonly GetUserRatingPath = '/business/{businessId}/user-rating';
     );
   }
 
+  /**
+   * Get user rating for a business
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getUserRating$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
   getUserRating(params: { businessId: number }, context?: HttpContext): Observable<number | null> {
     return this.getUserRating$Response(params, context).pipe(
       map((r: StrictHttpResponse<number | null>) => r.body)
     );
   }
 
+  /**
+   * Get the current business
+   */
+  getCurrentBusiness(): Observable<Business | null> {
+    return this.currentBusiness.asObservable();
+  }
+
+  /**
+   * Navigate to business details
+   */
+  navigateToBusinessDetails(idBusiness: number): void {
+    this.router.navigate([`/admin/my-business/${idBusiness}`]);
+  }
+
+  /**
+   * Trigger a list refresh
+   */
+  triggerRefresh(): void {
+    this.refreshList$.next();
+  }
+
+  /**
+   * Observable for refresh requests
+   */
+  getRefreshObservable(): Observable<void> {
+    return this.refreshList$.asObservable();
+  }
+  /** Path part for operation `getQRCodeForBusiness()` */
+static readonly GetQRCodeForBusinessPath = '/business/{id}/qrcode';
+
+/**
+ * Récupérer le QR Code pour un business
+ *
+ * This method provides access to the full `HttpResponse`, allowing access to response headers.
+ * To access only the response body, use `getQRCodeForBusiness()` instead.
+ *
+ * This method doesn't expect any request body.
+ */
+getQRCodeForBusiness$Response(params: { id: number; width?: number; height?: number }, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+  const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.GetQRCodeForBusinessPath, 'get');
+  if (params) {
+    rb.path('id', params.id, {});
+    rb.query('width', params.width || 200, {});
+    rb.query('height', params.height || 200, {});
+  }
+
+  return this.http.request(
+    rb.build({
+      responseType: 'blob',
+      accept: 'image/png',
+      context,
+    })
+  ).pipe(
+    filter((r: any) => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => r as StrictHttpResponse<Blob>)
+  );
+}
+
+/**
+ * Récupérer le QR Code pour un business
+ *
+ * This method provides access only to the response body.
+ * To access the full response (for headers, for example), `getQRCodeForBusiness$Response()` instead.
+ *
+ * This method doesn't expect any request body.
+ */
+getQRCodeForBusiness(params: { id: number; width?: number; height?: number }, context?: HttpContext): Observable<Blob> {
+  return this.getQRCodeForBusiness$Response(params, context).pipe(
+    map((r: StrictHttpResponse<Blob>): Blob => r.body)
+  );
+}
 }

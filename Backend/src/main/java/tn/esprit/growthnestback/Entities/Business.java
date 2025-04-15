@@ -27,12 +27,16 @@ public class Business {
     @NotBlank(message = "La description est obligatoire")
     @Size(min = 10, max = 255, message = "La description doit avoir entre 10 et 255 caractères")
     String description;
-
+    @NotBlank(message = "Le nom de la page Instagram est obligatoire")
+    @Size(min = 1, max = 30, message = "Le nom de la page Instagram doit avoir entre 1 et 30 caractères")
+    @Column(name = "instagram_page_name")
+    String instagramPageName;
     @NotNull(message = "La catégorie est obligatoire")
     @Enumerated(EnumType.STRING)
     CategorieBusiness categorieBusiness;
   // @NotBlank(message = "Le logo est obligatoire")
-    String logo;
+  @Column(name = "logo", length = 255) // Adjust length as needed
+  private String logo;
     @Column(name = "average_rating", nullable = false)
     private Double averageRating = 0.0;
 
@@ -119,5 +123,13 @@ public class Business {
 
     public void setRatingCount(Integer ratingCount) {
         this.ratingCount = ratingCount;
+    }
+
+    public String getInstagramPageName() {
+        return instagramPageName;
+    }
+
+    public void setInstagramPageName(String instagramPageName) {
+        this.instagramPageName = instagramPageName;
     }
 }

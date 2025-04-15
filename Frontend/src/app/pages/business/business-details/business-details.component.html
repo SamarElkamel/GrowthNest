@@ -1,9 +1,9 @@
 <!-- Title page -->
 <section
   class="bg-img1 txt-center p-lr-15 p-tb-92"
-  [style.background-image]="'url(' + (business?.bannerImage || 'assets/images/bg-01.jpg') + ')'"
+  [style.background-image]="'url(' + getLogoUrl(business?.logo) + ')'"
 >
-  <h2 class="ltext-105 cl0 txt-center">Welcome to our business</h2>
+  <h2 class="ltext-105 cl0 txt-center">Welcome to {{ business?.name || 'our business' }}</h2>
 </section>
 
 <!-- Content page -->
@@ -25,16 +25,27 @@
               {{ business.description || 'Aucune description disponible pour cette entreprise.' }}
             </p>
             <p class="stext-113 cl6 p-b-26">
-              Contactez-nous pour plus d'informations ou pour découvrir nos services.
+              <strong>Catégorie :</strong> {{ business.categorieBusiness || 'Général' }}
+            </p>
+            <p class="stext-113 cl6 p-b-26">
+              <strong>Page Instagram :</strong> {{ business.instagramPageName || 'Non spécifiée' }}
             </p>
             <div>
               <p>
-                Average Rating: {{ business.averageRating | number:'1.1-1' }} ({{ business.ratingCount }} votes)
+                <strong>Average Rating:</strong> {{ business.averageRating | number:'1.1-1' }} ({{
+                  business.ratingCount
+                }}
+                votes)
               </p>
               <app-rating
                 [businessId]="business.idBusiness"
                 (ratingSubmitted)="refreshBusiness()"
               ></app-rating>
+            </div>
+            <!-- QR Code -->
+            <div class="qr-code-section p-t-20" *ngIf="qrCodeUrl">
+              <h4 class="stext-111 cl2 p-b-10">Scannez pour visiter notre Instagram</h4>
+              <img [src]="qrCodeUrl" alt="QR Code Instagram" class="qr-code-img" />
             </div>
           </div>
           <div class="col-8 txt-center p-t-20">
@@ -49,7 +60,11 @@
         <div class="col-11 col-md-5 col-lg-4 m-lr-auto">
           <div class="how-bor1">
             <div class="hov-img0">
-              <img [src]="business.image1 || 'assets/images/about-01.jpg'" alt="IMG" />
+              <img
+                [src]="getLogoUrl(business.logo)"
+                alt="Business Image"
+                (error)="onImageError($event, business)"
+              />
             </div>
           </div>
         </div>

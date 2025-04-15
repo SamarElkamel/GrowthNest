@@ -8,10 +8,10 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Business } from '../../models/business';
+import { Business, CreateBusinessDto } from '../../models/business';
 
 export interface AddBusiness$Params {
-      body: Business
+      body: CreateBusinessDto
 }
 
 export function addBusiness(http: HttpClient, rootUrl: string, params: AddBusiness$Params, context?: HttpContext): Observable<StrictHttpResponse<Business>> {

@@ -12,6 +12,15 @@ export interface Business {
   logo: string;
   averageRating: number;
   ratingCount: number;
+  instagramPageName: string;
   products?: Array<Products>;
 
+}
+export interface CreateBusinessDto {
+  name: string;
+  description: string;
+  categorieBusiness: string;
+  logo?: string;
+  averageRating: number;
+  ratingCount: number;
 }

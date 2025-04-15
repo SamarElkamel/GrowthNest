@@ -9,6 +9,7 @@ import tn.esprit.growthnestback.Repository.BusinessRepository;
 import tn.esprit.growthnestback.Repository.ProductsRepository;
 import tn.esprit.growthnestback.Repository.UserRatingRepository;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,24 @@ public class BusinessServiceImpl implements IBusinessService{
     private BusinessRepository businessRepository;
     @Autowired
     private UserRatingRepository userRatingRepository;
+    @Autowired
     private ProductsRepository productsRepository;
+    @Autowired
+    private QRCodeService qrCodeService;
+
+    public Business findById(Long id) {
+        return businessRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Business non trouvée avec l'ID : " + id));
+    }
+@Override
+    public byte[] generateQRCodeForBusiness(Long businessId, int width, int height) throws Exception {
+        Business business = findById(businessId);
+        if (business.getInstagramPageName() == null || business.getInstagramPageName().trim().isEmpty()) {
+            throw new IllegalArgumentException("La page Instagram n'est pas définie pour cette entreprise.");
+        }
+        String instagramUrl = "https://www.instagram.com/" + business.getInstagramPageName() + "/";
+        return qrCodeService.generateQRCode(instagramUrl, width, height);
+    }
     @Override
     public List<Business> getAllBusiness() {
         return businessRepository.findAll();
@@ -115,6 +133,15 @@ public class BusinessServiceImpl implements IBusinessService{
         Long userId = 2L;
         Optional<UserRating> rating = userRatingRepository.findByUserIdAndBusinessId(userId, businessId);
         return rating.map(UserRating::getRatingValue).orElse(null);
+    }
+    private boolean isValidBase64(String base64) {
+        try {
+            String base64Data = base64.startsWith("data:image") ? base64.split(",")[1] : base64;
+            Base64.getDecoder().decode(base64Data);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
 
