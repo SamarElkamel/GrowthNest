@@ -298,6 +298,42 @@
                 }
             }
         },
+        "/Registration/downloadInvitation/{idR}": {
+            "get": {
+                "tags": [
+                    "Registration Management"
+                ],
+                "description": "Download event invitation PDF",
+                "operationId": "downloadInvitation",
+                "parameters": [
+                    {
+                        "name": "idR",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "format": "byte"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/Registration/DisplayRegistration/{idR}": {
             "get": {
                 "tags": [
@@ -684,6 +720,10 @@
                     "name": {
                         "type": "string"
                     },
+                    "lastModifiedDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
                     "username": {
                         "type": "string"
                     },
@@ -693,17 +733,13 @@
                             "$ref": "#/components/schemas/GrantedAuthority"
                         }
                     },
-                    "lastModifiedDate": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "accountNonLocked": {
-                        "type": "boolean"
-                    },
                     "accountNonExpired": {
                         "type": "boolean"
                     },
                     "credentialsNonExpired": {
+                        "type": "boolean"
+                    },
+                    "accountNonLocked": {
                         "type": "boolean"
                     }
                 }

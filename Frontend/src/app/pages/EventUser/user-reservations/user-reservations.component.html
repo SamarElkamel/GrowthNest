@@ -53,6 +53,11 @@
                       (click)="deleteReservation(reservation.idRegist!)">
                 Delete
               </button>
+              <button *ngIf="reservation.status === 'CONFIRMED'"
+              class="btn btn-sm btn-primary ms-2"
+              (click)="downloadInvitation(reservation)">
+        <i class="fas fa-file-pdf"></i> Download Invitation
+      </button>
               <span *ngIf="reservation.status === 'CANCELED'" class="text-muted">
                 No actions available
               </span>

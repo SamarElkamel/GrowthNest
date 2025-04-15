@@ -21,6 +21,8 @@ import { displayByEvent } from '../fn/registration-management/display-by-event';
 import { DisplayByEvent$Params } from '../fn/registration-management/display-by-event';
 import { displayRegistration } from '../fn/registration-management/display-registration';
 import { DisplayRegistration$Params } from '../fn/registration-management/display-registration';
+import { downloadInvitation } from '../fn/registration-management/download-invitation';
+import { DownloadInvitation$Params } from '../fn/registration-management/download-invitation';
 import { getUserReservations } from '../fn/registration-management/get-user-reservations';
 import { GetUserReservations$Params } from '../fn/registration-management/get-user-reservations';
 import { Registration } from '../models/registration';
@@ -148,6 +150,35 @@ export class RegistrationManagementService extends BaseService {
   getUserReservations(params: GetUserReservations$Params, context?: HttpContext): Observable<Array<Registration>> {
     return this.getUserReservations$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<Registration>>): Array<Registration> => r.body)
+    );
+  }
+
+  /** Path part for operation `downloadInvitation()` */
+  static readonly DownloadInvitationPath = '/Registration/downloadInvitation/{idR}';
+
+  /**
+   * Download event invitation PDF
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `downloadInvitation()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  downloadInvitation$Response(params: DownloadInvitation$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<string>>> {
+    return downloadInvitation(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Download event invitation PDF
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `downloadInvitation$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  downloadInvitation(params: DownloadInvitation$Params, context?: HttpContext): Observable<Array<string>> {
+    return this.downloadInvitation$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<string>>): Array<string> => r.body)
     );
   }
 

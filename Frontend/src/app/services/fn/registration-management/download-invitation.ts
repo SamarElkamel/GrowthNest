@@ -8,26 +8,25 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Event } from '../../models/event';
 
-export interface DisplayEvent$Params {
-  idE: number;
+export interface DownloadInvitation$Params {
+  idR: number;
 }
 
-export function displayEvent(http: HttpClient, rootUrl: string, params: DisplayEvent$Params, context?: HttpContext): Observable<StrictHttpResponse<Event>> {
-  const rb = new RequestBuilder(rootUrl, displayEvent.PATH, 'get');
+export function downloadInvitation(http: HttpClient, rootUrl: string, params: DownloadInvitation$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<string>>> {
+  const rb = new RequestBuilder(rootUrl, downloadInvitation.PATH, 'get');
   if (params) {
-    rb.path('idE', params.idE, {});
+    rb.path('idR', params.idR, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'application/json', context })
+    rb.build({ responseType: 'blob', accept: 'application/pdf', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Event>;
+      return r as StrictHttpResponse<Array<string>>;
     })
   );
 }
 
-displayEvent.PATH = '/Event/DisplayEvent/{idE}';
+downloadInvitation.PATH = '/Registration/downloadInvitation/{idR}';
