@@ -33,4 +33,14 @@ export class OrderService {
   getOrderById(orderId: number): Observable<OrderResponse> {
     return this.http.get<OrderResponse>(`${this.baseUrl}/${orderId}`);
   }
+  reorder(originalOrderId: number): Observable<OrderResponse> {
+    const userId = 1; // or dynamically pull this later
+    return this.http.post<OrderResponse>(
+      `${this.baseUrl}/reorder/${originalOrderId}?userId=${userId}`,
+      {}
+    );
+  }
+  getOrderHistory(userId: number): Observable<OrderResponse[]> {
+    return this.http.get<OrderResponse[]>(`${this.baseUrl}/user/${userId}`);
+  }  
 }

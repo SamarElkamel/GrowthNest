@@ -45,7 +45,7 @@ public class CouponServiceImpl implements ICouponService{
         coupon.setActive(true);
         coupon.setGlobal(request.global());
         coupon.setMaxUses(request.maxUses());
-        coupon.setUsageCount(coupon.getUsageCount() + 1);
+        coupon.setUsageCount(coupon.getUsageCount());
         coupon.setOwner(owner);
         if (coupon.getUsageCount() >= coupon.getMaxUses()) {
             throw new RuntimeException("Coupon usage limit reached.");

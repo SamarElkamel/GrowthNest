@@ -30,6 +30,8 @@ import { BackLayoutComponent } from './layouts/back-layout/back-layout.component
 import { CouponAnalyticsComponent } from './pages/Orders/coupon-analytics/coupon-analytics.component';
 import { CartPageComponent } from './pages/cart-page/cart-page.component';
 import { ProduitsComponent } from './pages/produits/produits.component';
+import { OrderHistoryComponent } from './pages/order-history/order-history.component';
+import { UserProgressComponent } from './pages/user-progress/user-progress.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,10 @@ import { ProduitsComponent } from './pages/produits/produits.component';
     BackLayoutComponent,
     CouponAnalyticsComponent,
     CartPageComponent,
-    ProduitsComponent
+    ProduitsComponent,
+    OrderHistoryComponent,
+    UserProgressComponent,
+    
    
   ],
   imports: [

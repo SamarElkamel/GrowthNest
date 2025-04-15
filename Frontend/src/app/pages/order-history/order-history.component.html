@@ -1,0 +1,55 @@
+<form class="bg0 p-t-75 p-b-85">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50" *ngFor="let order of orders">
+          <div class="m-l-25 m-r--38 m-lr-0-xl">
+            <div class="wrap-table-shopping-cart">
+              <table class="table-shopping-cart">
+                <tr class="table_head">
+                  <th class="column-1">Product</th>
+                  <th class="column-2">Name</th>
+                  <th class="column-3">Price</th>
+                  <th class="column-4">Quantity</th>
+                  <th class="column-5">Total</th>
+                </tr>
+  
+                <tr class="table_row" *ngFor="let item of order.items">
+                  <td class="column-1">
+                    <div class="how-itemcart1">
+                      <img src="assets/images/default-product.jpg" alt="IMG">
+                    </div>
+                  </td>
+                  <td class="column-2">{{ item.productName }}</td>
+                  <td class="column-3">{{ item.priceAtTime | currency }}</td>
+                  <td class="column-4"> 
+                    {{ item.quantity }}
+                   
+                  </td>
+                  <td class="column-5">
+                    {{ item.priceAtTime * item.quantity | currency }}
+                  </td>
+                </tr>
+              </table>
+            </div>
+  
+            <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+              <div class="flex-w flex-m m-r-20 m-tb-5">
+                <p class="stext-104 cl2 m-r-10">
+                  <strong>Order #{{ order.orderId }}</strong> - 
+                  <em>Status:</em> {{ order.status }} | 
+                  <em>Payment:</em> {{ order.paymentMethod }} | 
+                  <em>Coupon:</em> {{ order.couponCode || 'N/A' }}
+                </p>
+              </div>
+  
+              <div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10"
+                   (click)="reorder(order.orderId)">
+                Re-order
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  

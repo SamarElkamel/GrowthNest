@@ -63,5 +63,19 @@ public class EmailService {
 
         mailSender.send(mimeMessage);
     }
+    public void sendHtmlOrderConfirmation(String toEmail, String subject, String htmlContent) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true); // true = multipart
 
+            helper.setFrom("yasminetemimi02@gmail.com");
+            helper.setTo(toEmail);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true); // true = HTML
+
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send HTML email", e);
+        }
+    }
 }

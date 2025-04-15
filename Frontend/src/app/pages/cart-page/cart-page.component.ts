@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from 'src/app/services/cart.service';
+import { loadStripe } from '@stripe/stripe-js';
 
 interface OrderItem {
   productId: number;
@@ -31,6 +32,7 @@ export class CartPageComponent implements OnInit {
   couponCode: string = '';
   deliveryAddress: string = '';
   paymentMethod: string = 'Cash';
+  
   constructor(private cartService: CartService) {}
 
   ngOnInit(): void {

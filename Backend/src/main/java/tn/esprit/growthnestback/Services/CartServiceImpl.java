@@ -38,7 +38,10 @@ public class CartServiceImpl implements ICartService {
     private  OrderDetailsRepository orderDetailsRepository;
     @Autowired
     private CouponRepository couponRepository ;
-
+   @Autowired
+    private EmailService mailService;
+   @Autowired
+   private PointsService points ;
     @Override
     public OrderResponseDTO viewCart(Long userId) {
         Order cart = getOrCreateCart(userId);
@@ -96,10 +99,10 @@ public class CartServiceImpl implements ICartService {
     public OrderResponseDTO checkoutCart(Long userId) {
         Order cart = orderRepository.findByUserIdAndStatus(userId, OrderStatus.CART)
                 .orElseThrow(() -> new EntityNotFoundException("No active cart to checkout"));
+        points.earnSeedsFromOrder(cart.getUser().getId(), BigDecimal.valueOf(cart.getTotalAmount()));
 
         cart.setStatus(OrderStatus.PENDING);
         orderRepository.save(cart);
-
         return mapOrderToDTO(cart);
     }
 
@@ -242,11 +245,13 @@ public class CartServiceImpl implements ICartService {
         BigDecimal roundedDiscount = BigDecimal.valueOf(discount).setScale(2, RoundingMode.HALF_UP);
 
         double totalAfterDiscount = subtotal - discount;
-
+        coupon.setUsageCount(coupon.getUsageCount()+1);
+        couponRepository.save(coupon);
         // Step 4: Apply to cart
         cart.setCoupon(coupon);
         cart.setTotalAmount(totalAfterDiscount);
         cart.setDiscountAmount(roundedDiscount.doubleValue());
+
         orderRepository.save(cart);
 
         return mapOrderToDTO(cart);
@@ -260,6 +265,105 @@ public class CartServiceImpl implements ICartService {
         cart.setPaymentMethod(paymentMethod);
 
         orderRepository.save(cart);
+        String html = """
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+        color: #333;
+      }
+      .email-container {
+        background-color: #fff;
+        max-width: 600px;
+        margin: auto;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        padding: 30px;
+      }
+      .header {
+        text-align: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #ddd;
+      }
+      .header h1 {
+        color: #4CAF50;
+        margin: 0;
+        font-size: 24px;
+      }
+      .content {
+        padding: 20px 0;
+        font-size: 16px;
+      }
+      .summary {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+      }
+      .summary p {
+        margin: 6px 0;
+      }
+      .summary strong {
+        display: inline-block;
+        width: 150px;
+      }
+      .footer {
+        font-size: 12px;
+        text-align: center;
+        color: #888;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+      }
+      @media (max-width: 600px) {
+        .email-container { padding: 20px; }
+        .summary strong { width: 120px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="header">
+        <h1>Thank You for Your Order!</h1>
+        <p>Your order has been confirmed</p>
+      </div>
+
+      <div class="content">
+        <p>Hi <b>%s</b>,</p>
+        <p>We’ve received your order <b>#%d</b>.</p>
+
+        <div class="summary">
+          <p><strong>Total:</strong> $%.2f</p>
+          <p><strong>Payment Method:</strong> %s</p>
+          <p><strong>Delivery Address:</strong> %s</p>
+        </div>
+
+        <p>We’ll notify you when your items are shipped.</p>
+        <p>If you have questions, just reply to this email — we’re happy to help!</p>
+      </div>
+
+      <div class="footer">
+        GrowthNest © 2025 – Built with ❤️ in Tunisia<br />
+        <a href="https://growthnest.com" style="color: #888;">Visit our store</a>
+      </div>
+    </div>
+  </body>
+</html>
+""".formatted(
+                cart.getUser().getFirstname(),
+                cart.getId(),
+                cart.getTotalAmount(),
+                cart.getPaymentMethod(),
+                cart.getDeliveryAddress()
+        );
+
+
+        points.earnSeedsFromOrder(cart.getUser().getId(), BigDecimal.valueOf(cart.getTotalAmount()));
+        mailService.sendHtmlOrderConfirmation(cart.getUser().getEmail(), "Your GrowthNest Order Confirmation", html);
         return mapOrderToDTO(cart);
     }
 

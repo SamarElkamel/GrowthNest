@@ -3,9 +3,14 @@ package tn.esprit.growthnestback.Controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import tn.esprit.growthnestback.Entities.UserProgress;
+import tn.esprit.growthnestback.Repository.UserProgressRepository;
 import tn.esprit.growthnestback.Services.CartServiceImpl;
+import tn.esprit.growthnestback.Services.PointsService;
 import tn.esprit.growthnestback.dto.*;
 
 @RestController
@@ -15,6 +20,8 @@ public class CartRestController {
 
    @Autowired
     private CartServiceImpl cartService;
+    @Autowired
+    private UserProgressRepository userProgressRepo;
 
 
     @PostMapping("/add-items")
@@ -73,4 +80,14 @@ public class CartRestController {
         ));
     }
 
+    @GetMapping("/user-progress/{userId}")
+    public UserProgressDTO getUserProgress(@PathVariable Long userId) {
+        UserProgress progress = userProgressRepo.findByUserId(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return new UserProgressDTO(
+                progress.getTotalPoints(),
+                progress.getBadge()
+        );
+    }
 }

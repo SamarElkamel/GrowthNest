@@ -9,5 +9,5 @@ public record OrderResponseDTO (Long orderId,
                                String paymentMethod,
                                List<OrderItemDTO> items ,
                                 String couponCode,
-                                Double discountAmount ){
+                                Double discountAmount){
 }

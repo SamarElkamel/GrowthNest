@@ -1,0 +1,17 @@
+<div *ngIf="progressData" class="user-progress-header">
+    <img [src]="getBadgeImage()" alt="Bird Badge" class="bird-badge" />
+  
+    <div class="progress-info">
+      <p class="badge-text">{{ getBadgeText() }}</p>
+  
+      <!-- Progress bar with fallback -->
+      <progress [value]="getProgressPercent()" max="100"></progress>
+  
+      <!-- Points display -->
+      <p class="points">{{ currentPoints || 0 }} Seeds</p>
+  
+      <!-- Optional: Debug or live value -->
+      <!-- <p class="debug">Progress: {{ getProgressPercent() | number:'1.0-2' }}%</p> -->
+    </div>
+  </div>
+  

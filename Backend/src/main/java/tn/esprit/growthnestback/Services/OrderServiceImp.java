@@ -37,6 +37,7 @@ public class OrderServiceImp implements IOrderService {
     @Autowired
     private  UserRepository userRepository;
 
+
     private OrderResponseDTO mapOrderToDTO(Order order) {
         List<OrderItemDTO> items = order.getOrderDetails().stream()
                 .map(detail -> new OrderItemDTO(
@@ -94,8 +95,6 @@ public class OrderServiceImp implements IOrderService {
         if (!original.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("This order does not belong to the user.");
         }
-
-        // ✅ Step 1: Reuse existing cart if it exists
         Order cart = orderRepository.findCartByUserIdAndStatus(userId, OrderStatus.CART)
                 .orElseGet(() -> {
                     Order newCart = new Order();
@@ -106,12 +105,8 @@ public class OrderServiceImp implements IOrderService {
                     newCart.setTotalAmount(0.0);
                     return orderRepository.save(newCart);
                 });
-
-        // ✅ Step 2: Clear existing items from cart if you want to replace them
         orderDetailsRepository.deleteAll(cart.getOrderDetails());
         cart.getOrderDetails().clear();
-
-        // ✅ Step 3: Add items from original order
         BigDecimal total = BigDecimal.ZERO;
         List<OrderItemDTO> items = new ArrayList<>();
 
