@@ -52,36 +52,17 @@
   }
   
   #butt {
-    background-color: white; 
-    border-color: white; 
-    width: 200px;                  
-    height: 50px;                
-    border-radius: 25px;          
-    color: white;               
-    font-size: 16px;                
-    font-weight: 500;               
-    text-align: center;            
-    line-height: 50px;            
-    transition: all 0.3s ease;     
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  
+    background-color: #fb9678;
+    border: none; 
+   
   }
   
   #butt:hover {
-    background-color: #fb9678;  
-    border-color: #f58f6c;          
-    cursor: pointer;               
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);  
+    background-color: #fca68c;          
   }
+ 
 
-  #butt2
+  #title
   {
-    background-color: white;
-    border-color: white; 
+   padding-top: 100px;
   }
-
-  #butt2:hover
-  {
-    background-color: #f58f6c; 
-    border-color: #f58f6c;
-  }
-  

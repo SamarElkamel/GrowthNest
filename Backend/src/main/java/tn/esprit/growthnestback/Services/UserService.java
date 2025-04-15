@@ -3,6 +3,7 @@ package tn.esprit.growthnestback.Services;
 import jakarta.mail.MessagingException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import tn.esprit.growthnestback.Entities.ChangePasswordRequest;
 import tn.esprit.growthnestback.Entities.EditProfileRequest;
 import tn.esprit.growthnestback.Entities.EmailTemplateName;
 import tn.esprit.growthnestback.Entities.User;
@@ -153,5 +154,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public void changePassword(Long userId, ChangePasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new RuntimeException("Old password is incorrect");
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("New password and confirmation do not match");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+    }
 }

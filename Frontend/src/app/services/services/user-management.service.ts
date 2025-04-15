@@ -86,5 +86,11 @@ export class UserManagementService extends BaseService {
         return this.http.put<User>(`${this.apiUrl}/updateprofile/${profileData.id}`, profileData);
       }
       
+      changePassword(userId: number, formData: any): Observable<any> {
+        return this.http.put(`http://localhost:8080/Growthnest/users/changepassword/${userId}`, formData, {
+          responseType: 'text'  
+        });
+      }
+      
       
 }

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tn.esprit.growthnestback.Entities.ChangePasswordRequest;
 import tn.esprit.growthnestback.Entities.EditProfileRequest;
 import tn.esprit.growthnestback.Entities.User;
 import tn.esprit.growthnestback.Services.UserService;
@@ -108,6 +109,17 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // or return an error message
         }
     }
+
+    @PutMapping("/changepassword/{userId}")
+    public ResponseEntity<String> changePassword(@PathVariable Long userId, @RequestBody ChangePasswordRequest request) {
+        try {
+            userService.changePassword(userId, request);
+            return ResponseEntity.ok("Password changed successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }
 
 

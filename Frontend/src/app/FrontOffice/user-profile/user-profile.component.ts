@@ -47,4 +47,8 @@ export class UserProfileComponent {
   goToEditProfile(): void {
     this.router.navigate(['/updateprofile']); 
   }
+
+  goTochangepassword(): void {
+    this.router.navigate(['/EditPassword']); 
+  }
 }

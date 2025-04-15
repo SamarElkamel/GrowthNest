@@ -1,56 +1,54 @@
 <section class="h-100 gradient-custom-2">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center">
-        <div class="col col-lg-9 col-xl-8">
-          <div class="card">
-            <div class="rounded-top text-white d-flex flex-row" style="background-color: grey; height:200px;">
-              <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                <!-- Show User's Profile Image if available -->
-                <img *ngIf="profile.image" [src]="'data:image/jpeg;base64,' + profile.image" alt="User Image" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">
-                <!-- If no image, use a placeholder image -->
-                <img *ngIf="!profile.image" src="https://i.pinimg.com/236x/bb/df/ec/bbdfecbe813809bf72def9772538e323.jpg" alt="Placeholder Image" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">
-                
-                <!-- Add flexbox to arrange buttons side by side -->
-                <div class="d-flex">
-                  <button type="button" (click)="goToEditProfile()" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-dark text-body" id="butt" data-mdb-ripple-color="dark" style="z-index: 1;">
-                    Edit profile
-                  </button>
-                 
-                </div>
-              </div>
-              <div class="ms-3" style="margin-top: 130px;">
-                <h5>{{ profile.firstname }} {{ profile.lastname }}</h5>
-                <p>{{ profile.email }}</p>
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center">
+      <div class="col-lg-9 col-xl-8">
+        <div class="card shadow-lg rounded-4">
+          <div class="rounded-top text-white d-flex flex-row" style="background-color: #2b2b2b; height: 200px;">
+            <div class="ms-4 mt-5 d-flex flex-column align-items-center" style="width: 150px;">
+              <!-- Show User's Profile Image if available -->
+              <img *ngIf="profile.image" [src]="'data:image/jpeg;base64,' + profile.image" alt="User Image" class="img-fluid img-thumbnail rounded-circle mt-4 mb-2" style="width: 150px; z-index: 1">
+              <!-- If no image, use a placeholder image -->
+              <img *ngIf="!profile.image" src="https://i.pinimg.com/236x/bb/df/ec/bbdfecbe813809bf72def9772538e323.jpg" alt="Placeholder Image" class="img-fluid img-thumbnail rounded-circle mt-4 mb-2" style="width: 150px; z-index: 1">
+              
+              <!-- Buttons Group -->
+              <div class="d-flex mt-3">
+                <button type="button" id="button"(click)="goToEditProfile()" class="btn btn-outline-light text-dark mx-2" style="z-index: 2; border-radius: 20px; color:black">
+                  Edit Profile
+                </button>
+                <button type="button" id="button" (click)="goTochangepassword()" class="btn btn-outline-light text-dark mx-2" style="z-index: 2; border-radius: 20px; color:black">
+                  Edit Password
+                </button>
               </div>
             </div>
-            <div class="p-4 text-black bg-body-tertiary">
-              <div class="d-flex justify-content-end text-center py-1 text-body">
-                <div>
-                    <button type="button" (click)="logout()" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-dark text-body"  id="butt2" data-mdb-ripple-color="dark" style="z-index: 1; ">
-                        Logout
-                      </button>
-                </div>
-            
-              </div>
+            <div class="ms-3 mt-4" id="title">
+              <h5 class="fw-bold" style="color:white">{{ profile.firstname }} {{ profile.lastname }}</h5>
+              <p class="text-white-50">{{ profile.email }}</p>
             </div>
-            <div class="card-body p-4 text-black">
-              <div class="mb-5 text-body">
-                <p class="lead fw-normal mb-1">About</p>
-                <div class="p-4 bg-body-tertiary">
-                  <p class="font-italic mb-1"><strong>Role:</strong>{{ profile.role.name }}</p>
-                  <p class="font-italic mb-1"><strong>Date of Birth:</strong>{{ profile.dateOfBirth | date:'dd/MM/yyyy' }}</p>
-                  <p class="font-italic mb-0"><strong>Account Created:</strong>{{ profile.createdDate | date: 'dd/MM/yyyy' }}</p>
-                </div>
+          </div>
+          <div class="p-4 text-black bg-light">
+            <div class="d-flex justify-content-end">
+              <button id="butt"type="button" (click)="logout()" class="btn btn-primary" style="z-index: 1;">
+                Logout
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-4 text-black">
+            <div class="mb-5">
+              <p class="lead fw-normal mb-1 text-muted">About</p>
+              <div class="p-4 bg-light rounded-3">
+                <p class="font-italic mb-1"><strong>Role:</strong> {{ profile.role.name }}</p>
+                <p class="font-italic mb-1"><strong>Date of Birth:</strong> {{ profile.dateOfBirth | date: 'dd/MM/yyyy' }}</p>
+                <p class="font-italic mb-0"><strong>Account Created:</strong> {{ profile.createdDate | date: 'dd/MM/yyyy' }}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  
-    <!-- Error Message -->
-    <div *ngIf="errorMsg">
-      <p class="error">{{ errorMsg }}</p>
-    </div>
-  </section>
-  
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMsg" class="alert alert-danger mt-4">
+    <p>{{ errorMsg }}</p>
+  </div>
+</section>
