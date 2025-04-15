@@ -49,7 +49,7 @@ export class ListPostComponent implements OnInit {
   ngOnInit(): void {
     this.fetchPosts();
   }
-  badWords = ['shit', 'fuck', 'bitch', 'damn', 'ass'];
+  badWords = ['shit', 'fuck', 'bitch', 'damn', 'ass','kill'];
   containsBadWords(text: string): boolean {
     const lowered = text.toLowerCase();
     return this.badWords.some(word => lowered.includes(word));
@@ -57,7 +57,7 @@ export class ListPostComponent implements OnInit {
 
   fetchPosts(): void {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
   
     const url = this.selectedTag
       ? `http://localhost:8080/Growthnest/post/byTag/${this.selectedTag}`
@@ -84,7 +84,7 @@ this.posts.forEach(post => {
 
   loadResponses(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
     
     this.http.get<any[]>(`http://localhost:8080/Growthnest/respons/byPost/${postId}`, { headers })
     .subscribe({
@@ -103,7 +103,7 @@ submitResponse(postId: number) {
   const token = localStorage.getItem('token');
   const headers = new HttpHeaders().set(
     'Authorization',
-      `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`
+      `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`
   );
 
   this.http
@@ -146,7 +146,7 @@ submitResponse(postId: number) {
 
   fetchLikes(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
 
     this.http.get<number>(`http://localhost:8080/Growthnest/post/likes/${postId}`, { headers })
       .subscribe({
@@ -162,7 +162,7 @@ submitResponse(postId: number) {
 
   fetchDislikes(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
 
     this.http.get<number>(`http://localhost:8080/Growthnest/post/dislikes/${postId}`, { headers })
       .subscribe({
@@ -186,7 +186,7 @@ submitResponse(postId: number) {
 
   addReact(postId: number, type: 'LIKE' | 'DISLIKE') {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
 
     const request: ReactRequest = {
       idp: postId,
@@ -206,7 +206,7 @@ submitResponse(postId: number) {
 
   fetchReactions(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
 
     this.http.get<React[]>(`http://localhost:8080/Growthnest/api/reacts/post/${postId}`, { headers })
       .subscribe({
@@ -243,7 +243,7 @@ submitResponse(postId: number) {
   deletePost(postId: number) {
     if (confirm('Are you sure you want to delete this post?')) {
       const token = localStorage.getItem('token');
-      const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+      const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
 
       this.http.delete(`http://localhost:8080/Growthnest/post/deletepost/${postId}`, { headers })
         .subscribe({
@@ -272,7 +272,7 @@ submitResponse(postId: number) {
 
   updatePost(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
 
     // Create the post object with the updated values
     const updatedPost = {
@@ -309,7 +309,7 @@ submitResponse(postId: number) {
 
   updateResponse(responseId: number, postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
 
     const updatedResponse = {
       id: responseId,
@@ -334,7 +334,7 @@ submitResponse(postId: number) {
   deleteResponse(responseId: number, postId: number) {
     if (confirm('Are you sure you want to delete this response?')) {
       const token = localStorage.getItem('token');
-      const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+      const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
 
       this.http.delete(`http://localhost:8080/Growthnest/respons/deleterespons/${responseId}`, { headers })
         .subscribe({
@@ -390,7 +390,7 @@ submitNewPost() {
 
   const token = localStorage.getItem('token');
   const headers = new HttpHeaders({
-    Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`
+    Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`
   });
 
   this.http.post('http://localhost:8080/Growthnest/post/addPost', formData, { headers })
@@ -425,7 +425,7 @@ filterMyPosts() {
 }
 loadSavedPosts() {
   const token = localStorage.getItem('token');
-  const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+  const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
 
   this.http.get<number[]>('http://localhost:8080/Growthnest/post/saved', { headers })
     .subscribe({
@@ -440,7 +440,7 @@ loadSavedPosts() {
 }
 toggleSave(postId: number) {
   const token = localStorage.getItem('token');
-  const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+  const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU5NTM1LCJleHAiOjE3NDQ3NjgxNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4AVqmUie_-1P1_7VxtpP6xWoOiOCbE56E2H66JfJA-OCmfxXD83SCHyXFcr-Cb78`);
 
   this.http.post(`http://localhost:8080/Growthnest/post/save/${postId}`, {}, { headers })
     .subscribe({
