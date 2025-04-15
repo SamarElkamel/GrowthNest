@@ -10,8 +10,12 @@ import { Router } from '@angular/router';
 })
 export class EventListComponent implements OnInit {
   events: Event[] = [];
+  paginatedEvents: Event[] = [];
   isLoading = true;
   error: string | null = null;
+  page = 1;
+  pageSize = 6; // 6 events per page
+  collectionSize = 0;
 
   constructor(
     private eventService: EventManagementService,
@@ -27,6 +31,8 @@ export class EventListComponent implements OnInit {
     this.eventService.display1().subscribe(
       (response) => {
         this.events = response;
+        this.collectionSize = this.events.length;
+        this.refreshEvents();
         this.isLoading = false;
       },
       (error) => {
@@ -35,6 +41,11 @@ export class EventListComponent implements OnInit {
         this.isLoading = false;
       }
     );
+  }
+
+  refreshEvents() {
+    this.paginatedEvents = this.events
+      .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
   }
 
   viewDetails(id: number): void {
@@ -50,11 +61,6 @@ export class EventListComponent implements OnInit {
   }
 
   viewHistory(): void {
-    console.log('Attempting to navigate to /admin/events/history');
-    this.router.navigate(['admin/events/history']).then(success => {
-      console.log('Navigation successful:', success);
-    }).catch(err => {
-      console.error('Navigation failed:', err);
-    });
+    this.router.navigate(['admin/events/history']);
   }
 }
