@@ -82,5 +82,9 @@ export class UserManagementService extends BaseService {
         return this.http.get<User>(`${this.apiUrl}/profile/${userId}`);
       }
       
+      updateProfile(profileData: any) {
+        return this.http.put<User>(`${this.apiUrl}/updateprofile/${profileData.id}`, profileData);
+      }
+      
       
 }

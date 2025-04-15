@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tn.esprit.growthnestback.Entities.EditProfileRequest;
 import tn.esprit.growthnestback.Entities.User;
 import tn.esprit.growthnestback.Services.UserService;
 
@@ -98,9 +99,16 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-
+    @PutMapping("/updateprofile/{userId}")
+    public ResponseEntity<User> updateProfile(@PathVariable Long userId, @RequestBody EditProfileRequest request) {
+        try {
+            User updatedUser = userService.updateUserProfile(userId, request);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // or return an error message
+        }
+    }
 }
-
 
 
 

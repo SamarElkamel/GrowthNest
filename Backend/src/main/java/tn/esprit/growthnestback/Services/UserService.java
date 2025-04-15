@@ -3,6 +3,7 @@ package tn.esprit.growthnestback.Services;
 import jakarta.mail.MessagingException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import tn.esprit.growthnestback.Entities.EditProfileRequest;
 import tn.esprit.growthnestback.Entities.EmailTemplateName;
 import tn.esprit.growthnestback.Entities.User;
 import tn.esprit.growthnestback.Repository.UserRepository;
@@ -17,6 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
+
 
     public UserService(UserRepository userRepository, EmailService emailService, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -127,6 +129,28 @@ public class UserService {
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
+    }
+
+    public User updateUserProfile(Long userId, EditProfileRequest request) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+        if (request.getFirstname() != null && !request.getFirstname().isEmpty()) {
+            user.setFirstname(request.getFirstname());
+        }
+
+        if (request.getLastname() != null && !request.getLastname().isEmpty()) {
+            user.setLastname(request.getLastname());
+        }
+
+        if (request.getDateOfBirth() != null) {
+            user.setDateOfBirth(request.getDateOfBirth());
+        }
+
+
+        return userRepository.save(user);
     }
 
 

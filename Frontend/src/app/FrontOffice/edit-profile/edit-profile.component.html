@@ -1,0 +1,77 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card shadow">
+        <div class="card-body">
+          <h3 class="card-title mb-4">Edit Profile</h3>
+          
+          <!-- Display success or error message -->
+          <div *ngIf="successMessage" class="alert alert-success">
+            {{ successMessage }}
+          </div>
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+
+          <!-- Profile Form -->
+          <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+            
+            <!-- First Name -->
+            <div class="mb-3">
+              <label for="firstname" class="form-label">First Name</label>
+              <input
+                id="firstname"
+                formControlName="firstname"
+                class="form-control"
+                [ngClass]="{'is-invalid': editProfileForm.get('firstname')?.invalid && editProfileForm.get('firstname')?.touched}"
+                type="text"
+                placeholder="Enter your first name"
+              />
+              <div *ngIf="editProfileForm.get('firstname')?.invalid && editProfileForm.get('firstname')?.touched" class="invalid-feedback">
+                First name is required.
+              </div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="mb-3">
+              <label for="lastname" class="form-label">Last Name</label>
+              <input
+                id="lastname"
+                formControlName="lastname"
+                class="form-control"
+                [ngClass]="{'is-invalid': editProfileForm.get('lastname')?.invalid && editProfileForm.get('lastname')?.touched}"
+                type="text"
+                placeholder="Enter your last name"
+              />
+              <div *ngIf="editProfileForm.get('lastname')?.invalid && editProfileForm.get('lastname')?.touched" class="invalid-feedback">
+                Last name is required.
+              </div>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="mb-3">
+              <label for="dateOfBirth" class="form-label">Date of Birth</label>
+              <input
+                id="dateOfBirth"
+                formControlName="dateOfBirth"
+                class="form-control"
+                [ngClass]="{'is-invalid': editProfileForm.get('dateOfBirth')?.invalid && editProfileForm.get('dateOfBirth')?.touched}"
+                type="date"
+              />
+              <div *ngIf="editProfileForm.get('dateOfBirth')?.invalid && editProfileForm.get('dateOfBirth')?.touched" class="invalid-feedback">
+                Date of birth is required.
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mb-3">
+              <button type="submit" class="btn btn-primary" id="butt" [disabled]="editProfileForm.invalid">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

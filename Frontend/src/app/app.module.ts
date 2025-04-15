@@ -27,6 +27,7 @@ import { SelectRoleComponent } from './pages/select-role/select-role.component';
 import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { UserProfileComponent } from './FrontOffice/user-profile/user-profile.component';
+import { EditProfileComponent } from './FrontOffice/edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { UserProfileComponent } from './FrontOffice/user-profile/user-profile.co
     ForgetPasswordComponent,
     ResetPasswordComponent,
     UserProfileComponent,
+    EditProfileComponent,
   ],
   imports: [
     CommonModule,

@@ -43,4 +43,8 @@ export class UserProfileComponent {
     this.tokenService.clearToken(); 
     this.router.navigate(['/login']);
   }
+
+  goToEditProfile(): void {
+    this.router.navigate(['/updateprofile']); 
+  }
 }
