@@ -1,11 +1,13 @@
 <div class="stars">
-    <span *ngFor="let star of [1, 2, 3, 4, 5]"
-          (click)="rate(star)"
-          (mouseenter)="hoverRating = star"
-          (mouseleave)="hoverRating = 0"
-          [class.selected]="star <= (hoverRating || userRating || selectedRating)"
-          [class.disabled]="isLoading"
-          class="star">★</span>
+    <span
+      *ngFor="let star of [1, 2, 3, 4, 5]"
+      (click)="rate(star)"
+      (mouseenter)="hoverRating = star"
+      (mouseleave)="hoverRating = 0"
+      [class.selected]="star <= (hoverRating || userRating)"
+      [class.disabled]="isLoading"
+      class="star"
+    >★</span>
   </div>
-  <p *ngIf="userRating">You rated {{ userRating }} star{{ userRating === 1 ? '' : 's' }}.</p>
+  <p *ngIf="userRating > 0">Vous avez noté {{ userRating }} étoile{{ userRating === 1 ? '' : 's' }}.</p>
   <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>

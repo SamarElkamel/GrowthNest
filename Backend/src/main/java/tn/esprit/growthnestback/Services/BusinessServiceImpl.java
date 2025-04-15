@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.growthnestback.Entities.Business;
 import tn.esprit.growthnestback.Entities.UserRating;
-
 import tn.esprit.growthnestback.Repository.BusinessRepository;
 import tn.esprit.growthnestback.Repository.ProductsRepository;
 import tn.esprit.growthnestback.Repository.UserRatingRepository;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BusinessServiceImpl implements IBusinessService{
+public class BusinessServiceImpl implements IBusinessService {
     @Autowired
     private BusinessRepository businessRepository;
     @Autowired
@@ -25,115 +24,134 @@ public class BusinessServiceImpl implements IBusinessService{
     private QRCodeService qrCodeService;
 
     public Business findById(Long id) {
+        System.out.println("Fetching business with ID: " + id);
         return businessRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Business non trouvée avec l'ID : " + id));
+                .orElseThrow(() -> {
+                    System.out.println("Business not found for ID: " + id);
+                    return new IllegalArgumentException("Business non trouvé avec l'ID : " + id);
+                });
     }
-@Override
+
+    @Override
     public byte[] generateQRCodeForBusiness(Long businessId, int width, int height) throws Exception {
+        System.out.println("Generating QR code for business ID: " + businessId);
         Business business = findById(businessId);
         if (business.getInstagramPageName() == null || business.getInstagramPageName().trim().isEmpty()) {
+            System.out.println("No Instagram page for business ID: " + businessId);
             throw new IllegalArgumentException("La page Instagram n'est pas définie pour cette entreprise.");
         }
         String instagramUrl = "https://www.instagram.com/" + business.getInstagramPageName() + "/";
-        return qrCodeService.generateQRCode(instagramUrl, width, height);
+        byte[] qrCode = qrCodeService.generateQRCode(instagramUrl, width, height);
+        System.out.println("QR code generated for business ID: " + businessId);
+        return qrCode;
     }
+
     @Override
     public List<Business> getAllBusiness() {
+        System.out.println("Fetching all businesses");
         return businessRepository.findAll();
     }
 
     @Override
     public Business getBusinessById(Long id) {
-        return businessRepository.findById(id).get();
+        return findById(id);
     }
 
     @Override
     public Business addBusiness(Business business) {
-        return businessRepository.save(business);
+        System.out.println("Adding business: " + business.getName());
+        Business saved = businessRepository.save(business);
+        System.out.println("Business added: ID " + saved.getIdBusiness());
+        return saved;
     }
 
     @Override
     public Business updateBusiness(Business updatedBusiness) {
-        // Charge l’entité existante avec ses relations
-        Business existingBusiness = businessRepository.findById(updatedBusiness.getIdBusiness())
-                .orElseThrow(() -> new RuntimeException("Business non trouvé avec l’ID : " + updatedBusiness.getIdBusiness()));
-
-        // Log pour vérifier les produits avant mise à jour
-        System.out.println("Produits existants avant mise à jour : " + existingBusiness.getProducts().size());
-
-        // Met à jour uniquement les champs fournis
+        System.out.println("Updating business ID: " + updatedBusiness.getIdBusiness());
+        Business existingBusiness = findById(updatedBusiness.getIdBusiness());
         existingBusiness.setName(updatedBusiness.getName());
         existingBusiness.setDescription(updatedBusiness.getDescription());
         existingBusiness.setCategorieBusiness(updatedBusiness.getCategorieBusiness());
         existingBusiness.setLogo(updatedBusiness.getLogo());
-
-        // Sauvegarde sans modifier Products
+        existingBusiness.setInstagramPageName(updatedBusiness.getInstagramPageName());
         Business savedBusiness = businessRepository.save(existingBusiness);
-
-        // Log pour vérifier après sauvegarde
-        System.out.println("Produits après mise à jour : " + savedBusiness.getProducts().size());
-
+        System.out.println("Business updated: ID " + savedBusiness.getIdBusiness());
         return savedBusiness;
     }
 
     @Override
     public void deleteBusiness(Long id) {
+        System.out.println("Deleting business ID: " + id);
         businessRepository.deleteById(id);
+        System.out.println("Business deleted: ID " + id);
     }
+
     @Override
     public void addRating(Long businessId, Integer ratingValue) {
-        // Validate rating
         if (ratingValue < 1 || ratingValue > 5) {
-            throw new IllegalArgumentException("Rating must be between 1 and 5");
+            System.out.println("Invalid rating value: " + ratingValue);
+            throw new IllegalArgumentException("La note doit être entre 1 et 5.");
         }
-
-        // Static user ID
         Long userId = 2L;
-
-        // Find business
-        Business business = businessRepository.findById(businessId)
-                .orElseThrow(() -> new RuntimeException("Business not found"));
-
-        // Check for existing rating
+        System.out.println("Adding rating: userId=" + userId + ", businessId=" + businessId + ", ratingValue=" + ratingValue);
+        Business business = findById(businessId);
         Optional<UserRating> existingRating = userRatingRepository.findByUserIdAndBusinessId(userId, businessId);
         int currentCount = business.getRatingCount() != null ? business.getRatingCount() : 0;
         double currentAverage = business.getAverageRating() != null ? business.getAverageRating() : 0.0;
+        System.out.println("Before update: count=" + currentCount + ", average=" + currentAverage);
 
-        if (existingRating.isPresent()) {
-            // Update existing rating
-            UserRating userRating = existingRating.get();
-            int oldRating = userRating.getRatingValue();
-            userRating.setRatingValue(ratingValue);
-            userRatingRepository.save(userRating);
-
-            // Recalculate average: remove old rating, add new one
-            if (currentCount > 0) {
-                double totalRating = currentAverage * currentCount;
-                totalRating = totalRating - oldRating + ratingValue;
-                business.setAverageRating(totalRating / currentCount);
+        try {
+            if (existingRating.isPresent()) {
+                UserRating userRating = existingRating.get();
+                int oldRating = userRating.getRatingValue();
+                userRating.setRatingValue(ratingValue);
+                userRatingRepository.save(userRating);
+                System.out.println("Updated rating: old=" + oldRating + ", new=" + ratingValue);
+                if (currentCount > 0) {
+                    double totalRating = currentAverage * currentCount;
+                    totalRating = totalRating - oldRating + ratingValue;
+                    double newAverage = totalRating / currentCount;
+                    business.setAverageRating(newAverage);
+                    System.out.println("Updated: totalRating=" + totalRating + ", newAverage=" + newAverage);
+                } else {
+                    business.setAverageRating((double) ratingValue);
+                    business.setRatingCount(1);
+                    System.out.println("Set initial: average=" + ratingValue + ", count=1");
+                }
+            } else {
+                UserRating userRating = new UserRating();
+                userRating.setUserId(userId);
+                userRating.setBusinessId(businessId);
+                userRating.setRatingValue(ratingValue);
+                userRatingRepository.save(userRating);
+                System.out.println("Created rating for userId: " + userId);
+                double totalRating = currentAverage * currentCount + ratingValue;
+                int newCount = currentCount + 1;
+                double newAverage = totalRating / newCount;
+                business.setAverageRating(newAverage);
+                business.setRatingCount(newCount);
+                System.out.println("New: totalRating=" + totalRating + ", count=" + newCount + ", average=" + newAverage);
             }
-        } else {
-            // New rating
-            UserRating userRating = new UserRating();
-            userRating.setUserId(userId);
-            userRating.setBusinessId(businessId);
-            userRating.setRatingValue(ratingValue);
-            userRatingRepository.save(userRating);
-
-            // Update average and count
-            double newAverage = ((currentAverage * currentCount) + ratingValue) / (currentCount + 1);
-            business.setAverageRating(newAverage);
-            business.setRatingCount(currentCount + 1);
+            Business savedBusiness = businessRepository.save(business);
+            System.out.println("Saved business: ID=" + savedBusiness.getIdBusiness() +
+                    ", averageRating=" + savedBusiness.getAverageRating() +
+                    ", ratingCount=" + savedBusiness.getRatingCount());
+        } catch (Exception e) {
+            System.out.println("Error saving rating: " + e.getMessage());
+            throw new RuntimeException("Erreur lors de l'enregistrement de la note: " + e.getMessage());
         }
-
-        businessRepository.save(business);
     }
-@Override
+
+    @Override
     public Integer getUserRating(Long businessId) {
         Long userId = 2L;
+        System.out.println("Fetching rating: userId=" + userId + ", businessId=" + businessId);
         Optional<UserRating> rating = userRatingRepository.findByUserIdAndBusinessId(userId, businessId);
-        return rating.map(UserRating::getRatingValue).orElse(null);
+        Integer ratingValue = rating.map(UserRating::getRatingValue).orElse(null);
+        System.out.println("Rating found: " + ratingValue);
+        return ratingValue;
     }
+
     private boolean isValidBase64(String base64) {
         try {
             String base64Data = base64.startsWith("data:image") ? base64.split(",")[1] : base64;
@@ -143,7 +161,4 @@ public class BusinessServiceImpl implements IBusinessService{
             return false;
         }
     }
-
-
-
 }

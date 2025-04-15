@@ -240,6 +240,11 @@ export class GestionDesBusinessService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   rateBusiness$Response(params: { businessId: number; ratingValue: number }, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    if (params.ratingValue < 1 || params.ratingValue > 5) {
+      console.error(`Invalid rating value: ${params.ratingValue}. Must be between 1 and 5.`);
+      throw new Error('Rating value must be between 1 and 5');
+    }
+    console.log(`Submitting rating: businessId=${params.businessId}, ratingValue=${params.ratingValue}`);
     const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.RateBusinessPath, 'post');
     if (params) {
       rb.path('businessId', params.businessId, {});
@@ -254,7 +259,11 @@ export class GestionDesBusinessService extends BaseService {
       })
     ).pipe(
       filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => r as StrictHttpResponse<void>)
+      map((r: HttpResponse<any>) => r as StrictHttpResponse<void>),
+      tap({
+        next: () => console.log(`Rating submitted successfully: businessId=${params.businessId}`),
+        error: (err) => console.error(`Error submitting rating for businessId=${params.businessId}: ${err.message}`)
+      })
     );
   }
 
@@ -284,6 +293,7 @@ export class GestionDesBusinessService extends BaseService {
    * This method doesn't expect any request body.
    */
   getUserRating$Response(params: { businessId: number }, context?: HttpContext): Observable<StrictHttpResponse<number | null>> {
+    console.log(`Fetching user rating for businessId=${params.businessId}`);
     const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.GetUserRatingPath, 'get');
     if (params) {
       rb.path('businessId', params.businessId, {});
@@ -296,7 +306,11 @@ export class GestionDesBusinessService extends BaseService {
       })
     ).pipe(
       filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => r as StrictHttpResponse<number | null>)
+      map((r: HttpResponse<any>) => r as StrictHttpResponse<number | null>),
+      tap({
+        next: (r) => console.log(`User rating fetched: businessId=${params.businessId}, value=${r.body}`),
+        error: (err) => console.error(`Error fetching user rating for businessId=${params.businessId}: ${err.message}`)
+      })
     );
   }
 
@@ -341,48 +355,54 @@ export class GestionDesBusinessService extends BaseService {
   getRefreshObservable(): Observable<void> {
     return this.refreshList$.asObservable();
   }
-  /** Path part for operation `getQRCodeForBusiness()` */
-static readonly GetQRCodeForBusinessPath = '/business/{id}/qrcode';
 
-/**
- * Récupérer le QR Code pour un business
- *
- * This method provides access to the full `HttpResponse`, allowing access to response headers.
- * To access only the response body, use `getQRCodeForBusiness()` instead.
- *
- * This method doesn't expect any request body.
- */
-getQRCodeForBusiness$Response(params: { id: number; width?: number; height?: number }, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
-  const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.GetQRCodeForBusinessPath, 'get');
-  if (params) {
-    rb.path('id', params.id, {});
-    rb.query('width', params.width || 200, {});
-    rb.query('height', params.height || 200, {});
+  /** Path part for operation `getQRCodeForBusiness()` */
+  static readonly GetQRCodeForBusinessPath = '/business/{id}/qrcode';
+
+  /**
+   * Récupérer le QR Code pour un business
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getQRCodeForBusiness()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getQRCodeForBusiness$Response(params: { id: number; width?: number; height?: number }, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+    console.log(`Fetching QR code for businessId=${params.id}`);
+    const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.GetQRCodeForBusinessPath, 'get');
+    if (params) {
+      rb.path('id', params.id, {});
+      rb.query('width', params.width || 200, {});
+      rb.query('height', params.height || 200, {});
+    }
+
+    return this.http.request(
+      rb.build({
+        responseType: 'blob',
+        accept: 'image/png',
+        context,
+      })
+    ).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => r as StrictHttpResponse<Blob>),
+      tap({
+        next: () => console.log(`QR code fetched for businessId=${params.id}`),
+        error: (err) => console.error(`Error fetching QR code for businessId=${params.id}: ${err.message}`)
+      })
+    );
   }
 
-  return this.http.request(
-    rb.build({
-      responseType: 'blob',
-      accept: 'image/png',
-      context,
-    })
-  ).pipe(
-    filter((r: any) => r instanceof HttpResponse),
-    map((r: HttpResponse<any>) => r as StrictHttpResponse<Blob>)
-  );
-}
-
-/**
- * Récupérer le QR Code pour un business
- *
- * This method provides access only to the response body.
- * To access the full response (for headers, for example), `getQRCodeForBusiness$Response()` instead.
- *
- * This method doesn't expect any request body.
- */
-getQRCodeForBusiness(params: { id: number; width?: number; height?: number }, context?: HttpContext): Observable<Blob> {
-  return this.getQRCodeForBusiness$Response(params, context).pipe(
-    map((r: StrictHttpResponse<Blob>): Blob => r.body)
-  );
-}
+  /**
+   * Récupérer le QR Code pour un business
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getQRCodeForBusiness$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getQRCodeForBusiness(params: { id: number; width?: number; height?: number }, context?: HttpContext): Observable<Blob> {
+    return this.getQRCodeForBusiness$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Blob>): Blob => r.body)
+    );
+  }
 }

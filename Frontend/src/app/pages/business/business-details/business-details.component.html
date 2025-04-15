@@ -1,16 +1,18 @@
 <!-- Title page -->
 <section
   class="bg-img1 txt-center p-lr-15 p-tb-92"
-  [style.background-image]="'url(' + getLogoUrl(business?.logo) + ')'"
+  [style.background-image]="'url(assets/images/small-business.jpg)'"
 >
-  <h2 class="ltext-105 cl0 txt-center">Welcome to {{ business?.name || 'our business' }}</h2>
+  <h2 class="ltext-105 txt-center" style="color: black;">
+    Welcome to {{ business?.name || 'our business' }}
+  </h2>
 </section>
 
 <!-- Content page -->
 <section class="bg0 p-t-75 p-b-120">
   <div class="container">
     <div *ngIf="loading" class="text-center">
-      <p>Loading...</p>
+      <p>Chargement...</p>
     </div>
     <div *ngIf="error" class="text-center text-danger">
       <p>{{ error }}</p>
@@ -32,7 +34,7 @@
             </p>
             <div>
               <p>
-                <strong>Average Rating:</strong> {{ business.averageRating | number:'1.1-1' }} ({{
+                <strong>Note moyenne :</strong> {{ business.averageRating | number:'1.1-1' }} ({{
                   business.ratingCount
                 }}
                 votes)
@@ -53,7 +55,7 @@
               class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer"
               (click)="viewProducts(business.idBusiness)"
             >
-              View products
+              Voir les produits
             </button>
           </div>
         </div>

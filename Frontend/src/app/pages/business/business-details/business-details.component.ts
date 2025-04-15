@@ -41,6 +41,7 @@ export class BusinessDetailsComponent implements OnInit {
     } else {
       this.error = 'ID de l\'entreprise non fourni.';
       this.loading = false;
+      console.error('No business ID provided in route');
     }
   }
 
@@ -49,6 +50,7 @@ export class BusinessDetailsComponent implements OnInit {
     if (isNaN(idB)) {
       this.error = 'ID de l\'entreprise invalide.';
       this.loading = false;
+      console.error('Invalid business ID:', id);
       return;
     }
     const params: GetBusinessById$Params = { idB };
@@ -56,13 +58,14 @@ export class BusinessDetailsComponent implements OnInit {
       next: (data) => {
         this.business = data;
         this.loading = false;
-        // Load QR Code after business details
         this.loadQRCode(idB);
+        console.log('Business chargé:', data);
+        console.log('Image1 URL:', this.getLogoUrl(data.logo));
       },
       error: (err) => {
         this.error = 'Erreur lors du chargement des détails de l\'entreprise.';
         this.loading = false;
-        console.error(err);
+        console.error('Échec du chargement du business:', err);
       }
     });
   }
@@ -73,7 +76,7 @@ export class BusinessDetailsComponent implements OnInit {
         this.qrCodeUrl = URL.createObjectURL(blob);
       },
       error: (err) => {
-        this.qrCodeUrl = null; // Ensure QR Code doesn’t display
+        this.qrCodeUrl = null;
         console.error('Erreur lors du chargement du QR Code:', err);
       }
     });
@@ -82,7 +85,10 @@ export class BusinessDetailsComponent implements OnInit {
   refreshBusiness(): void {
     const id = this.route.snapshot.paramMap.get('idB');
     if (id) {
+      console.log('Refreshing business with ID:', id);
       this.loadBusinessDetails(id);
+    } else {
+      console.error('Cannot refresh: No business ID');
     }
   }
 
@@ -95,12 +101,15 @@ export class BusinessDetailsComponent implements OnInit {
   }
 
   getLogoUrl(logo: string | undefined): string {
-    return logo ? `${this.baseUrl}${logo}` : 'assets/images/banner-07.jpg';
+    const url = logo ? `${this.baseUrl}${logo}` : 'assets/images/banner-07.jpg';
+    console.log('Generated URL:', url);
+    return url;
   }
 
   onImageError(event: Event, business: Business): void {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = 'assets/images/banner-07.jpg';
-    business.image1 = ''; // Clear image1 to prevent repeated attempts
+    business.image1 = '';
+    console.log('Image error, switched to fallback');
   }
 }
