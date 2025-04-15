@@ -1,1 +1,27 @@
-<p>add-reclamation works!</p>
+<div class="container mt-4">
+    <h3>Ajouter une Réclamation</h3>
+
+    <form #reclamationForm="ngForm" (ngSubmit)="save(reclamationForm)">
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select id="type" class="form-control" [(ngModel)]="newReclamation.type" name="type" required
+                #type="ngModel">
+                <option *ngFor="let t of reclamationTypes" [value]="t">{{ t }}</option>
+            </select>
+            <div *ngIf="type.invalid && type.touched" class="alert alert-danger mt-2">
+                Le type est requis.
+            </div>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="description">Description</label>
+            <textarea id="description" class="form-control" [(ngModel)]="newReclamation.description" name="description"
+                required minlength="10" placeholder="Entrez la description" #description="ngModel"></textarea>
+            <div *ngIf="description.invalid && description.touched" class="alert alert-danger mt-2">
+                La description est requise et doit contenir entre 10 et 255 caractères.
+            </div>
+        </div>
+
+        <button class="btn btn-primary mt-3" type="submit" [disabled]="reclamationForm.invalid">Enregistrer</button>
+    </form>
+</div>

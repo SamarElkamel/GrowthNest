@@ -1,0 +1,30 @@
+<form (ngSubmit)="submitRating()" class="mb-4">
+  <div class="mb-2">
+    <label>Note :</label>
+    <div>
+      <i
+        class="fa"
+        *ngFor="let star of [1, 2, 3, 4, 5]"
+        [class.fa-star]="star <= newRating.stars"
+        [class.fa-star-o]="star > newRating.stars"
+        (click)="newRating.stars = star"
+        style="cursor: pointer; color: gold; font-size: 24px;"
+      ></i>
+    </div>
+  </div>
+
+  <div class="mb-2">
+    <textarea [(ngModel)]="newRating.comment" name="comment" class="form-control" placeholder="Votre commentaire..." required></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Envoyer</button>
+</form>
+  
+
+<h4 class="mt-4">Toutes les notes</h4>
+<ul>
+  <li *ngFor="let r of ratings">
+    {{ r.stars }} ★ - {{ r.comment }}
+    <button (click)="deleteRating(r.id!)">Supprimer</button>
+  </li>
+</ul>

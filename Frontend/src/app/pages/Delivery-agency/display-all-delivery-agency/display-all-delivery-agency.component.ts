@@ -13,30 +13,46 @@ export class DisplayAllDeliveryAgencyComponent implements OnInit {
   displayModal = false;
   newReclamation: Reclamation = { type: '', description: '', reclamationDate: new Date() };
   @Output() added = new EventEmitter<void>();
+  searchTerm: string = '';
+filteredAgencies: DeliveryAgency[] = [];
+currentPage = 1;
+itemsPerPage = 2;
   constructor(private agencyService: DeliveryAgencyService,private reclamationService: ReclamationService) {}
+
+  reclamationTypes: string[] = [];
 
   ngOnInit(): void {
     this.agencyService.getAll().subscribe(data => {
       this.agencies = data;
-      console.log(this.agencies);
-      
+      this.filterAndPaginate();
+
     });
+  
   }
-
-
-
-
-  openModal() {
-    this.displayModal = true;
+  filterAndPaginate() {
+    const filtered = this.agencies.filter(a =>
+      a.agencyName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      a.address.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      a.phoneNumber.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.filteredAgencies = filtered.slice(start, end);
   }
-  closeModal() {
-    this.displayModal = false;
+  onPageChanged(page: number) {
+    this.currentPage = page;
+    this.filterAndPaginate();
   }
-  save() {
-    this.reclamationService.add(this.newReclamation).subscribe(() => {
-      this.closeModal();
-      this.added.emit();
-      this.newReclamation = { type: '', description: '', reclamationDate: new Date() };
-    });
+  onSearchChange() {
+    this.currentPage = 1; 
+    this.filterAndPaginate();
+  }
+  get filteredTotalItems(): number {
+    return this.agencies.filter(a =>
+      a.agencyName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      a.address.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      a.phoneNumber.toLowerCase().includes(this.searchTerm.toLowerCase())
+    ).length;
   }
 }

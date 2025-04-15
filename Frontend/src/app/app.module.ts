@@ -21,23 +21,25 @@ import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SpinnerComponent } from './BackOffice/shared/spinner.component';
 import { DisplayAllDeliveryAgencyComponent } from './pages/Delivery-agency/display-all-delivery-agency/display-all-delivery-agency.component';
-import { DisplayByIdDeliveryAgencyComponent } from './pages/Delivery-agency/display-by-id-delivery-agency/display-by-id-delivery-agency.component';
 import { AddReclamationComponent } from './pages/Reclamation/add-reclamation/add-reclamation.component';
 import { DeleteReclamationComponent } from './pages/Reclamation/delete-reclamation/delete-reclamation.component';
 import { UpdateReclamationComponent } from './pages/Reclamation/update-reclamation/update-reclamation.component';
 import { DisplayReclamationComponent } from './pages/Reclamation/display-reclamation/display-reclamation.component';
 import { HeaderComponent } from './FrontOffice/header/header.component';
+import { PaginationComponent } from './pages/pagination/pagination.component';
+import { RatingComponent } from './pages/rating/rating.component';
 @NgModule({
   declarations: [
     AppComponent,
     SpinnerComponent,
     DisplayAllDeliveryAgencyComponent,
-    DisplayByIdDeliveryAgencyComponent,
     AddReclamationComponent,
     DeleteReclamationComponent,
     UpdateReclamationComponent,
     DisplayReclamationComponent,
     HeaderComponent,
+    PaginationComponent,
+    RatingComponent,
     
   ],
   imports: [

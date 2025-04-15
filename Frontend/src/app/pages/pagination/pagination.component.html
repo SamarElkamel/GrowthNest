@@ -1,0 +1,17 @@
+<nav *ngIf="totalPages > 1">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="changePage(currentPage - 1)">Précédent</button>
+      </li>
+  
+      <li class="page-item"
+          *ngFor="let page of pages"
+          [class.active]="currentPage === page">
+        <button class="page-link" (click)="changePage(page)">{{ page }}</button>
+      </li>
+  
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="changePage(currentPage + 1)">Suivant</button>
+      </li>
+    </ul>
+  </nav>

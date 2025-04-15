@@ -5,6 +5,8 @@ import { FullComponent } from './layouts/full/full.component';
 import { DisplayAllDeliveryAgencyComponent } from './pages/Delivery-agency/display-all-delivery-agency/display-all-delivery-agency.component';
 import { HomeComponent } from './FrontOffice/home/home.component';
 import { DisplayReclamationComponent } from './pages/Reclamation/display-reclamation/display-reclamation.component';
+import { AddReclamationComponent } from './pages/Reclamation/add-reclamation/add-reclamation.component';
+import { RatingComponent } from './pages/rating/rating.component';
 
 export const Approutes: Routes = [
   {
@@ -17,7 +19,11 @@ export const Approutes: Routes = [
     component: HomeComponent,
     children: [
       { path: '', component: HomeComponent },
-      { path: 'delivery-agencies', component: DisplayAllDeliveryAgencyComponent }
+      { path: 'delivery-agencies', component: DisplayAllDeliveryAgencyComponent },
+      { path: 'add-reclamation', component: AddReclamationComponent },
+      { path: 'rating', component: RatingComponent }
+
+
     ]
   },
   {

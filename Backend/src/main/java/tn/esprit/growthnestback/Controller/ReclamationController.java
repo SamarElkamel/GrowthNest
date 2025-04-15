@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.growthnestback.Entities.Reclamation;
+import tn.esprit.growthnestback.Entities.ReclamationType;
 import tn.esprit.growthnestback.Services.IReclamationServices;
+
+import java.util.Arrays;
 import java.util.List;
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
@@ -39,5 +42,9 @@ public class ReclamationController {
     @DeleteMapping("/deleteReclamation/{idR}")
     public void deleteReclamation(@PathVariable("idR") long reclamationId) {
         ireclamationServices.deleteReclamation(reclamationId);
+    }
+    @GetMapping("/reclamation-types")
+    public List<ReclamationType> getAllReclamationTypes() {
+        return Arrays.asList(ReclamationType.values());
     }
 }

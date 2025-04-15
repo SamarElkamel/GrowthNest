@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ReclamationType } from './FrontOffice/models/reclamation-type';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+  reclamationTypes = Object.values(ReclamationType);
+
 }

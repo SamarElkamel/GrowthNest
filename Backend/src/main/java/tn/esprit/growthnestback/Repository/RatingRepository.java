@@ -1,4 +1,9 @@
 package tn.esprit.growthnestback.Repository;
 
-public interface RatingRepository {
-}
+import org.springframework.data.jpa.repository.JpaRepository;
+import tn.esprit.growthnestback.Entities.Rating;
+
+public interface RatingRepository extends JpaRepository<Rating, Long> {
+    
+    }
+

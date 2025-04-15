@@ -20,9 +20,8 @@ public class Reclamation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long reclamationId;
 
-    @NotBlank(message = "The complaint type is required")
-    @Size(min = 3, max = 50, message = "The type must be between 3 and 50 characters")
-    String type;
+    @Enumerated(EnumType.STRING)
+    ReclamationType type;
 
     @NotBlank(message = "The description is required")
     @Size(min = 10, max = 255, message = "The description must be between 10 and 255 characters")
@@ -30,4 +29,7 @@ public class Reclamation {
 
     @Temporal(TemporalType.TIMESTAMP)
     Date reclamationDate;
+
+    @Enumerated(EnumType.STRING)
+    ReclamationStatus status = ReclamationStatus.PENDING;
 }
