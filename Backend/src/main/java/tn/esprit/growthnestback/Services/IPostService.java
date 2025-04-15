@@ -36,4 +36,10 @@ public interface IPostService {
 
     List<Post> findAll();
     Post validatePost(long id);
+
+    void toggleSavePost(Long postId, Authentication authentication);
+
+    List<Long> getSavedPostIds(Authentication authentication);
+
+    List<Post> getPostsByCurrentUser(Authentication authentication);
 }

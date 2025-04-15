@@ -17,10 +17,12 @@ import tn.esprit.growthnestback.Entities.Post;
 import tn.esprit.growthnestback.Entities.React;
 import tn.esprit.growthnestback.Entities.ReactionType;
 import tn.esprit.growthnestback.Entities.User;
+import tn.esprit.growthnestback.Repository.PostRepository;
 import tn.esprit.growthnestback.Repository.ReactRepository;
 import tn.esprit.growthnestback.Repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,6 +38,8 @@ public class ReactService implements IReactService {
     EntityManager entityManager;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     // 🆕 Nouvelle méthode pour ajouter une réaction avec DTO
     @Override
@@ -89,4 +93,31 @@ public class ReactService implements IReactService {
 
 
     }
+    @Override
+    public void toggleReaction(Long postId, ReactionType newType, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        Optional<React> existingReactOpt = reactRepository.findByUserAndPost(user, post);
+
+        if (existingReactOpt.isPresent()) {
+            React existing = existingReactOpt.get();
+            if (existing.getType() == newType) {
+                reactRepository.delete(existing); // same click => toggle off
+            } else {
+                existing.setType(newType); // different type => update
+                reactRepository.save(existing);
+            }
+        } else {
+            React newReact = new React();
+            newReact.setUser(user);
+            newReact.setPost(post);
+            newReact.setType(newType);
+            reactRepository.save(newReact);
+        }
+    }
+
 }

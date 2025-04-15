@@ -95,3 +95,81 @@
     <div class="wrap-slick1-arrows flex-sb-m flex-w"></div>
   </div>
 </section>
+
+<div class="home-container">
+  <div class="post-list-container">
+    <h2 class="section-title">📢 Growthnest Community</h2>
+
+    <!-- Tag Filter -->
+    <div class="filter-container">
+      <label for="tagFilter">🔍 Filter by Tag:</label>
+      <select id="tagFilter" [(ngModel)]="selectedTag" (change)="onTagChange()">
+        <option value="">All</option>
+        <option *ngFor="let tag of tags" [value]="tag">{{ tag }}</option>
+      </select>
+    </div>
+
+    <!-- Posts -->
+    <div *ngFor="let post of visiblePosts" class="post-card">
+      <div class="post-header">
+        <h3>{{ post.title }}</h3>
+        <span class="tag">{{ post.tags }}</span>
+      </div>
+      <p class="post-content">{{ post.content }}</p>
+
+      <!-- Media Display -->
+      <div class="media-section" *ngIf="post.image || post.video">
+        <img *ngIf="post.image"
+             [src]="getMediaUrl(post.image)"
+             alt="Post Image"
+             class="post-media"
+             (error)="handleImageError($event)" />
+
+        <video *ngIf="post.video" controls class="post-media">
+          <source [src]="getMediaUrl(post.video)" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <div class="post-meta">
+        <span>🕒 {{ post.createdAt | date:'short' }}</span>
+        <div class="reactions">
+          <button (click)="addReact(post.idp, 'LIKE')" class="reaction-btn like-btn">
+            👍 {{ likesMap[post.idp] || 0 }}
+          </button>
+          <button (click)="addReact(post.idp, 'DISLIKE')" class="reaction-btn dislike-btn">
+            👎 {{ dislikesMap[post.idp] || 0 }}
+          </button>
+        </div>
+        <button (click)="toggleResponses(post.idp)" class="toggle-responses-btn">
+          {{ showResponsesMap[post.idp] ? 'Hide Responses' : 'Show Responses' }} ({{ (responsesMap[post.idp] || []).length }})
+        </button>
+      </div>
+
+      <!-- Responses -->
+      <div class="response-section" *ngIf="showResponsesMap[post.idp]">
+        <h4>Responses</h4>
+        <div *ngFor="let response of responsesMap[post.idp] || []" class="response-item">
+          <div class="response-header">
+            <span class="user-name">{{ response.user?.fullName || 'Anonymous' }}</span>
+            <span class="response-date">{{ response.createdAt | date:'short' }}</span>
+          </div>
+          <p class="response-content">{{ response.respons }}</p>
+        </div>
+
+        <!-- Add new response -->
+        <div class="new-response">
+          <textarea [(ngModel)]="newResponse[post.idp]" placeholder="Write your response..." rows="3"></textarea>
+          <button (click)="submitResponse(post.idp)" class="submit-btn">Submit Response</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="load-more">
+      <button (click)="loadMore()" *ngIf="visiblePosts.length < posts.length">
+        🔽 Load More
+      </button>
+    </div>
+  </div>
+</div>

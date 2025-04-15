@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import tn.esprit.growthnestback.Entities.Post;
 import tn.esprit.growthnestback.Entities.Tags;
+import tn.esprit.growthnestback.Entities.User;
 
 import java.util.List;
 
@@ -14,5 +15,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByTags(Tags tag);
     List<Post> findByValidatedTrue();
     List<Post> findByValidatedFalse();
+    List<Post> findByUser(User user);
 
 }

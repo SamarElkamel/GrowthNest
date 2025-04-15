@@ -1,9 +1,12 @@
 package tn.esprit.growthnestback.Controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.growthnestback.DTO.ReactRequest;
 import tn.esprit.growthnestback.Entities.React;
+import tn.esprit.growthnestback.Entities.ReactionType;
 import tn.esprit.growthnestback.Services.IReactService;
 
 import java.util.List;
@@ -15,8 +18,17 @@ public class ReactController {
     private final IReactService reactService;
 
     @PostMapping("/add")
-    public React addReact(@RequestBody ReactRequest request) {
-        return reactService.addReact(request);
+    public ResponseEntity<?> addOrUpdateReact(@RequestBody ReactRequest request, Authentication authentication) {
+        ReactionType type;
+
+        try {
+            type = ReactionType.valueOf(request.getType().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid reaction type: " + request.getType());
+        }
+
+        reactService.toggleReaction(request.getIdp(), type, authentication);
+        return ResponseEntity.ok("Reaction updated");
     }
     @DeleteMapping("/delete/{id}")
     public void deleteReact(@PathVariable("id") long idreact) {

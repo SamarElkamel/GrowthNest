@@ -40,17 +40,24 @@ export class ListPostComponent implements OnInit {
   editedPost: { [key: string]: any } = {};
   editedResponse: { [key: string]: string } = {};
   showEditResponseMap: { [key: string]: boolean } = {};
+  savedMap: { [key: number]: boolean } = {};
   private readonly API_BASE_URL = 'http://localhost:8080/Growthnest';
+  imageLoadingStates: { [key: string]: boolean } = {};
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.fetchPosts();
   }
+  badWords = ['shit', 'fuck', 'bitch', 'damn', 'ass'];
+  containsBadWords(text: string): boolean {
+    const lowered = text.toLowerCase();
+    return this.badWords.some(word => lowered.includes(word));
+  }
 
   fetchPosts(): void {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
   
     const url = this.selectedTag
       ? `http://localhost:8080/Growthnest/post/byTag/${this.selectedTag}`
@@ -59,6 +66,7 @@ export class ListPostComponent implements OnInit {
     this.http.get<any[]>(url, { headers }).subscribe({
       next: data => {
         this.posts = data;
+        this.loadSavedPosts();
 this.visiblePosts = [];
 this.currentPage = 1;
 this.loadMore();
@@ -76,7 +84,7 @@ this.posts.forEach(post => {
 
   loadResponses(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
     
     this.http.get<any[]>(`http://localhost:8080/Growthnest/respons/byPost/${postId}`, { headers })
     .subscribe({
@@ -95,7 +103,7 @@ submitResponse(postId: number) {
   const token = localStorage.getItem('token');
   const headers = new HttpHeaders().set(
     'Authorization',
-      `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`
+      `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`
   );
 
   this.http
@@ -138,7 +146,7 @@ submitResponse(postId: number) {
 
   fetchLikes(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
 
     this.http.get<number>(`http://localhost:8080/Growthnest/post/likes/${postId}`, { headers })
       .subscribe({
@@ -154,7 +162,7 @@ submitResponse(postId: number) {
 
   fetchDislikes(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
 
     this.http.get<number>(`http://localhost:8080/Growthnest/post/dislikes/${postId}`, { headers })
       .subscribe({
@@ -178,7 +186,7 @@ submitResponse(postId: number) {
 
   addReact(postId: number, type: 'LIKE' | 'DISLIKE') {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
 
     const request: ReactRequest = {
       idp: postId,
@@ -198,7 +206,7 @@ submitResponse(postId: number) {
 
   fetchReactions(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
 
     this.http.get<React[]>(`http://localhost:8080/Growthnest/api/reacts/post/${postId}`, { headers })
       .subscribe({
@@ -220,13 +228,22 @@ submitResponse(postId: number) {
 
   getMediaUrl(path: string): string {
     if (!path) return '';
+    // Check if the path is already a full URL
+    if (path.startsWith('http')) {
+      return path;
+    }
+    // Handle local image paths
+    if (path.startsWith('uploads/images/')) {
+      return `${this.API_BASE_URL}/${path}`;
+    }
+    // Handle other cases
     return `${this.API_BASE_URL}${path}`;
   }
 
   deletePost(postId: number) {
     if (confirm('Are you sure you want to delete this post?')) {
       const token = localStorage.getItem('token');
-      const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`);
+      const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
 
       this.http.delete(`http://localhost:8080/Growthnest/post/deletepost/${postId}`, { headers })
         .subscribe({
@@ -255,7 +272,7 @@ submitResponse(postId: number) {
 
   updatePost(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
 
     // Create the post object with the updated values
     const updatedPost = {
@@ -292,7 +309,7 @@ submitResponse(postId: number) {
 
   updateResponse(responseId: number, postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
 
     const updatedResponse = {
       id: responseId,
@@ -317,7 +334,7 @@ submitResponse(postId: number) {
   deleteResponse(responseId: number, postId: number) {
     if (confirm('Are you sure you want to delete this response?')) {
       const token = localStorage.getItem('token');
-      const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`);
+      const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
 
       this.http.delete(`http://localhost:8080/Growthnest/respons/deleterespons/${responseId}`, { headers })
         .subscribe({
@@ -329,5 +346,144 @@ submitResponse(postId: number) {
         });
     }
   }
+  getTotalPages(): number {
+    return Math.ceil(this.posts.length / this.itemsPerPage);
+  }
   
+  getTotalPagesArray(): number[] {
+    return Array(this.getTotalPages()).fill(0);
+  }
+  
+  goToPage(page: number): void {
+    if (page < 1 || page > this.getTotalPages()) return;
+    this.currentPage = page;
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = this.currentPage * this.itemsPerPage;
+    this.visiblePosts = this.posts.slice(start, end);
+  }
+  showAddPostModal = false;
+newPost = {
+  title: '',
+  content: '',
+  tags: ''
+};
+selectedImage?: File;
+selectedVideo?: File;
+
+onFileSelected(event: any, type: 'image' | 'video') {
+  const file = event.target.files[0];
+  if (type === 'image') this.selectedImage = file;
+  if (type === 'video') this.selectedVideo = file;
+}
+
+submitNewPost() {
+  if (this.containsBadWords(this.newPost.title) || this.containsBadWords(this.newPost.content)) {
+    alert('🚫 Your post contains inappropriate language.');
+    return;
+  }
+  const formData = new FormData();
+  formData.append('title', this.newPost.title);
+  formData.append('content', this.newPost.content);
+  formData.append('tags', this.newPost.tags);
+  if (this.selectedImage) formData.append('image', this.selectedImage);
+  if (this.selectedVideo) formData.append('video', this.selectedVideo);
+
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders({
+    Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`
+  });
+
+  this.http.post('http://localhost:8080/Growthnest/post/addPost', formData, { headers })
+    .subscribe({
+      next: () => {
+        alert('Post added successfully!');
+        this.showAddPostModal = false;
+        this.newPost = { title: '', content: '', tags: '' };
+        this.selectedImage = undefined;
+        this.selectedVideo = undefined;
+        this.fetchPosts();
+      },
+      error: err => alert('Error adding post: ' + err.message)
+    });
+}
+
+filterSaved() {
+  this.visiblePosts = this.posts.filter(p => this.savedMap[p.idp]);
+}
+
+filterTrending() {
+  this.visiblePosts = this.posts.filter(p => (this.likesMap[p.idp] || 0) >= 10);
+}
+
+filterRecent() {
+  this.visiblePosts = [...this.posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+filterMyPosts() {
+  const currentUserId = localStorage.getItem('userId'); // depends how you're storing it
+  this.visiblePosts = this.posts.filter(p => p.user?.id === Number(currentUserId));
+}
+loadSavedPosts() {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+
+  this.http.get<number[]>('http://localhost:8080/Growthnest/post/saved', { headers })
+    .subscribe({
+      next: (savedIds: number[]) => {
+        this.savedMap = {};
+        savedIds.forEach(id => this.savedMap[id] = true);
+      },
+      error: err => {
+        console.error('Error loading saved posts:', err);
+      }
+    });
+}
+toggleSave(postId: number) {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ0NzU1NDM1LCJleHAiOjE3NDQ3NjQwNzUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.2nou13BAMlrk0VpDebJGHpfikdR0gk4f8IK2MOw1ymjSaweCeFCR4nZYtxp1WVzK`);
+
+  this.http.post(`http://localhost:8080/Growthnest/post/save/${postId}`, {}, { headers })
+    .subscribe({
+      next: () => {
+        this.savedMap[postId] = !this.savedMap[postId]; // toggle UI
+      },
+      error: err => {
+        console.error('Error saving post:', err);
+      }
+    });
+}
+fetchMyPosts(): void {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFud2FyIGFpc3NhIiwic3ViIjoiYW53YXIuYWlzc2FqZXJiaUBlc3ByaXQudG4iLCJpYXQiOjE3NDQ1ODUzMDMsImV4cCI6MTc0NDU5Mzk0MywiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl19.E64-Ye8XdmuiOTMB1uqZRhIzX-bGBAEDTWYuiqPBsCc3kwfHUHWT_rCIsx5JNtUR`);
+
+  this.http.get<any[]>('http://localhost:8080/Growthnest/post/myPosts', { headers })
+    .subscribe({
+      next: data => {
+        this.posts = data;
+        this.visiblePosts = [];
+        this.currentPage = 1;
+        this.loadMore();
+
+        this.posts.forEach(post => {
+          this.loadResponses(post.idp);
+          this.fetchLikes(post.idp);
+          this.fetchDislikes(post.idp);
+        });
+      },
+      error: err => console.error('Error fetching user posts', err)
+    });
+}
+
+onImageLoad(event: Event) {
+  const imgElement = event.target as HTMLImageElement;
+  const postId = imgElement.getAttribute('data-post-id');
+  if (postId) {
+    this.imageLoadingStates[postId] = true;
+  }
+}
+
+isImageLoading(postId: number): boolean {
+  return !this.imageLoadingStates[postId];
+}
+
 }

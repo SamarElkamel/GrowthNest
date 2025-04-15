@@ -51,6 +51,11 @@ public class PostController {
     public long countDisLikes(@PathVariable Long postId) {
         return postService.countDisLikesForPost(postId);
     }
+    @GetMapping("/myPosts")
+    @PreAuthorize("hasRole('USER')")
+    public List<Post> getMyPosts(Authentication authentication) {
+        return postService.getPostsByCurrentUser(authentication);
+    }
 
     @PostMapping(value = "/addPostWithMedia", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('USER')")
@@ -91,5 +96,16 @@ public class PostController {
  public List<Post> getUnvalidatedPosts() {
      return postService.findUnvalidatedPosts();
  }
+    @PostMapping("/save/{postId}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> toggleSave(@PathVariable Long postId, Authentication auth) {
+        postService.toggleSavePost(postId, auth);
+        return ResponseEntity.ok().build();
+    }
 
+    @GetMapping("/saved")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<List<Long>> getSaved(Authentication auth) {
+        return ResponseEntity.ok(postService.getSavedPostIds(auth));
+    }
 }

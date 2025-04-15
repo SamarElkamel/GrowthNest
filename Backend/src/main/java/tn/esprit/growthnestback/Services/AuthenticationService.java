@@ -55,6 +55,7 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
         sendValidationEmail(user);
+        System.out.println("🔥 register called for email: " + request.getEmail());
 
     }
 

@@ -12,7 +12,7 @@ export const Approutes: Routes = [
    // Front Office Routes (Public)
    {
     path: '',
-    component: HomeComponent,
+    component: ListPostComponent,
     children: [
       { path: 'posts', component: ListPostComponent },
     ]

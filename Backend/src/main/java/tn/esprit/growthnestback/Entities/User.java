@@ -16,7 +16,9 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -63,6 +65,14 @@ public class User implements UserDetails, Principal {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "respons-user")
     private List<Respons> responsList;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_saved_posts",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id")
+    )
+    private Set<Post> savedPosts = new HashSet<>();
 
     // Spring Security methods
 
@@ -150,4 +160,8 @@ public class User implements UserDetails, Principal {
 
     public List<Post> getPosts() { return posts; }
     public void setPosts(List<Post> posts) { this.posts = posts; }
+    public List<React> getReactions() { return reactions; }
+    public void setReactions(List<React> reactions) { this.reactions = reactions; }
+    public Set<Post> getSavedPosts() { return savedPosts; }
+    public void setSavedPosts(Set<Post> savedPosts) { this.savedPosts = savedPosts; }
 }

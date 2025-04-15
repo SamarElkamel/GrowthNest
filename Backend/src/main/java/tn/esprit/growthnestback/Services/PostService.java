@@ -161,6 +161,43 @@ public class PostService implements IPostService {
         return repo.save(post);
     }
 
+    @Override
+    public void toggleSavePost(Long postId, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Post post = repo.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        if (user.getSavedPosts().contains(post)) {
+            user.getSavedPosts().remove(post); // unsave
+        } else {
+            user.getSavedPosts().add(post); // save
+        }
+
+        userRepository.save(user); // persist change
+    }
+
+    @Override
+    public List<Long> getSavedPostIds(Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return user.getSavedPosts().stream()
+                .map(Post::getIdp)
+                .toList();
+    }
+
+    @Override
+    public List<Post> getPostsByCurrentUser(Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return repo.findByUser(user);
+    }
+
+
 
 }
 

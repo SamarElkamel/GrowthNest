@@ -59,7 +59,7 @@ export class AddPostComponent {
   
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InNhbGltIGhhZGRhcmkiLCJzdWIiOiJzYWxpbS5oYWRkYXJpQGVzcHJpdC50biIsImlhdCI6MTc0NDM0MjI2OCwiZXhwIjoxNzQ0MzUwOTA4LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.tO5ZB2vz4Ok4hDJWBzoboj7A6EAkKsqGYzyxIN2SR2w96NpkaLC7Uo6RExBGA2Bw`
+      Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFud2FyIGFpc3NhIiwic3ViIjoiYW53YXIuYWlzc2FqZXJiaUBlc3ByaXQudG4iLCJpYXQiOjE3NDQzNzg1NjgsImV4cCI6MTc0NDM4NzIwOCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl19.U-NcaljbnIKkyg5e06mE4I1GsD1Nb5cBWhhTsqAMb8Mm97rJfMwgyI8CZWmgbCD3`
     });
   
     this.http.post('http://localhost:8080/Growthnest/post/addPost', formData, { headers })
