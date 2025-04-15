@@ -25,6 +25,7 @@ export class UserManagementService extends BaseService {
   static readonly GetAllUsersPath = '/users';
   private apiUrl = 'http://localhost:8080/Growthnest/users';
 
+
   ;
 
  
@@ -77,7 +78,9 @@ export class UserManagementService extends BaseService {
         return this.http.patch<User>(`${this.apiUrl}/${userId}/lock`, {});
       }
       
-      
+      getProfile(userId: number): Observable<User> {
+        return this.http.get<User>(`${this.apiUrl}/profile/${userId}`);
+      }
       
       
 }

@@ -9,6 +9,7 @@ import { UserListComponent } from './BackOffice/component/users-list/users-list.
 import { SelectRoleComponent } from './pages/select-role/select-role.component';
 import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { UserProfileComponent } from './FrontOffice/user-profile/user-profile.component';
 
 export const Approutes: Routes = [
 
@@ -18,6 +19,8 @@ export const Approutes: Routes = [
   { path: 'select-role', component: SelectRoleComponent },
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+ 
+  
 
 
   {

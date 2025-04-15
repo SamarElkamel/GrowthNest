@@ -26,6 +26,7 @@ import { ActivateAccountComponent } from './pages/activate-account/activate-acco
 import { SelectRoleComponent } from './pages/select-role/select-role.component';
 import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { UserProfileComponent } from './FrontOffice/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
     SelectRoleComponent,
     ForgetPasswordComponent,
     ResetPasswordComponent,
+    UserProfileComponent,
   ],
   imports: [
     CommonModule,

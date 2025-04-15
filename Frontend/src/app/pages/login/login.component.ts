@@ -25,15 +25,47 @@ export class LoginComponent {
       body: this.authRequest
     }).subscribe({
       next: (res) => {
-        this.tokenService.token = res.token as string;
-
+        console.log('Response from backend:', res); 
         
-        if (this.authRequest.email.toLowerCase() === 'admin@gmail.com') {
-          this.router.navigate(['dashboard']);
+        
+        if (res instanceof Blob) {
+          res.text().then((text) => {
+            try {
+             
+              const responseJson = JSON.parse(text);
+              console.log('Parsed response:', responseJson);
+      
+              
+              if (responseJson.token) {
+                this.tokenService.token = responseJson.token;
+              } else {
+                this.errorMsg.push("Token not received from server.");
+              }
+      
+              if (this.authRequest.email.toLowerCase() === 'admin@gmail.com') {
+                this.router.navigate(['dashboard']);
+              } else {
+                this.router.navigate(['/']);
+              }
+            } catch (error) {
+              console.error('Failed to parse response:', error);
+              this.errorMsg.push("Failed to parse response.");
+            }
+          }).catch((error) => {
+            console.error('Error reading Blob:', error);
+            this.errorMsg.push("Error reading server response.");
+          });
         } else {
-          this.router.navigate(['/']);
+          
+          if (res.token) {
+            this.tokenService.token = res.token;
+          } else {
+            this.errorMsg.push("Token not received from server.");
+          }
         }
       },
+      
+      
 
       error: (err) => {
         if (err.error instanceof Blob) {
@@ -68,6 +100,6 @@ export class LoginComponent {
 
   register() {
     this.router.navigate(['register']);
-    // this.router.navigate(['select-role']);
+
   }
 }
