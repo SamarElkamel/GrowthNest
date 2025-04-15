@@ -23,6 +23,8 @@ public class Registration {
     long idRegist;
 
 
+
+
     public long getIdRegist() {
         return idRegist;
     }

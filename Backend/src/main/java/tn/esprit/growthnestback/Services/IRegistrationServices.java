@@ -1,5 +1,6 @@
 package tn.esprit.growthnestback.Services;
 
+import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.growthnestback.Entities.Registration;
 import tn.esprit.growthnestback.Entities.ReservationStatus;
 
@@ -14,4 +15,6 @@ public interface IRegistrationServices {
     public List<Registration> DisplayRegistrationsByEvent(Long eventId);
     List<Registration> getUserReservations(Long userId);
     Registration updateRegistrationStatus(Long registrationId, ReservationStatus newStatus);
+
+
 }

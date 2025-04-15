@@ -5,8 +5,10 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.growthnestback.Entities.Event;
 import tn.esprit.growthnestback.Entities.Registration;
 import tn.esprit.growthnestback.Entities.ReservationStatus;
@@ -15,6 +17,11 @@ import tn.esprit.growthnestback.Repository.EventRepository;
 import tn.esprit.growthnestback.Repository.RegistrationRepository;
 import tn.esprit.growthnestback.Repository.UserRepository;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +39,7 @@ public class RegistrationServiceImpl implements IRegistrationServices{
     UserRepository userRepository;
     @Autowired
     EventRepository eventRepository;
+
     @Override
     public List<Registration> DisplayAllRegistartion() {
         return registrationRepository.findAll();
@@ -125,4 +133,6 @@ public class RegistrationServiceImpl implements IRegistrationServices{
         registration.setStatus(newStatus);
         return registrationRepository.save(registration);
     }
+
+
 }
