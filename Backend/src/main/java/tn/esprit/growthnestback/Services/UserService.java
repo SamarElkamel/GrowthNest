@@ -170,4 +170,12 @@ public class UserService {
         userRepository.save(user);
 
     }
+
+    public User updateProfileImage(Long userId, String base64Image) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setImage(base64Image);
+        return userRepository.save(user);
+    }
 }

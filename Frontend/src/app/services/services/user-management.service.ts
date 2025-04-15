@@ -92,5 +92,10 @@ export class UserManagementService extends BaseService {
         });
       }
       
+      updateProfileImage(userId: number, formData: FormData): Observable<any> {
+        return this.http.patch(`${this.apiUrl}/${userId}/updateProfileImage`, formData);
+      }
+      
+
       
 }

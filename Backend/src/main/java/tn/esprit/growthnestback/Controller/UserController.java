@@ -120,6 +120,20 @@ public class UserController {
         }
     }
 
+    @PatchMapping("/{userId}/updateProfileImage")
+    public ResponseEntity<?> updateProfileImage(@PathVariable Long userId, @RequestParam("image") MultipartFile file) {
+        try {
+            byte[] bytes = file.getBytes();
+            String base64Image = Base64.getEncoder().encodeToString(bytes);  // Convert the image to Base64
+
+            // Update the user's image with the Base64 string
+            User updatedUser = userService.updateProfileImage(userId, base64Image);
+
+            return ResponseEntity.ok(updatedUser);  // Return the updated user object
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating image: " + e.getMessage());
+        }
+    }
 }
 
 
