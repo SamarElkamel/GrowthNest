@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Reclamation, ReclamationService } from 'src/app/services/reclamation.service';
+import { ReportService } from 'src/app/services/report.service'; // Import ajouté
 import { ReclamationType } from 'src/app/FrontOffice/models/reclamation-type';
+import * as saveAs from 'file-saver';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-display-reclamation',
@@ -14,10 +17,16 @@ export class DisplayReclamationComponent {
   selectedType: string = 'ALL';
 
   displayEditModal = false;
-  editingReclamation: Reclamation = {type: ReclamationType.DELIVERY,
-     description: '', reclamationDate: new Date() };
+  editingReclamation: Reclamation = {
+    type: ReclamationType.DELIVERY,
+    description: '', 
+    reclamationDate: new Date() 
+  };
 
-  constructor(private reclamationService: ReclamationService) {}
+  constructor(
+    private reclamationService: ReclamationService,
+    private reportService: ReportService // Service injecté
+  ) {}
 
   ngOnInit() {
     this.loadReclamations();
@@ -34,7 +43,7 @@ export class DisplayReclamationComponent {
   }
 
   applyFilter() {
-    if (this.selectedType  === 'ALL') {
+    if (this.selectedType === 'ALL') {
       this.filteredReclamations = this.reclamations;
     } else {
       this.filteredReclamations = this.reclamations.filter(
@@ -62,6 +71,22 @@ export class DisplayReclamationComponent {
     this.reclamationService.update(this.editingReclamation).subscribe(() => {
       this.loadReclamations();
       this.closeEditModal();
+    });
+  }
+
+  generatePdfReport() {
+    this.reportService.generateReclamationsPdf().subscribe({
+      next: (pdfBlob: Blob) => {
+        saveAs(pdfBlob, `reclamations_report_${new Date().toISOString().slice(0, 10)}.pdf`);
+      },
+      error: (error: HttpErrorResponse) => { // Typage plus spécifique
+        console.error('Erreur lors de la génération du PDF:', error);
+        if (error.status === 403) {
+          alert('Vous n\'avez pas les permissions nécessaires');
+        } else {
+          alert('Erreur lors de la génération du rapport');
+        }
+      }
     });
   }
 }

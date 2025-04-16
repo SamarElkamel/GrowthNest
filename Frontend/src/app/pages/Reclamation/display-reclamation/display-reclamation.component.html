@@ -6,6 +6,9 @@
     <option *ngFor="let type of reclamationTypes" [value]="type">{{ type }}</option>
   </select>
 </div>
+<button class="btn btn-primary" (click)="generatePdfReport()">
+  <i class="bi bi-file-earmark-pdf"></i> Générer PDF
+</button>
 
 <!-- Tableau filtré -->
 <table class="table table-bordered table-striped">

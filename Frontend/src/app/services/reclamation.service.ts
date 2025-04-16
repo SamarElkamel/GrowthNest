@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ReclamationType } from '../FrontOffice/models/reclamation-type';
@@ -41,4 +41,11 @@ export class ReclamationService {
   getReclamationTypes(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/reclamation-types`);
   }
+ // generatePdfReport() {
+   // const headers = new HttpHeaders({ 'Accept': 'application/pdf' });
+    //return this.http.get(`${this.apiUrl}/reports/reclamations`, { 
+      //responseType: 'blob',
+      //headers: headers
+    //});
+ // }
 }

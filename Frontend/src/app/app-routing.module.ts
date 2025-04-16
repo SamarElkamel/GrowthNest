@@ -7,6 +7,7 @@ import { HomeComponent } from './FrontOffice/home/home.component';
 import { DisplayReclamationComponent } from './pages/Reclamation/display-reclamation/display-reclamation.component';
 import { AddReclamationComponent } from './pages/Reclamation/add-reclamation/add-reclamation.component';
 import { RatingComponent } from './pages/rating/rating.component';
+import { FooterComponent } from './FrontOffice/footer/footer.component';
 
 export const Approutes: Routes = [
   {

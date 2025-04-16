@@ -32,8 +32,7 @@ public class ReclamationServiceImpl implements IReclamationServices {
     public void deleteReclamation(Long reclamationId) {
         reclamationRepository.deleteById(reclamationId);
     }
-    // Traitement automatique chaque jour à 2h du matin
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 */2 * * * *")
     public void processReclamations() {
         List<Reclamation> pendingRecs = reclamationRepository.findAll()
                 .stream()
@@ -48,4 +47,20 @@ public class ReclamationServiceImpl implements IReclamationServices {
 
         System.out.println("Traitement auto des réclamations exécuté !");
     }
+    @Scheduled(cron = "0 */3 * * * *")
+    public void resolveOldInProgressReclamations() {
+        List<Reclamation> inProgressRecs = reclamationRepository.findAll()
+                .stream()
+                .filter(r -> r.getStatus() == ReclamationStatus.IN_PROGRESS)
+                .toList();
+
+        for (Reclamation rec : inProgressRecs) {
+            // Simuler un traitement automatique simple
+            rec.setStatus(ReclamationStatus.RESOLVED);
+            reclamationRepository.save(rec);
+        }
+
+        System.out.println("Traitement auto des réclamations (IN_PROGRESS -> RESOLVED) exécuté !");
+    }
+
 }
