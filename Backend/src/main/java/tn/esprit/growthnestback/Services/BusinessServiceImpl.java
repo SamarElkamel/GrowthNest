@@ -59,9 +59,9 @@ public class BusinessServiceImpl implements IBusinessService {
 
     @Override
     public Business addBusiness(Business business) {
-        System.out.println("Adding business: " + business.getName());
+        System.out.println("Adding business: " + business.getName() + ", PDF: " + business.getBusinessPdf());
         Business saved = businessRepository.save(business);
-        System.out.println("Business added: ID " + saved.getIdBusiness());
+        System.out.println("Business added: ID " + saved.getIdBusiness() + ", PDF: " + saved.getBusinessPdf());
         return saved;
     }
 
@@ -74,8 +74,9 @@ public class BusinessServiceImpl implements IBusinessService {
         existingBusiness.setCategorieBusiness(updatedBusiness.getCategorieBusiness());
         existingBusiness.setLogo(updatedBusiness.getLogo());
         existingBusiness.setInstagramPageName(updatedBusiness.getInstagramPageName());
+        existingBusiness.setBusinessPdf(updatedBusiness.getBusinessPdf());
         Business savedBusiness = businessRepository.save(existingBusiness);
-        System.out.println("Business updated: ID " + savedBusiness.getIdBusiness());
+        System.out.println("Business updated: ID " + savedBusiness.getIdBusiness() + ", PDF: " + savedBusiness.getBusinessPdf());
         return savedBusiness;
     }
 

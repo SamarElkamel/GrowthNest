@@ -41,6 +41,8 @@ public class Business {
 
     @Column(name = "rating_count", nullable = false)
     private Integer ratingCount = 0;
+    @Column(name = "business_pdf", length = 255) // Optional PDF path
+    String businessPdf;
 
     @OneToMany(mappedBy = "business",cascade = CascadeType.ALL)
     @JsonIgnore
@@ -48,6 +50,14 @@ public class Business {
     public Business() {
         this.averageRating = 0.0;
         this.ratingCount = 0;
+    }
+
+    public String getBusinessPdf() {
+        return businessPdf;
+    }
+
+    public void setBusinessPdf(String businessPdf) {
+        this.businessPdf = businessPdf;
     }
 
     public Long getIdBusiness() {

@@ -38,6 +38,23 @@
     </div>
 
     <div class="form-group">
+      <label for="instagramPageName">Nom de la page Instagram</label>
+      <input
+        id="instagramPageName"
+        formControlName="instagramPageName"
+        placeholder="Entrez le nom de la page Instagram (optionnel)"
+        [ngClass]="{
+          'invalid': instagramPageName.touched && instagramPageName.invalid,
+          'valid': instagramPageName.touched && instagramPageName.valid
+        }"
+      />
+      <div *ngIf="instagramPageName.touched && instagramPageName.invalid" class="error">
+        <div *ngIf="instagramPageName.errors?.['maxlength']">Le nom ne doit pas dépasser 30 caractères.</div>
+        <div *ngIf="instagramPageName.errors?.['pattern']">Utilisez uniquement des lettres, chiffres, points ou tirets bas.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
       <label for="categorieBusiness">Catégorie</label>
       <select id="categorieBusiness" formControlName="categorieBusiness">
         <option [ngValue]="null" disabled>Sélectionnez une catégorie</option>
@@ -57,9 +74,24 @@
         (change)="onLogoSelected($event)"
         style="display: none;"
       />
-      <button type="button" (click)="triggerFileInput()">Choisir un logo</button>
+      <button type="button" (click)="triggerFileInput('logo')">Choisir un logo</button>
       <div *ngIf="logoPreview" class="preview">
         <img [src]="logoPreview" alt="Logo Preview" style="max-width: 200px;" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="pdfInput">Document PDF</label>
+      <input
+        id="pdfInput"
+        type="file"
+        accept="application/pdf"
+        (change)="onPdfSelected($event)"
+        style="display: none;"
+      />
+      <button type="button" (click)="triggerFileInput('pdf')">Choisir un PDF</button>
+      <div *ngIf="pdfName" class="preview">
+        <p>Fichier sélectionné : {{ pdfName }}</p>
       </div>
     </div>
 

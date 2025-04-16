@@ -19,22 +19,23 @@ label {
   font-weight: bold;
 }
 
-input,
-select {
+input, select {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-input.invalid,
-select.invalid {
+input.invalid {
   border-color: red;
 }
 
-input.valid,
-select.valid {
+input.valid {
   border-color: green;
+}
+
+select {
+  appearance: none;
 }
 
 .error {
@@ -44,7 +45,7 @@ select.valid {
 }
 
 button {
-  padding: 10px 20px;
+  padding: 10px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -52,15 +53,27 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #0056b3;
+button[type="submit"] {
+  display: block;
+  width: 100%;
 }
 
 button:disabled {
-  background-color: #ccc;
+  background-color: #cccccc;
   cursor: not-allowed;
 }
 
 .preview {
   margin-top: 10px;
+}
+
+.preview img {
+  max-width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.preview p {
+  margin: 5px 0;
+  font-style: italic;
 }

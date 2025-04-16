@@ -7,7 +7,7 @@ import {
 } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -46,6 +46,7 @@ import { UpdateBusinessDialogComponent } from './pages/business/update-business-
 import { MatSelectModule } from '@angular/material/select';
 import { BusinessDetailsComponent } from './pages/business/business-details/business-details.component';
 import { RatingComponent } from './pages/business/rating/rating.component';
+import { LoggingInterceptor } from './interceptor/logging.interceptor';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { RatingComponent } from './pages/business/rating/rating.component';
       provide: LocationStrategy,
       useClass: PathLocationStrategy
     },
-    HttpClient
+    HttpClient,
+    { provide: HTTP_INTERCEPTORS, useClass: LoggingInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

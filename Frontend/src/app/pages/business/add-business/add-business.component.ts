@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AddBusiness$Params } from 'src/app/services/fn/gestion-des-business/add-business';
 import { Business, CategorieBusiness } from 'src/app/services/models';
 import { GestionDesBusinessService } from 'src/app/services/services';
 
@@ -15,6 +14,7 @@ export class AddBusinessComponent {
   businessForm: FormGroup;
   categories = Object.values(CategorieBusiness);
   logoPreview: string | null = null;
+  pdfName: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -26,7 +26,9 @@ export class AddBusinessComponent {
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(255)]],
       categorieBusiness: [null as keyof typeof CategorieBusiness | null, Validators.required],
-      logo: [''],
+      instagramPageName: ['', [Validators.maxLength(30), Validators.pattern(/^[a-zA-Z0-9._]*$/)]],
+      logo: [null],
+      pdf: [null]
     });
   }
 
@@ -36,13 +38,13 @@ export class AddBusinessComponent {
       const file = input.files[0];
       if (!file.type.startsWith('image/')) {
         this.handleError({ error: { message: 'Veuillez sélectionner une image valide (JPEG, PNG, etc.).' } });
-        this.businessForm.get('logo')?.setValue('');
+        this.businessForm.get('logo')?.setValue(null);
         this.logoPreview = null;
         return;
       }
-      if (file.size > 2 * 1024 * 1024) {
-        this.handleError({ error: { message: "L'image ne doit pas dépasser 2 Mo." } });
-        this.businessForm.get('logo')?.setValue('');
+      if (file.size > 5 * 1024 * 1024) {
+        this.handleError({ error: { message: "L'image ne doit pas dépasser 5 Mo." } });
+        this.businessForm.get('logo')?.setValue(null);
         this.logoPreview = null;
         return;
       }
@@ -59,70 +61,86 @@ export class AddBusinessComponent {
     }
   }
 
-  triggerFileInput(): void {
-    const fileInput = document.getElementById('logoInput') as HTMLInputElement;
-    fileInput.click();
+  onPdfSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (file.type !== 'application/pdf') {
+        this.handleError({ error: { message: 'Veuillez sélectionner un fichier PDF valide.' } });
+        this.businessForm.get('pdf')?.setValue(null);
+        this.pdfName = null;
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        this.handleError({ error: { message: 'Le PDF ne doit pas dépasser 10 Mo.' } });
+        this.businessForm.get('pdf')?.setValue(null);
+        this.pdfName = null;
+        return;
+      }
+      this.pdfName = file.name;
+      this.businessForm.get('pdf')?.setValue(file);
+    }
   }
 
-  async onSubmit(): Promise<void> {
+  triggerFileInput(field: 'logo' | 'pdf'): void {
+    const input = document.getElementById(`${field}Input`) as HTMLInputElement;
+    input.click();
+  }
+
+  onSubmit(): void {
     if (this.businessForm.valid) {
-      try {
-        this.businessForm.disable();
-        let logoPath: string = ''; // Explicitly typed as string
-
-        // Upload logo if a file is selected
-        const logoControl = this.businessForm.get('logo');
-        if (logoControl?.value instanceof File) {
-          const path = await this.businessService
-            .uploadLogo({ body: logoControl.value })
-            .toPromise();
-          logoPath = path ?? ''; // Handle potential undefined
+      this.businessForm.disable();
+      const businessData = {
+        name: this.businessForm.value.name,
+        description: this.businessForm.value.description,
+        categorieBusiness: this.businessForm.value.categorieBusiness,
+        instagramPageName: this.businessForm.value.instagramPageName || null,
+        averageRating: 0,
+        ratingCount: 0
+      };
+      const logoFile = this.businessForm.get('logo')?.value;
+      const pdfFile = this.businessForm.get('pdf')?.value;
+  
+      console.log('Submitting business:', JSON.stringify(businessData));
+      console.log('Logo file:', logoFile ? `${logoFile.name} (type: ${logoFile.type})` : 'None');
+      console.log('PDF file:', pdfFile ? `${pdfFile.name} (type: ${pdfFile.type})` : 'None');
+  
+      this.businessService.addBusiness(businessData, logoFile, pdfFile).subscribe({
+        next: (newBusiness: Business) => {
+          this.snackBar.open('Business créé avec succès !', 'Fermer', {
+            duration: 3000,
+            panelClass: ['success-snackbar'],
+          });
+          this.businessService.triggerRefresh();
+          this.router.navigate(['/admin/my-business', newBusiness.idBusiness], {
+            state: { freshCreation: true },
+          });
+          this.businessForm.reset();
+          this.logoPreview = null;
+          this.pdfName = null;
+          const logoInput = document.getElementById('logoInput') as HTMLInputElement;
+          const pdfInput = document.getElementById('pdfInput') as HTMLInputElement;
+          if (logoInput) logoInput.value = '';
+          if (pdfInput) pdfInput.value = '';
+          this.businessForm.enable();
+        },
+        error: (err) => {
+          console.error('Erreur détaillée:', {
+            status: err.status,
+            statusText: err.statusText,
+            url: err.url,
+            headers: err.headers ? Object.fromEntries(err.headers.normalizedNames) : 'No headers',
+            error: err.error,
+            message: err.message
+          });
+          this.handleError(err);
+          this.businessForm.enable();
         }
-
-        // Prepare business data
-        const businessData: AddBusiness$Params = {
-          body: {
-            name: this.businessForm.value.name,
-            description: this.businessForm.value.description,
-            categorieBusiness: this.businessForm.value.categorieBusiness,
-            logo: logoPath,
-            averageRating: 0.0,
-            ratingCount: 0,
-          },
-        };
-
-        // Add business
-        this.businessService.addBusiness(businessData).subscribe({
-          next: (newBusiness: Business) => {
-            this.snackBar.open('Business créé avec succès !', 'Fermer', {
-              duration: 3000,
-              panelClass: ['success-snackbar'],
-            });
-            this.businessService.triggerRefresh();
-            this.router.navigate(['/admin/my-business', newBusiness.idBusiness], {
-              state: { freshCreation: true },
-            });
-            this.businessForm.reset();
-            this.logoPreview = null;
-            const fileInput = document.getElementById('logoInput') as HTMLInputElement;
-            fileInput.value = '';
-            this.businessForm.enable();
-          },
-          error: (err) => {
-            console.error('Erreur détaillée:', err);
-            this.handleError(err);
-            this.businessForm.enable();
-          },
-        });
-      } catch (err) {
-        this.handleError(err);
-        this.businessForm.enable();
-      }
+      });
     } else {
       this.markFormAsTouched();
     }
   }
-
   private handleError(error: any): void {
     let errorMessage = 'Erreur lors de la création du business';
     if (error.error?.message) {
@@ -154,7 +172,15 @@ export class AddBusinessComponent {
     return this.businessForm.get('categorieBusiness') as FormControl;
   }
 
+  get instagramPageName(): FormControl {
+    return this.businessForm.get('instagramPageName') as FormControl;
+  }
+
   get logo(): FormControl {
     return this.businessForm.get('logo') as FormControl;
+  }
+
+  get pdf(): FormControl {
+    return this.businessForm.get('pdf') as FormControl;
   }
 }

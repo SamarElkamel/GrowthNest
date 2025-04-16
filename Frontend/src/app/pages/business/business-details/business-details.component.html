@@ -29,12 +29,10 @@
             <p class="stext-113 cl6 p-b-26">
               <strong>Catégorie :</strong> {{ business.categorieBusiness || 'Général' }}
             </p>
-            <p class="stext-113 cl6 p-b-26">
-              <strong>Page Instagram :</strong> {{ business.instagramPageName || 'Non spécifiée' }}
-            </p>
+            
             <div>
               <p>
-                <strong>Note moyenne :</strong> {{ business.averageRating | number:'1.1-1' }} ({{
+                <strong>Average rating :</strong> {{ business.averageRating | number:'1.1-1' }} ({{
                   business.ratingCount
                 }}
                 votes)
@@ -44,9 +42,18 @@
                 (ratingSubmitted)="refreshBusiness()"
               ></app-rating>
             </div>
+            <!-- PDF Download Button -->
+            <div class="pdf-download-section p-t-20" *ngIf="business.businessPdf">
+              <button
+                class="flex-c-m stext-101 cl0 size-101 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer"
+                (click)="downloadPdf()"
+              >
+                download the pdf to know more about us
+              </button>
+            </div>
             <!-- QR Code -->
             <div class="qr-code-section p-t-20" *ngIf="qrCodeUrl">
-              <h4 class="stext-111 cl2 p-b-10">Scannez pour visiter notre Instagram</h4>
+              <h4 class="stext-111 cl2 p-b-10">Scan to visit our instagram</h4>
               <img [src]="qrCodeUrl" alt="QR Code Instagram" class="qr-code-img" />
             </div>
           </div>

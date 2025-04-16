@@ -14,6 +14,7 @@ export interface Business {
   averageRating: number;
   ratingCount: number;
   instagramPageName?: string;
+  businessPdf?: string; // Added to store PDF filename
 }
 
 @Component({
@@ -60,7 +61,7 @@ export class BusinessDetailsComponent implements OnInit {
         this.loading = false;
         this.loadQRCode(idB);
         console.log('Business chargé:', data);
-        console.log('Image1 URL:', this.getLogoUrl(data.logo));
+        console.log('Logo URL:', this.getLogoUrl(data.logo));
       },
       error: (err) => {
         this.error = 'Erreur lors du chargement des détails de l\'entreprise.';
@@ -82,6 +83,30 @@ export class BusinessDetailsComponent implements OnInit {
     });
   }
 
+  // Fixed method to download PDF
+  downloadPdf(): void {
+    if (this.business && this.business.idBusiness) {
+      const business = this.business; // Assign to local variable for type narrowing
+      this.businessService.downloadBusinessPdf({ id: business.idBusiness }).subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = business.businessPdf ?? `business-${business.idBusiness}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+          console.log('PDF download initiated');
+        },
+        error: (err) => {
+          console.error('Erreur lors du téléchargement du PDF:', err);
+          alert('Impossible de télécharger le PDF. Veuillez réessayer.');
+        }
+      });
+    }
+  }
+
   refreshBusiness(): void {
     const id = this.route.snapshot.paramMap.get('idB');
     if (id) {
@@ -101,7 +126,7 @@ export class BusinessDetailsComponent implements OnInit {
   }
 
   getLogoUrl(logo: string | undefined): string {
-    const url = logo ? `${this.baseUrl}${logo}` : 'assets/images/banner-07.jpg';
+    const url = logo ? `${this.baseUrl}/${logo}` : 'assets/images/banner-07.jpg';
     console.log('Generated URL:', url);
     return url;
   }
