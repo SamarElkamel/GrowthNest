@@ -15,16 +15,19 @@ export class UserProfileComponent implements OnInit {
   imageChangeModalVisible: boolean = false; // To control modal visibility
   selectedImage: File | null = null; // To hold the selected image file for upload
   imagePreview: string | ArrayBuffer | null = null; // To hold the image preview (base64 or URL)
-
+  userRole: string | null = null;
   constructor(
     private userService: UserManagementService,
     private tokenService: TokenService,
     private router: Router
+    
   ) {}
 
   ngOnInit() {
+    this.userRole = this.tokenService.getUserRole();  // Call getUserRole() to get the role
+    console.log('User Role:', this.userRole);  // Log the user role for debugging
     const userId = this.tokenService.getUserId();  
-
+    
     if (!userId) {
       this.router.navigate(['/login']); 
       return;

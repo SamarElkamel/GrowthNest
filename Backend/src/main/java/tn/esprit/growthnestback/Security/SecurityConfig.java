@@ -40,26 +40,32 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers(
-                                        "/auth/**",
-                                        "/users/**",
-                                        "/users/**/lock",
-                                        "/v2/api-docs",
-                                        "/v3/api-docs",
-                                        "/v3/api-docs/**",
-                                        "/swagger-resources",
-                                        "/swagger-resources/**",
-                                        "/configuration/ui",
-                                        "/configuration/security",
-                                        "/swagger-ui/**",
-                                        "/webjars/**",
-                                        "/swagger-ui.html",
-                                        "/api/users/**/lock"  // Allow PATCH on /users/{userId}/lock
-                                )
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers(
+                                "/auth/**",
+                                "/users/**",
+                                "/users/**/lock",
+                                "/v2/api-docs",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/configuration/ui",
+                                "/configuration/security",
+                                "/swagger-ui/**",
+                                "/webjars/**",
+                                "/swagger-ui.html",
+                                "/api/users/**/lock"  // Allow PATCH on /users/{userId}/lock
+                        )
+                        .permitAll()
+
+                        .requestMatchers("/users/**").hasRole("ADMIN")
+                        .requestMatchers("/profile").hasAnyRole("USER", "BUSINESSOWNER", "MARKETINGAGENT")
+
+
+                        // For all other requests, authentication is required
+                        .anyRequest()
+                        .authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

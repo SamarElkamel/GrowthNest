@@ -78,8 +78,9 @@ public class User implements UserDetails, Principal {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + this.role.getName()));
     }
+
 
     @Override
     public String getPassword() {
@@ -227,5 +228,4 @@ public class User implements UserDetails, Principal {
     public LocalDateTime getResetTokenExpiration() {
         return resetTokenExpiration;
     }
-
 }
