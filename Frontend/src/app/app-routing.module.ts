@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { FullComponent } from './backoffice/layouts/full/full.component';
+import { FullComponent } from './BackOffice/layouts/full/full.component';
 import { LayoutComponent } from './FrontOffice/layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
@@ -9,7 +9,7 @@ import { UserListComponent } from './BackOffice/component/users-list/users-list.
 import { SelectRoleComponent } from './pages/select-role/select-role.component';
 import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
-import { UserProfileComponent } from './FrontOffice/user-profile/user-profile.component';
+
 
 export const Approutes: Routes = [
 

@@ -21,6 +21,6 @@ public class AuthenticationRequest {
     @NotEmpty(message="Password is mandatory")
     @NotBlank(message="Password is mandatory")
     private String password;
-
+    private String captcha;
 
 }

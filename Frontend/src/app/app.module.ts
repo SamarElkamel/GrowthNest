@@ -11,15 +11,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { CodeInputModule } from 'angular-code-input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { FullComponent } from './backoffice/layouts/full/full.component';
+import { FullComponent } from './BackOffice/layouts/full/full.component';
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 
 
-import { NavigationComponent } from './backoffice/shared/header/navigation.component';
-import { SidebarComponent } from './backoffice/shared/sidebar/sidebar.component';
 
 import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SpinnerComponent } from './backoffice/shared/spinner.component';
+import { SpinnerComponent } from './BackOffice/shared/spinner.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
@@ -29,6 +28,8 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { UserProfileComponent } from './FrontOffice/user-profile/user-profile.component';
 import { EditProfileComponent } from './FrontOffice/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './FrontOffice/change-password/change-password.component';
+import { NavigationComponent } from './BackOffice/shared/header/navigation.component';
+import { SidebarComponent } from './BackOffice/shared/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -56,14 +57,20 @@ import { ChangePasswordComponent } from './FrontOffice/change-password/change-pa
     FullComponent,
     NavigationComponent,
     SidebarComponent,
-    CodeInputModule
+    CodeInputModule,
+    RecaptchaV3Module,
   ],
   providers: [
     HttpClient,
+    
     {
       provide: LocationStrategy,
       useClass: PathLocationStrategy
     },
+    {
+      provide: RECAPTCHA_V3_SITE_KEY,
+      useValue: '6LfIuhsrAAAAAIK8Zpv-E_7v8SrOXEUIEntvIP1Z' 
+    }
   ],
   bootstrap: [AppComponent]
 })
