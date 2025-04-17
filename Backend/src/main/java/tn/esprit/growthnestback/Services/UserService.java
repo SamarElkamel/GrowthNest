@@ -35,7 +35,8 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.setAccountLocked(!user.isAccountLocked());
+           // user.setAccountLocked(!user.isAccountLocked());
+            user.setEnabled(!user.isEnabled());
             return userRepository.save(user);
         }
         return null;

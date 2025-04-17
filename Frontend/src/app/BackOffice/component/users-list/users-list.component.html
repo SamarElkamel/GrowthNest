@@ -18,23 +18,15 @@
     <div class="filters mb-4 d-flex justify-content-between flex-wrap">
       <!-- User State Filter -->
       <div class="filter-item mb-2 mb-md-0">
-        <label for="userState" class="form-label">User State</label>
+        <label for="userState" class="form-label">Account State</label>
         <select [(ngModel)]="selectedUserState" (change)="onFilterChange()" class="form-select" id="userState">
-          <option value="">All User States</option>
-          <option value="enabled">Enabled</option>
-          <option value="disabled">Disabled</option>
+          <option value="">All Account States</option>
+          <option value="enabled">Activated</option>
+          <option value="disabled">Disactivated</option>
         </select>
       </div>
 
-      <!-- Account State Filter -->
-      <div class="filter-item mb-2 mb-md-0">
-        <label for="accountState" class="form-label">Account State</label>
-        <select [(ngModel)]="selectedAccountState" (change)="onFilterChange()" class="form-select" id="accountState">
-          <option value="">All Account States</option>
-          <option value="locked">Locked</option>
-          <option value="unlocked">Unlocked</option>
-        </select>
-      </div>
+     
 
       <!-- Role Filter -->
       <div class="filter-item mb-2 mb-md-0">
@@ -53,9 +45,8 @@
           <tr>
             <th class="text-dark font-medium fs-4">User</th>
             <th class="text-dark font-medium fs-4">Created Date</th>
-            <th class="text-dark font-medium fs-4">Date of Birth</th>
-            <th class="text-dark font-medium fs-4">Last Login</th> <!-- NEW COLUMN -->
-            <th class="text-dark font-medium fs-4">User State</th>
+            <th class="text-dark font-medium fs-4">Date of Birth</th> 
+            <th class="text-dark font-medium fs-4">Last Login</th>
             <th class="text-dark font-medium fs-4">Account State</th>
             <th class="text-dark font-medium fs-4">Role</th>
             <th class="text-dark font-medium fs-4">Actions</th>
@@ -73,42 +64,38 @@
               </div>
             </td>
             <td class="fs-4">{{ user.createdDate | date:'medium' }}</td>
-            <td class="fs-4">{{ user.dateOfBirth | date:'dd-MM-yyyy' }}</td>
+            <td class="fs-4">{{ user.dateOfBirth | date:'dd-MM-yyyy' }}</td> 
             <td class="fs-4">
               {{ user.lastLogin ? (user.lastLogin | date:'medium') : 'Never' }}
-            </td> <!-- NEW CELL -->
+            </td>
             <td>
               <span class="badge" [ngClass]="{
                 'bg-danger': !user.enabled,
                 'bg-success': user.enabled
               }">{{ user.enabled ? 'Activated' : 'Disactivated' }}</span>
             </td>
-            <td>
-              <span class="badge" [ngClass]="{
-                'bg-danger': user?.accountLocked,
-                'bg-success': !user?.accountLocked
-              }">{{ user?.accountLocked ? 'Locked' : 'Unlocked' }}</span>
-            </td>
+           
             <td>
               {{ user.role?.name || 'No role assigned' }}
             </td>
+          
             <td>
               <button 
                 class="btn btn-outline-dark btn-sm px-2 py-1 small-button"
                 [ngClass]="{
-                  'btn-outline-danger': user?.accountLocked, 
-                  'btn-outline-success': !user?.accountLocked
+                  'btn-outline-danger': user?.enabled, 
+                  'btn-outline-success': !user?.enabled
                 }"
                 (click)="toggleLock(user)">
                 <i 
                   class="bi me-1" 
                   [ngClass]="{
-                    'bi-lock': user?.accountLocked, 
-                    'bi-unlock': !user?.accountLocked
+                    'bi-lock': user?.enabled, 
+                    'bi-unlock': !user?.enabled
                   }"
                   style="font-size: 0.8rem;"
                 ></i>
-                <span style="font-size: 0.75rem;">{{ user?.accountLocked ? 'Unlock' : 'Lock' }}</span>
+                <span style="font-size: 0.75rem;">{{ user?.enabled ? 'Lock' : 'Unlock' }}</span>
               </button>
             </td>
           </tr>

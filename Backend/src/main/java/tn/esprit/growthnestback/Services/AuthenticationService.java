@@ -102,7 +102,7 @@ public class AuthenticationService {
 
         var user = ((User) auth.getPrincipal());
 
-        
+
         user.setLastLogin(new Date());
         userRepository.save(user);
 
