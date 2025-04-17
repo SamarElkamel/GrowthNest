@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/services';
 import { TokenService } from 'src/app/services/token/token.service';
@@ -27,5 +27,11 @@ export class HeaderComponent {
   logout() {
     this.tokenService.clearToken(); 
     this.router.navigate(['/login']);
+  }
+  isScrolled = false;
+
+  @HostListener('window:scroll', [])
+  onScroll(): void {
+    this.isScrolled = window.scrollY > 30; // adjust if needed
   }
 }

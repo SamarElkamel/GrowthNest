@@ -44,7 +44,7 @@ public class AuthenticationController {
 
         boolean captchaVerified = captchaService.verifyCaptcha(request.getCaptcha());
         if (!captchaVerified) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); 
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
         return ResponseEntity.ok(service.authenticate(request));

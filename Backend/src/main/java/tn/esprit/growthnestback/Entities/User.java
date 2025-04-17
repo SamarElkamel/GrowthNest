@@ -18,6 +18,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -61,6 +62,9 @@ public class User implements UserDetails, Principal {
     @Column(name = "date_of_birth")
     @PastOrPresent(message = "Date of birth cannot be in the future")
     private LocalDate dateOfBirth;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLogin;
 
     @Override
     public String getName() {
@@ -210,6 +214,14 @@ public class User implements UserDetails, Principal {
 
     public void setResetTokenExpiration(LocalDateTime resetTokenExpiration) {
         this.resetTokenExpiration = resetTokenExpiration;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     public LocalDateTime getResetTokenExpiration() {

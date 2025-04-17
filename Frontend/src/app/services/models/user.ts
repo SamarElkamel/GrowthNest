@@ -23,4 +23,5 @@ export interface User {
   role?: Role;
   username?: string;
   dateOfBirth: string;
+  lastLogin?: Date;
 }

@@ -53,7 +53,8 @@
           <tr>
             <th class="text-dark font-medium fs-4">User</th>
             <th class="text-dark font-medium fs-4">Created Date</th>
-            <th class="text-dark font-medium fs-4">Date of Birth</th> 
+            <th class="text-dark font-medium fs-4">Date of Birth</th>
+            <th class="text-dark font-medium fs-4">Last Login</th> <!-- NEW COLUMN -->
             <th class="text-dark font-medium fs-4">User State</th>
             <th class="text-dark font-medium fs-4">Account State</th>
             <th class="text-dark font-medium fs-4">Role</th>
@@ -72,7 +73,10 @@
               </div>
             </td>
             <td class="fs-4">{{ user.createdDate | date:'medium' }}</td>
-            <td class="fs-4">{{ user.dateOfBirth | date:'dd-MM-yyyy' }}</td> 
+            <td class="fs-4">{{ user.dateOfBirth | date:'dd-MM-yyyy' }}</td>
+            <td class="fs-4">
+              {{ user.lastLogin ? (user.lastLogin | date:'medium') : 'Never' }}
+            </td> <!-- NEW CELL -->
             <td>
               <span class="badge" [ngClass]="{
                 'bg-danger': !user.enabled,
@@ -88,7 +92,6 @@
             <td>
               {{ user.role?.name || 'No role assigned' }}
             </td>
-            <!-- Smaller Lock/Unlock Button -->
             <td>
               <button 
                 class="btn btn-outline-dark btn-sm px-2 py-1 small-button"
