@@ -15,4 +15,7 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     }
   }
-  
+  .user-points-display {
+    font-weight: 500;
+    color: #4CAF50;
+  }

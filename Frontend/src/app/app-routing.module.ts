@@ -10,7 +10,7 @@ import { BackLayoutComponent } from './layouts/back-layout/back-layout.component
 import { CartPageComponent } from './pages/cart-page/cart-page.component';
 import { ProduitsComponent } from './pages/produits/produits.component';
 import { OrderHistoryComponent } from './pages/order-history/order-history.component';
-import { UserProgressComponent } from './pages/user-progress/user-progress.component';
+import { PaymentComponent } from './pages/payment/payment.component';
 
 export const Approutes: Routes = [
   // FrontOffice layout
@@ -21,9 +21,9 @@ export const Approutes: Routes = [
       { path: '', component: HomeComponent }, 
       { path: '', component: HomeComponent },
       { path: 'cart', component: CartPageComponent },
-      {path: 'produits', component: ProduitsComponent},
+      {path:  'produits', component: ProduitsComponent},
       { path: 'orders/history', component: OrderHistoryComponent },
-      { path: 'progress', component: UserProgressComponent },
+      { path: 'payment', component: PaymentComponent },
 
       // public home
       //{ path: 'about', loadChildren: () => import('./FrontOffice/about/about.module').then(m => m.AboutModule) },

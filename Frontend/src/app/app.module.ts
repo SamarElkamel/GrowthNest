@@ -31,8 +31,13 @@ import { CouponAnalyticsComponent } from './pages/Orders/coupon-analytics/coupon
 import { CartPageComponent } from './pages/cart-page/cart-page.component';
 import { ProduitsComponent } from './pages/produits/produits.component';
 import { OrderHistoryComponent } from './pages/order-history/order-history.component';
-import { UserProgressComponent } from './pages/user-progress/user-progress.component';
+import { PaymentComponent } from './pages/payment/payment.component';
+import { AddressPickerComponent } from './pages/address-picker/address-picker.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
+export function playerFactory() {
+ 
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +55,8 @@ import { UserProgressComponent } from './pages/user-progress/user-progress.compo
     CartPageComponent,
     ProduitsComponent,
     OrderHistoryComponent,
-    UserProgressComponent,
+    PaymentComponent,
+    AddressPickerComponent,
     
    
   ],
@@ -68,6 +74,8 @@ import { UserProgressComponent } from './pages/user-progress/user-progress.compo
     SidebarComponent,
     MatDialogModule,
     MatButtonModule,
+    LeafletModule
+
  
    
   ],

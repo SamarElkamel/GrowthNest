@@ -71,7 +71,7 @@ public class EmailService {
             helper.setFrom("yasminetemimi02@gmail.com");
             helper.setTo(toEmail);
             helper.setSubject(subject);
-            helper.setText(htmlContent, true); // true = HTML
+            helper.setText(htmlContent, true);
 
             mailSender.send(message);
         } catch (MessagingException e) {

@@ -42,6 +42,9 @@ public class CartServiceImpl implements ICartService {
     private EmailService mailService;
    @Autowired
    private PointsService points ;
+   @Autowired
+   private UserPointsRepository UserPointsRepo ;
+
     @Override
     public OrderResponseDTO viewCart(Long userId) {
         Order cart = getOrCreateCart(userId);
@@ -99,12 +102,15 @@ public class CartServiceImpl implements ICartService {
     public OrderResponseDTO checkoutCart(Long userId) {
         Order cart = orderRepository.findByUserIdAndStatus(userId, OrderStatus.CART)
                 .orElseThrow(() -> new EntityNotFoundException("No active cart to checkout"));
-        points.earnSeedsFromOrder(cart.getUser().getId(), BigDecimal.valueOf(cart.getTotalAmount()));
+
+        User user = cart.getUser();
 
         cart.setStatus(OrderStatus.PENDING);
         orderRepository.save(cart);
+
         return mapOrderToDTO(cart);
     }
+
 
     private Order getOrCreateCart(Long userId) {
         return orderRepository.findByUserIdAndStatus(userId, OrderStatus.CART)
@@ -256,15 +262,34 @@ public class CartServiceImpl implements ICartService {
 
         return mapOrderToDTO(cart);
     }
-    public OrderResponseDTO checkoutCartUser(Long userId, String deliveryAddress, String paymentMethod) {
+    public OrderResponseDTO checkoutCartUser(Long userId, String deliveryAddress, String paymentMethod, int redeemedPoints) {
         Order cart = orderRepository.findByUserIdAndStatus(userId, OrderStatus.CART)
                 .orElseThrow(() -> new EntityNotFoundException("No active cart to checkout"));
+
+        double discount = redeemedPoints * 0.01;
 
         cart.setStatus(OrderStatus.PENDING);
         cart.setDeliveryAddress(deliveryAddress);
         cart.setPaymentMethod(paymentMethod);
+        cart.setDiscountAmount(discount); // ✅ store discount (double)
 
         orderRepository.save(cart);
+
+        // 🪙 Update UserPoints
+        UserPoints point = UserPointsRepo.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("UserPoints not found"));
+
+        int available = point.getTotalPoints() - point.getRedeemedPoints();
+        if (redeemedPoints > available) {
+            throw new IllegalArgumentException("Insufficient points to redeem.");
+        }
+
+        point.setRedeemedPoints(point.getRedeemedPoints() + redeemedPoints);
+        UserPointsRepo.save(point);
+
+        // 📧 Confirmation Email
+        double finalTotal = cart.getTotalAmount() - discount;
+
         String html = """
 <!DOCTYPE html>
 <html>
@@ -338,6 +363,8 @@ public class CartServiceImpl implements ICartService {
 
         <div class="summary">
           <p><strong>Total:</strong> $%.2f</p>
+          <p><strong>Discount:</strong> -$%.2f</p>
+          <p><strong>Final Total:</strong> $%.2f</p>
           <p><strong>Payment Method:</strong> %s</p>
           <p><strong>Delivery Address:</strong> %s</p>
         </div>
@@ -357,15 +384,19 @@ public class CartServiceImpl implements ICartService {
                 cart.getUser().getFirstname(),
                 cart.getId(),
                 cart.getTotalAmount(),
+                discount,
+                finalTotal,
                 cart.getPaymentMethod(),
                 cart.getDeliveryAddress()
         );
 
-
-        points.earnSeedsFromOrder(cart.getUser().getId(), BigDecimal.valueOf(cart.getTotalAmount()));
+        points.addPoints(userId, BigDecimal.valueOf(finalTotal));
         mailService.sendHtmlOrderConfirmation(cart.getUser().getEmail(), "Your GrowthNest Order Confirmation", html);
+
         return mapOrderToDTO(cart);
     }
+
+
 
 }
 

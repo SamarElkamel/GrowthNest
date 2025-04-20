@@ -61,5 +61,11 @@ export class CartService {
       orderDetails: [{ productId, quantity }]
     });
   }
-  
+  applyPoints(userId: number, points: number, cartTotal: number) {
+    return this.http.post<any>(`${this.baseUrl}/apply-points`, {
+      userId: userId,
+      pointsToRedeem: points,
+      cartTotal: cartTotal
+    });
+  }
 }

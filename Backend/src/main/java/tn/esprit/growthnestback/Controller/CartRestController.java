@@ -7,11 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import tn.esprit.growthnestback.Entities.UserProgress;
-import tn.esprit.growthnestback.Repository.UserProgressRepository;
+import tn.esprit.growthnestback.Entities.UserPoints;
+import tn.esprit.growthnestback.Repository.UserPointsRepository;
 import tn.esprit.growthnestback.Services.CartServiceImpl;
-import tn.esprit.growthnestback.Services.PointsService;
 import tn.esprit.growthnestback.dto.*;
+
+import java.math.BigDecimal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -20,9 +22,9 @@ public class CartRestController {
 
    @Autowired
     private CartServiceImpl cartService;
-    @Autowired
-    private UserProgressRepository userProgressRepo;
 
+    @Autowired
+    private UserPointsRepository userPointsRepo ;
 
     @PostMapping("/add-items")
     public ResponseEntity<OrderResponseDTO> addOrUpdateCartItems(@RequestBody CreateOrderRequestDTO request) {
@@ -76,18 +78,42 @@ public class CartRestController {
         return ResponseEntity.ok(cartService.checkoutCartUser(
                 request.userId(),
                 request.deliveryAddress(),
-                request.paymentMethod()
+                request.paymentMethod(),
+                request.redeemedPoints()
         ));
     }
 
-    @GetMapping("/user-progress/{userId}")
-    public UserProgressDTO getUserProgress(@PathVariable Long userId) {
-        UserProgress progress = userProgressRepo.findByUserId(userId)
+    @GetMapping("/points/{userId}")
+    public ResponseEntity<UserPointsDTO> getUserPoints(@PathVariable Long userId) {
+        UserPoints points = userPointsRepo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return new UserProgressDTO(
-                progress.getTotalPoints(),
-                progress.getBadge()
-        );
+        int available = points.getTotalPoints() - points.getRedeemedPoints();
+        return ResponseEntity.ok(new UserPointsDTO(
+                points.getTotalPoints(),
+                points.getRedeemedPoints(),
+                available
+        ));
     }
+    @PostMapping("/apply-points")
+    public ResponseEntity<Map<String, Object>> applyPoints(@RequestBody RedeemPointsRequest request) {
+        UserPoints points = userPointsRepo.findById(request.userId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        int available = points.getTotalPoints() - points.getRedeemedPoints();
+
+        if (request.pointsToRedeem() > available) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Insufficient points"));
+        }
+
+        BigDecimal discount = BigDecimal.valueOf(request.pointsToRedeem() * 0.01); // 100 pts = 1 TND
+        BigDecimal newTotal = request.cartTotal().subtract(discount);
+
+        return ResponseEntity.ok(Map.of(
+                "discount", discount,
+                "newTotal", newTotal
+        ));
+    }
+
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from 'src/app/services/cart.service';
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe, Stripe, StripeCardElement } from '@stripe/stripe-js';
 
 interface OrderItem {
   productId: number;
@@ -32,25 +32,55 @@ export class CartPageComponent implements OnInit {
   couponCode: string = '';
   deliveryAddress: string = '';
   paymentMethod: string = 'Cash';
-  
+  availablePoints = 0;
+  pointsToRedeem = 0;
+  redeeming = false;
+  discount = 0;
   constructor(private cartService: CartService) {}
 
   ngOnInit(): void {
     this.loadCart();
   }
 
+  applyPoints() {
+    this.cartService.applyPoints(this.userId, this.pointsToRedeem, this.total).subscribe({
+      next: res => {
+        this.discount = res.discount;
+        if (this.cart) {
+          this.cart.discountAmount = this.subtotal - res.newTotal;
+        }
+        this.redeeming = false;
+      },
+      error: err => {
+        alert(err.error?.error || 'Could not redeem points');
+      }
+    });
+  }
   
-
-checkoutCart(): void {
-  this.cartService.checkoutCart(
-    this.userId,
-    this.deliveryAddress,
-    this.paymentMethod
-  ).subscribe({
-    next: () => this.loadCart(),
-    error: err => console.error('Checkout failed', err)
-  });
+cancelRedemption() {
+  this.pointsToRedeem = 0;
+  this.discount = 0;
+  this.redeeming = false;
 }
+  checkoutCart(): void {
+    if (this.paymentMethod === 'Cash') {
+      this.cartService.checkoutCart(
+        this.userId,
+        this.deliveryAddress,
+        this.paymentMethod
+      ).subscribe({
+        next: () => {
+          alert('Order placed with Cash on Delivery!');
+          this.loadCart();
+        },
+        error: err => console.error('Checkout failed', err)
+      });
+    } else if (this.paymentMethod === 'Stripe') {
+      // Redirect to payment page with queryParams
+      window.location.href = `/payment?userId=${this.userId}&cartId=${this.cart?.orderId}&amount=${this.total}`;
+    }
+  }
+  
 
   get cartItems(): OrderItem[] {
     return this.cart?.items || [];
@@ -61,8 +91,7 @@ checkoutCart(): void {
   }
 
   get total(): number {
-    return this.cart?.totalAmount ?? this.subtotal;
-  }
+    return this.subtotal - (this.cart?.discountAmount || 0);  }
 
   loadCart(): void {
     this.cartService.getCart(this.userId).subscribe({
