@@ -1,6 +1,6 @@
 <div class="add-business-container">
   <h1>Ajouter un Business</h1>
-  <form [formGroup]="businessForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="businessForm" (ngSubmit)="onSubmit()" aria-label="Formulaire d'ajout de business">
     <div class="form-group">
       <label for="name">Nom du Business</label>
       <input
@@ -11,6 +11,7 @@
           'invalid': name.touched && name.invalid,
           'valid': name.touched && name.valid
         }"
+        aria-required="true"
       />
       <div *ngIf="name.touched && name.invalid" class="error">
         <div *ngIf="name.errors?.['required']">Le nom est requis.</div>
@@ -29,6 +30,7 @@
           'invalid': description.touched && description.invalid,
           'valid': description.touched && description.valid
         }"
+        aria-required="true"
       />
       <div *ngIf="description.touched && description.invalid" class="error">
         <div *ngIf="description.errors?.['required']">La description est requise.</div>
@@ -56,7 +58,7 @@
 
     <div class="form-group">
       <label for="categorieBusiness">Catégorie</label>
-      <select id="categorieBusiness" formControlName="categorieBusiness">
+      <select id="categorieBusiness" formControlName="categorieBusiness" aria-required="true">
         <option [ngValue]="null" disabled>Sélectionnez une catégorie</option>
         <option *ngFor="let category of categories" [ngValue]="category">{{ category }}</option>
       </select>
@@ -73,10 +75,11 @@
         accept="image/jpeg,image/png"
         (change)="onLogoSelected($event)"
         style="display: none;"
+        aria-label="Sélectionner un logo"
       />
-      <button type="button" (click)="triggerFileInput('logo')">Choisir un logo</button>
+      <button type="button" (click)="triggerFileInput('logo')" [disabled]="isSubmitting">Choisir un logo</button>
       <div *ngIf="logoPreview" class="preview">
-        <img [src]="logoPreview" alt="Logo Preview" style="max-width: 200px;" />
+        <img [src]="logoPreview" alt="Prévisualisation du logo" style="max-width: 200px;" />
       </div>
     </div>
 
@@ -88,13 +91,16 @@
         accept="application/pdf"
         (change)="onPdfSelected($event)"
         style="display: none;"
+        aria-label="Sélectionner un PDF"
       />
-      <button type="button" (click)="triggerFileInput('pdf')">Choisir un PDF</button>
+      <button type="button" (click)="triggerFileInput('pdf')" [disabled]="isSubmitting">Choisir un PDF</button>
       <div *ngIf="pdfName" class="preview">
         <p>Fichier sélectionné : {{ pdfName }}</p>
       </div>
     </div>
 
-    <button type="submit" [disabled]="businessForm.disabled">Ajouter le Business</button>
+    <button type="submit" [disabled]="businessForm.invalid || isSubmitting" aria-label="Ajouter le business">
+      {{ isSubmitting ? 'Envoi en cours...' : 'Ajouter le Business' }}
+    </button>
   </form>
-</div>
+</div> 

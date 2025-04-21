@@ -1,4 +1,14 @@
-<!-- business-details.component.html -->
+
+<!-- Ajoutez ce style dans la balise <head> ou dans le fichier SCSS associé -->
+  <style>
+    .product-image {
+      max-width: 100px;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      object-fit: cover;
+    }
+    </style><!-- business-details.component.html -->
 <h2>Business Details</h2>
 <div *ngIf="business" class="business-details">
     <div class="business-details__header">
@@ -66,7 +76,7 @@
         <ng-container matColumnDef="image">
           <th mat-header-cell *matHeaderCellDef>Image</th>
           <td mat-cell *matCellDef="let product">
-            <img [src]="getImageUrl(product.image)" alt="Image du produit" *ngIf="product.image" class="product-image">
+            <img [src]="getLogoUrl(product.image)" alt="Image du produit" *ngIf="product.image" class="product-image">
             <span *ngIf="!product.image">Aucune image</span>
           </td>
         </ng-container>

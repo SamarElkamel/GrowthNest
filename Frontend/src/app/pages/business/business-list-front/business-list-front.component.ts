@@ -1,5 +1,6 @@
-import { Component, AfterViewInit, Input } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
 import { Business, CategorieBusiness } from 'src/app/services/models';
 import { GestionDesBusinessService } from 'src/app/services/services';
 
@@ -14,6 +15,8 @@ declare var swal: any;
 export class BusinessListFrontComponent implements AfterViewInit {
   businesses: Business[] = [];
   filteredBusinesses: Business[] = [];
+  paginatedBusinesses: Business[] = [];
+  topThreeBusinesses: Business[] = []; // Nouvelle propriété pour les trois meilleures entreprises
   categories: string[] = Object.values(CategorieBusiness);
   selectedCategory: string = '';
   searchQuery: string = '';
@@ -25,59 +28,22 @@ export class BusinessListFrontComponent implements AfterViewInit {
   @Input() business?: Business;
   baseUrl: string = 'http://localhost:8080/Growthnest';
 
+  pageSize = 6;
+  pageIndex = 0;
+  pageSizeOptions: number[] = [6, 12, 24];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   constructor(private businessService: GestionDesBusinessService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadBusinesses();
+    this.loadTopThreeBusinesses(); // Charger les trois meilleures entreprises
   }
 
   ngAfterViewInit(): void {
     this.initializeSelect2();
     this.initializeParallax();
-    setTimeout(() => {
-      $('.wrap-slick1 .slick1').slick({
-        pauseOnFocus: false,
-        pauseOnHover: false,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        fade: true,
-        speed: 1000,
-        infinite: true,
-        autoplay: true,
-        autoplaySpeed: 6000,
-        arrows: true,
-        appendArrows: $('.wrap-slick1'),
-        prevArrow: '<button class="arrow-slick1 prev-slick1"><i class="zmdi zmdi-caret-left"></i></button>',
-        nextArrow: '<button class="arrow-slick1 next-slick1"><i class="zmdi zmdi-caret-right"></i></button>',
-        dots: true,
-        appendDots: $('.wrap-slick1').find('.wrap-slick1-dots'),
-        dotsClass: 'slick1-dots',
-      });
-
-      const firstSlide = $('.wrap-slick1 .item-slick1').first().find('.layer-slick1');
-      firstSlide.each(function (_index: number, element: HTMLElement) {
-        const $this = $(element);
-        setTimeout(() => {
-          $this.addClass($this.data('appear') + ' visible-true');
-        }, $this.data('delay'));
-      });
-
-      $('.wrap-slick1 .slick1').on('afterChange', function (_event: any, _slick: any, currentSlide: number) {
-        const layerSlick1 = $('.wrap-slick1 .layer-slick1');
-        layerSlick1.removeClass((_: number, className: string) => {
-          const matches = className.match(/(?:^|\s)(fadeIn|fadeInDown|fadeInUp|zoomIn|rollIn|slideInUp|rotateIn.*?)(?=\s|$)/g);
-          return (matches || []).join(' ') + ' visible-true';
-        });
-
-        const current = $('.wrap-slick1 .item-slick1').eq(currentSlide).find('.layer-slick1');
-        current.each(function (_i: number, el: HTMLElement) {
-          const $el = $(el);
-          setTimeout(() => {
-            $el.addClass($el.data('appear') + ' visible-true');
-          }, $el.data('delay'));
-        });
-      });
-    }, 100);
   }
 
   loadBusinesses(): void {
@@ -97,17 +63,33 @@ export class BusinessListFrontComponent implements AfterViewInit {
     });
   }
 
+  loadTopThreeBusinesses(): void {
+    this.businessService.getTopThreeBusinesses().subscribe({
+      next: (data) => {
+        this.topThreeBusinesses = data;
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des meilleures entreprises:', err);
+        this.topThreeBusinesses = [];
+      },
+    });
+  }
+
   filterByCategory(category: string): void {
     this.selectedCategory = category;
+    this.pageIndex = 0;
     this.applyFilters();
   }
 
   searchBusinesses(): void {
+    this.pageIndex = 0;
     this.applyFilters();
   }
 
-  sortBusinesses(sortOption: string): void {
+  sortBusinesses(event: MouseEvent, sortOption: string): void {
+    event.preventDefault();
     this.sortBy = sortOption;
+    this.pageIndex = 0;
     this.applyFilters();
   }
 
@@ -134,6 +116,19 @@ export class BusinessListFrontComponent implements AfterViewInit {
     }
 
     this.filteredBusinesses = result;
+    this.updatePaginatedBusinesses();
+  }
+
+  onPageChange(event: any): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatedBusinesses();
+  }
+
+  updatePaginatedBusinesses(): void {
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedBusinesses = this.filteredBusinesses.slice(startIndex, endIndex);
   }
 
   toggleFilter(): void {
@@ -167,13 +162,13 @@ export class BusinessListFrontComponent implements AfterViewInit {
     this.router.navigate(['/business', businessId, 'products']);
   }
 
-  getLogoUrl(logo: string): string {
-    return logo ? `${this.baseUrl}${logo}` : 'assets/images/banner-07.jpg';
+  getLogoUrl(logo: string | null | undefined): string {
+    return logo ? `${this.baseUrl}/uploads/logos/${logo.split('/').pop()}` : 'assets/images/banner-07.jpg';
   }
 
   onImageError(event: Event, business: Business): void {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = 'assets/images/banner-07.jpg';
-    business.logo = ''; // Prevent repeated failed attempts
+    business.logo = '';
   }
 }

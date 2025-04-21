@@ -1,57 +1,46 @@
 <div class="business-list-container">
-  <!-- Banner Section -->
-  <div class="sec-banner bg0 p-t-80 p-b-50">
+  <!-- Trending Section -->
+  <div class="sec-trending bg0 p-t-80 p-b-50">
     <div class="container">
+      <h2 class="section-title text-center p-b-30">Tendances</h2>
       <div class="row">
-        <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto">
+        <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto" *ngFor="let business of topThreeBusinesses; let i = index">
           <div class="block1 wrap-pic-w">
-            <img src="assets/images/banner-01.jpg" alt="IMG-BANNER" />
+            <img
+              [src]="getLogoUrl(business.logo)"
+              alt="{{ business.name }}"
+              class="business-image"
+              (error)="onImageError($event, business)"
+            />
             <a
-              href="/business-list"
+              [routerLink]="['/business-details', business.idBusiness]"
               class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3"
             >
               <div class="block1-txt-child1 flex-col-l">
-                <span class="block1-name ltext-102 trans-04 p-b-8"> Entreprises locales </span>
-                <span class="block1-info stext-102 trans-04"> Découvrez nos partenaires </span>
+                <span class="block1-name ltext-102 trans-04 p-b-8">{{ business.name }}</span>
+                <span class="block1-info stext-102 trans-04">
+                  {{ business.categorieBusiness || 'Général' }}
+                </span>
+                <span class="block1-info stext-102 trans-04">
+                  Note: {{ business.averageRating | number: '1.1-1' }} ({{ business.ratingCount }} votes)
+                </span>
               </div>
               <div class="block1-txt-child2 p-b-4 trans-05">
-                <div class="block1-link stext-101 cl0 trans-09"> Explorer </div>
+                <div class="block1-link stext-101 cl0 trans-09">Voir détails</div>
               </div>
             </a>
           </div>
         </div>
-        <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto">
+        <!-- Placeholder si moins de 3 entreprises -->
+        <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto" *ngIf="topThreeBusinesses.length < 3 && topThreeBusinesses.length <= 2" [ngStyle]="{'visibility': topThreeBusinesses.length <= 2 ? 'visible' : 'hidden'}">
           <div class="block1 wrap-pic-w">
-            <img src="assets/images/banner-02.jpg" alt="IMG-BANNER" />
-            <a
-              href="/business-list"
-              class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3"
-            >
+            <img src="assets/images/banner-04.jpg" />
+            <div class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
               <div class="block1-txt-child1 flex-col-l">
-                <span class="block1-name ltext-102 trans-04 p-b-8"> Services </span>
-                <span class="block1-info stext-102 trans-04"> Qualité garantie </span>
+                <span class="block1-name ltext-102 trans-04 p-b-8">Bientôt disponible</span>
+                <span class="block1-info stext-102 trans-04">Plus d'entreprises à venir</span>
               </div>
-              <div class="block1-txt-child2 p-b-4 trans-05">
-                <div class="block1-link stext-101 cl0 trans-09"> Explorer </div>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto">
-          <div class="block1 wrap-pic-w">
-            <img src="assets/images/banner-03.jpg" alt="IMG-BANNER" />
-            <a
-              href="/business-list"
-              class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3"
-            >
-              <div class="block1-txt-child1 flex-col-l">
-                <span class="block1-name ltext-102 trans-04 p-b-8"> Produits </span>
-                <span class="block1-info stext-102 trans-04"> Nouveautés </span>
-              </div>
-              <div class="block1-txt-child2 p-b-4 trans-05">
-                <div class="block1-link stext-101 cl0 trans-09"> Explorer </div>
-              </div>
-            </a>
+            </div>
           </div>
         </div>
       </div>
@@ -84,7 +73,10 @@
 
         <!-- Filter and Search Buttons -->
         <div class="flex-w flex-c-m m-tb-10">
-          <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4" (click)="toggleFilter()">
+          <div
+            class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4"
+            (click)="toggleFilter()"
+          >
             <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
             <i
               class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close"
@@ -93,7 +85,10 @@
             Filter
           </div>
 
-          <div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4" (click)="toggleSearch()">
+          <div
+            class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4"
+            (click)="toggleSearch()"
+          >
             <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
             <i
               class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close"
@@ -130,7 +125,7 @@
                     href="#"
                     class="filter-link stext-106 trans-04"
                     [ngClass]="{'filter-link-active': sortBy === 'default'}"
-                    (click)="sortBusinesses('default')"
+                    (click)="sortBusinesses($event, 'default')"
                   >
                     Default
                   </a>
@@ -140,7 +135,7 @@
                     href="#"
                     class="filter-link stext-106 trans-04"
                     [ngClass]="{'filter-link-active': sortBy === 'name'}"
-                    (click)="sortBusinesses('name')"
+                    (click)="sortBusinesses($event, 'name')"
                   >
                     Name
                   </a>
@@ -156,7 +151,7 @@
         <h2 class="section-title">Liste des entreprises</h2>
 
         <div class="row">
-          <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto" *ngFor="let business of filteredBusinesses">
+          <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto" *ngFor="let business of paginatedBusinesses">
             <div class="block1 wrap-pic-w">
               <img
                 [src]="getLogoUrl(business.logo)"
@@ -169,7 +164,7 @@
                 class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3"
               >
                 <div class="block1-txt-child1 flex-col-l">
-                  <span class="block1-name ltext-102 trans-04 p-b-8"> {{ business.name }} </span>
+                  <span class="block1-name ltext-102 trans-04 p-b-8">{{ business.name }}</span>
                   <span class="block1-info stext-102 trans-04">
                     {{ business.categorieBusiness || 'Général' }}
                   </span>
@@ -182,18 +177,33 @@
                 </div>
 
                 <div class="block1-txt-child2 p-b-4 trans-05">
-                  <div class="block1-link stext-101 cl0 trans-09"> Voir détails </div>
+                  <div class="block1-link stext-101 cl0 trans-09">Voir détails</div>
                 </div>
               </a>
             </div>
           </div>
         </div>
 
+        <!-- Pagination -->
+        <mat-paginator
+          [length]="filteredBusinesses.length"
+          [pageSize]="pageSize"
+          [pageIndex]="pageIndex"
+          [pageSizeOptions]="pageSizeOptions"
+          (page)="onPageChange($event)"
+          aria-label="Select page of businesses"
+        ></mat-paginator>
+
         <!-- Empty State -->
-        <div class="empty-state" *ngIf="filteredBusinesses.length === 0">
+        <div class="empty-state" *ngIf="filteredBusinesses.length === 0 && !loading">
           <mat-icon class="empty-icon">business</mat-icon>
           <h3>Aucune entreprise disponible</h3>
           <p>Revenez plus tard pour découvrir nos nouvelles partenaires</p>
+        </div>
+
+        <!-- Loading State -->
+        <div class="text-center p-t-50" *ngIf="loading">
+          <mat-spinner diameter="50"></mat-spinner>
         </div>
       </div>
     </div>

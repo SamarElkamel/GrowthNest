@@ -11,6 +11,7 @@ import tn.esprit.growthnestback.Repository.UserRatingRepository;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BusinessServiceImpl implements IBusinessService {
@@ -47,6 +48,14 @@ public class BusinessServiceImpl implements IBusinessService {
     }
 
     @Override
+    public List<Business> getTopThreeBusinessesByRating() {
+        return businessRepository.findTopThreeByAverageRating()
+                .stream()
+                .limit(3)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<Business> getAllBusiness() {
         System.out.println("Fetching all businesses");
         return businessRepository.findAll();
@@ -59,9 +68,18 @@ public class BusinessServiceImpl implements IBusinessService {
 
     @Override
     public Business addBusiness(Business business) {
-        System.out.println("Adding business: " + business.getName() + ", PDF: " + business.getBusinessPdf());
+        System.out.println("Adding business: Name=" + business.getName() +
+                ", Description=" + business.getDescription() +
+                ", Category=" + business.getCategorieBusiness() +
+                ", Logo=" + business.getLogo() +
+                ", PDF=" + business.getBusinessPdf() +
+                ", Instagram=" + business.getInstagramPageName() +
+                ", OwnerId=" + business.getOwnerId() +
+                ", Status=" + business.getStatus());
         Business saved = businessRepository.save(business);
-        System.out.println("Business added: ID " + saved.getIdBusiness() + ", PDF: " + saved.getBusinessPdf());
+        System.out.println("Business added: ID=" + saved.getIdBusiness() +
+                ", Name=" + saved.getName() +
+                ", Status=" + saved.getStatus());
         return saved;
     }
 
@@ -75,8 +93,12 @@ public class BusinessServiceImpl implements IBusinessService {
         existingBusiness.setLogo(updatedBusiness.getLogo());
         existingBusiness.setInstagramPageName(updatedBusiness.getInstagramPageName());
         existingBusiness.setBusinessPdf(updatedBusiness.getBusinessPdf());
+        existingBusiness.setOwnerId(updatedBusiness.getOwnerId());
+        existingBusiness.setStatus(updatedBusiness.getStatus());
         Business savedBusiness = businessRepository.save(existingBusiness);
-        System.out.println("Business updated: ID " + savedBusiness.getIdBusiness() + ", PDF: " + savedBusiness.getBusinessPdf());
+        System.out.println("Business updated: ID=" + savedBusiness.getIdBusiness() +
+                ", Name=" + savedBusiness.getName() +
+                ", Status=" + savedBusiness.getStatus());
         return savedBusiness;
     }
 
@@ -93,7 +115,7 @@ public class BusinessServiceImpl implements IBusinessService {
             System.out.println("Invalid rating value: " + ratingValue);
             throw new IllegalArgumentException("La note doit être entre 1 et 5.");
         }
-        Long userId = 2L;
+        Long userId = 1L;
         System.out.println("Adding rating: userId=" + userId + ", businessId=" + businessId + ", ratingValue=" + ratingValue);
         Business business = findById(businessId);
         Optional<UserRating> existingRating = userRatingRepository.findByUserIdAndBusinessId(userId, businessId);

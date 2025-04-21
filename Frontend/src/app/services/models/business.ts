@@ -13,6 +13,9 @@ export interface Business {
   averageRating: number;
   ratingCount: number;
   instagramPageName: string;
+  businessPdf?: string;
+  ownerId?: string;
+  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
   products?: Array<Products>;
 
 }
@@ -21,6 +24,10 @@ export interface CreateBusinessDto {
   description: string;
   categorieBusiness: string;
   logo?: string;
+  ownerId?: string;
+  businessPdf?: string;
+  instagramPageName?: string;
+  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
   averageRating: number;
   ratingCount: number;
 }

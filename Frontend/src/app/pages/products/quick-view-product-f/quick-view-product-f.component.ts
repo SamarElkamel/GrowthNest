@@ -12,6 +12,7 @@ import { GestionDesProduitsService } from 'src/app/services/services';
 export class QuickViewProductFComponent {
   product: Products | null = null; // Initialisation explicite
   isLoading = true;
+  baseUrl: string = 'http://localhost:8080/Growthnest';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { productId: number },
@@ -77,6 +78,16 @@ export class QuickViewProductFComponent {
     setTimeout(() => {
       notification.remove();
     }, 2000);
+  }
+  getLogoUrl(logo: string | null | undefined): string {
+    // Use lowercase 'uploads' in the URL path
+    return logo ? `${this.baseUrl}/uploads/products/${logo.split('/').pop()}` : 'assets/images/banner-07.jpg';
+  }
+  
+  onImageError(event: Event, business: Products): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'assets/images/banner-07.jpg';
+    business.image = ''; // Prevent repeated failed attempts
   }
  
 }

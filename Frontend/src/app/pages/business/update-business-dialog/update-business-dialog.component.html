@@ -18,6 +18,17 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
+      <mat-label>Page Instagram</mat-label>
+      <input matInput formControlName="instagramPageName" placeholder="Nom de la page Instagram (optionnel)">
+      <mat-error *ngIf="instagramPageName?.hasError('pattern')">
+        Caractères autorisés : lettres, chiffres, points et tirets bas
+      </mat-error>
+      <mat-error *ngIf="instagramPageName?.hasError('maxlength')">
+        Maximum 30 caractères
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
       <mat-label>Catégorie</mat-label>
       <mat-select formControlName="categorieBusiness">
         <mat-option *ngFor="let category of categorieBusinessOptions" [value]="category">
@@ -26,10 +37,51 @@
       </mat-select>
       <mat-error *ngIf="categorieBusiness?.hasError('required')">La catégorie est obligatoire</mat-error>
     </mat-form-field>
+
+    <div class="file-upload-section">
+      <!-- Logo Upload -->
+      <div class="upload-group">
+        <label>Logo actuel</label>
+        <div class="current-file" *ngIf="existingLogoUrl">
+          <img [src]="existingLogoUrl" alt="Logo actuel" class="logo-preview">
+        </div>
+        <input type="file" id="logoInput" accept="image/*" hidden (change)="onLogoSelected($event)">
+        <div class="upload-controls">
+          <button mat-stroked-button type="button" (click)="triggerFileInput('logo')">
+            <mat-icon>image</mat-icon>
+            Changer le logo
+          </button>
+          <span class="file-info" *ngIf="logoPreview">
+            Nouveau logo sélectionné
+          </span>
+        </div>
+      </div>
+
+      <!-- PDF Upload -->
+      <div class="upload-group">
+        <label>PDF actuel</label>
+        <div class="current-file" *ngIf="existingPdfName">
+          {{ existingPdfName }}
+        </div>
+        <input type="file" id="pdfInput" accept="application/pdf" hidden (change)="onPdfSelected($event)">
+        <div class="upload-controls">
+          <button mat-stroked-button type="button" (click)="triggerFileInput('pdf')">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Changer le PDF
+          </button>
+          <span class="file-info" *ngIf="pdfName">
+            {{ pdfName }}
+          </span>
+        </div>
+      </div>
+    </div>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Annuler</button>
-  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="businessForm.invalid">Sauvegarder</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="businessForm.invalid">
+    <mat-icon>save</mat-icon>
+    Sauvegarder
+  </button>
 </mat-dialog-actions>

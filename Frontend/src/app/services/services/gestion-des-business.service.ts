@@ -474,4 +474,107 @@ addBusiness(business: any, logo?: File, pdf?: File, context?: HttpContext): Obse
       map((r: StrictHttpResponse<Blob>): Blob => r.body)
     );
   }
+   /** Path part for operation `approveBusiness()` */
+   static readonly ApproveBusinessPath = '/business/approve/{id}';
+
+   /**
+    * Approuver un business
+    *
+    * This method provides access to the full `HttpResponse`, allowing access to response headers.
+    * To access only the response body, use `approveBusiness()` instead.
+    *
+    * This method doesn't expect any request body.
+    */
+   approveBusiness$Response(params: { id: number }, context?: HttpContext): Observable<StrictHttpResponse<Business>> {
+     const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.ApproveBusinessPath, 'post');
+     if (params) {
+       rb.path('id', params.id, {});
+     }
+     return this.http.request(
+       rb.build({ responseType: 'json', accept: 'application/json', context })
+     ).pipe(
+       filter((r: any) => r instanceof HttpResponse),
+       map((r: HttpResponse<any>) => r as StrictHttpResponse<Business>),
+       tap({
+         next: () => console.log(`Business approved: ID=${params.id}`),
+         error: (err) => console.error(`Error approving business ID=${params.id}: ${err.message}`)
+       })
+     );
+   }
+ 
+   /**
+    * Approuver un business
+    *
+    * This method provides access only to the response body.
+    * To access the full response (for headers, for example), `approveBusiness$Response()` instead.
+    *
+    * This method doesn't expect any request body.
+    */
+   approveBusiness(params: { id: number }, context?: HttpContext): Observable<Business> {
+     return this.approveBusiness$Response(params, context).pipe(
+       map((r: StrictHttpResponse<Business>) => r.body)
+     );
+   }
+ 
+   /** Path part for operation `rejectBusiness()` */
+   static readonly RejectBusinessPath = '/business/reject/{id}';
+ 
+   /**
+    * Rejeter un business
+    *
+    * This method provides access to the full `HttpResponse`, allowing access to response headers.
+    * To access only the response body, use `rejectBusiness()` instead.
+    *
+    * This method doesn't expect any request body.
+    */
+   rejectBusiness$Response(params: { id: number }, context?: HttpContext): Observable<StrictHttpResponse<Business>> {
+     const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.RejectBusinessPath, 'post');
+     if (params) {
+       rb.path('id', params.id, {});
+     }
+     return this.http.request(
+       rb.build({ responseType: 'json', accept: 'application/json', context })
+     ).pipe(
+       filter((r: any) => r instanceof HttpResponse),
+       map((r: HttpResponse<any>) => r as StrictHttpResponse<Business>),
+       tap({
+         next: () => console.log(`Business rejected: ID=${params.id}`),
+         error: (err) => console.error(`Error rejecting business ID=${params.id}: ${err.message}`)
+       })
+     );
+   }
+ 
+   /**
+    * Rejeter un business
+    *
+    * This method provides access only to the response body.
+    * To access the full response (for headers, for example), `rejectBusiness$Response()` instead.
+    *
+    * This method doesn't expect any request body.
+    */
+   rejectBusiness(params: { id: number }, context?: HttpContext): Observable<Business> {
+     return this.rejectBusiness$Response(params, context).pipe(
+       map((r: StrictHttpResponse<Business>) => r.body)
+     );
+   }
+   // gestion-des-business.service.ts
+/** Path part for operation `updateBusinessWithFiles()` */
+static readonly UpdateBusinessWithFilesPath = '/business/updateBusinessWithFiles';
+
+updateBusinessWithFiles(formData: FormData): Observable<Business> {
+  return this.http.put<Business>(
+    `${this.rootUrl}${GestionDesBusinessService.UpdateBusinessWithFilesPath}`,
+    formData
+  );
+}
+getBaseUrl(): string {
+  // Version plus robuste
+  const url = new URL(this.rootUrl);
+  return `${url.protocol}//${url.host}`;
+}
+static readonly getTopThreeBusinessesPath = '/business/getTopThreeBusinesses';
+
+getTopThreeBusinesses(): Observable<Business[]> {
+  return this.http.get<Business[]>(`${this.rootUrl}${GestionDesBusinessService.getTopThreeBusinessesPath}`);
+}
 }

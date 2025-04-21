@@ -11,11 +11,12 @@
     <div *ngIf="product && !isLoading" class="product-content">
       <div class="product-gallery">
         <div class="image-container">
-          <img src="assets/images/banner-01.jpg"  
+          <img  [src]="getLogoUrl(product.image)"   
                [alt]="product.name"
                class="product-image">
           <div class="image-gradient"></div>
         </div>
+       
       </div>
   
       <div class="product-info">

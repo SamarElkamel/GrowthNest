@@ -13,4 +13,5 @@ public interface IBusinessService {
     public void addRating(Long businessId, Integer ratingValue);
     public Integer getUserRating(Long businessId);
     public byte[] generateQRCodeForBusiness(Long businessId, int width, int height) throws Exception ;
+    List<Business> getTopThreeBusinessesByRating();
 }

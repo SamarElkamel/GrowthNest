@@ -4,6 +4,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GestionDesProduitsService } from 'src/app/services/services';
 
+
+
+
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
@@ -13,6 +16,8 @@ export class AddProductComponent {
   productForm!: FormGroup;
   businessId!: number;
   isLoading = false;
+  selectedImage: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -39,19 +44,44 @@ export class AddProductComponent {
     });
   }
 
+  onImageSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImage = file;
+      
+      // Générer la prévisualisation
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   onSubmit(): void {
     if (this.productForm.valid) {
       this.isLoading = true;
+      
+      const formData = new FormData();
       const productData = {
-        name: this.productForm.get('name')?.value,
-        description: this.productForm.get('description')?.value,
-        price: this.productForm.get('price')?.value,
-        stock: this.productForm.get('stock')?.value
+        name: this.productForm.value.name,
+        description: this.productForm.value.description,
+        price: this.productForm.value.price,
+        stock: this.productForm.value.stock
       };
 
-      console.log('Données envoyées :', productData);
+      // Ajouter les données du produit
+      formData.append('product', JSON.stringify(productData));
+      
+      // Ajouter l'image si elle existe
+      if (this.selectedImage) {
+        formData.append('image', this.selectedImage);
+      }
 
-      this.productService.addBusinessProduct({ businessId: this.businessId,body: productData}).subscribe({
+      this.productService.addBusinessProductWithImage({
+        businessId: this.businessId,
+        formData: formData
+      }).subscribe({
         next: (res: any) => {
           this.snackBar.open('Produit ajouté avec succès', 'Fermer', { duration: 3000 });
           this.router.navigate(['admin/my-business', this.businessId]);

@@ -30,4 +30,4 @@ export function getProductsByBusiness(
   );
 }
 
-getProductsByBusiness.PATH = '/Products/business/{businessId}';
+getProductsByBusiness.PATH = 'Products/getProductBusiness/{businessId}';

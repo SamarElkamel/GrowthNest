@@ -54,7 +54,22 @@
         <mat-error *ngIf="productForm.get('stock')?.hasError('min')">
           Le stock doit être supérieur ou égal à 0
         </mat-error>
+        
       </mat-form-field>
+      
+
+      <div class="image-section">
+        <input type="file" #fileInput hidden (change)="onImageSelected($event)" accept="image/*">
+        <button mat-stroked-button type="button" (click)="fileInput.click()">
+          <mat-icon>image</mat-icon>
+          {{ selectedImage ? 'Changer l\'image' : 'Ajouter une image' }}
+        </button>
+        
+        <div *ngIf="imagePreview" class="image-preview">
+          <img [src]="imagePreview" alt="Prévisualisation de l'image du produit">
+        </div>
+      </div>
+   
   
     
   

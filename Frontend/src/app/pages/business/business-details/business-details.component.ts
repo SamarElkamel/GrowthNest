@@ -4,6 +4,9 @@ import { GestionDesBusinessService } from 'src/app/services/services';
 import { GetBusinessById$Params } from 'src/app/services/fn/gestion-des-business/get-business-by-id';
 
 export interface Business {
+  
+  ownerId?: string;
+  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
   idBusiness: number;
   name: string;
   description: string;
@@ -125,16 +128,16 @@ export class BusinessDetailsComponent implements OnInit {
     }
   }
 
+  
   getLogoUrl(logo: string | undefined): string {
-    const url = logo ? `${this.baseUrl}/${logo}` : 'assets/images/banner-07.jpg';
-    console.log('Generated URL:', url);
-    return url;
+    // Use optional chaining and nullish coalescing for safety
+    const logoFilename = logo?.split('/').pop() ?? 'default.jpg';
+    return logo ? `${this.baseUrl}/uploads/logos/${logoFilename}` : 'assets/images/banner-07.jpg';
   }
-
-  onImageError(event: Event, business: Business): void {
-    const imgElement = event.target as HTMLImageElement;
-    imgElement.src = 'assets/images/banner-07.jpg';
-    business.image1 = '';
-    console.log('Image error, switched to fallback');
-  }
+  
+    onImageError(event: Event, business: Business): void {
+      const imgElement = event.target as HTMLImageElement;
+      imgElement.src = 'assets/images/banner-07.jpg';
+      business.logo = ''; // Prevent repeated failed attempts
+    }
 }

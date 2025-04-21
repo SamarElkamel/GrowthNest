@@ -19,7 +19,7 @@ import { getAllProducts } from '../fn/gestion-des-produits/get-all-products';
 import { GetAllProducts$Params } from '../fn/gestion-des-produits/get-all-products';
 import { getProductById } from '../fn/gestion-des-produits/get-product-by-id';
 import { GetProductById$Params } from '../fn/gestion-des-produits/get-product-by-id';
-import { Products } from '../models/products';
+import { Products, Wishlist } from '../models/products';
 import { updateProducts } from '../fn/gestion-des-produits/update-products';
 import { UpdateProducts$Params } from '../fn/gestion-des-produits/update-products';
 import { addBusinessProduct, AddBusinessProduct$Params } from '../fn/gestion-des-produits/add-business-product';
@@ -178,7 +178,7 @@ export class GestionDesProduitsService extends BaseService {
   }
   // Nouveaux paths
 static readonly AddBusinessProductPath = '/Products/business/{businessId}';
-static readonly GetProductsByBusinessPath =  '/Products/business/{businessId}';
+static readonly GetProductsByBusinessPath =  '/Products/getProductBusiness/{businessId}';
 
 /**
  * 🔹 Ajouter un produit à un business
@@ -219,5 +219,54 @@ getProductsByBusiness(params: GetProductsByBusiness$Params, context?: HttpContex
     map((r: StrictHttpResponse<Array<Products>>): Array<Products> => r.body)
   );
 }
+addBusinessProductWithImage(params: { 
+  businessId: number, 
+  formData: FormData 
+}): Observable<Products> {
+  return this.http.post<Products>(
+    `${this.rootUrl}/Products/business/${params.businessId}`,
+    params.formData
+  );
+}
+getImageUrl(fileName: string): string {
+  // ✅ Utilisez directement le nom de fichier stocké en base
+  return `http://localhost:8080/uploads/products/${fileName}`;
+}
+static readonly AddToWishlistPath = '/wishlist/add/{userId}/{productId}';
+  static readonly RemoveFromWishlistPath = '/wishlist/remove/{userId}/{productId}';
+  static readonly GetWishlistPath = '/wishlist/user/{userId}';
+  static readonly CheckWishlistPath = '/wishlist/check/{userId}/{productId}';
+
+  // Ajouter un produit à la wishlist
+  addToWishlist(userId: number, productId: number, context?: HttpContext): Observable<Wishlist> {
+    return this.http.post<Wishlist>(
+      `${this.rootUrl}/wishlist/add/${userId}/${productId}`,
+      {},
+      { context }
+    );
+  }
+
+  removeFromWishlist(userId: number, productId: number, context?: HttpContext): Observable<void> {
+    return this.http.delete<void>(
+      `${this.rootUrl}/wishlist/remove/${userId}/${productId}`,
+      { context }
+    );
+  }
+
+  // Récupérer la wishlist d'un utilisateur
+  getWishlist(userId: number, context?: HttpContext): Observable<Wishlist[]> {
+    return this.http.get<Wishlist[]>(
+      `${this.rootUrl}/wishlist/user/${userId}`,
+      { context }
+    );
+  }
+
+  // Vérifier si un produit est dans la wishlist
+  isProductInWishlist(userId: number, productId: number, context?: HttpContext): Observable<boolean> {
+    return this.http.get<boolean>(
+      `${this.rootUrl}/wishlist/check/${userId}/${productId}`,
+      { context }
+    );
+  }
 
 }

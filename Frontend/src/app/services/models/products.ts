@@ -6,9 +6,14 @@ import { Business } from '../models/business';
 export interface Products {
   business?: Business;
   description: string;
-  idProduct?: number;
+  idProduct: number;
   image?: string;
   name: string;
   price?: number;
   stock: number;
+}
+export interface Wishlist {
+  id: number;
+  user: { id: number };
+  product: Products;
 }

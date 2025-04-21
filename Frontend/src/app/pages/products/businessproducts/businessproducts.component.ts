@@ -1,20 +1,21 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Products } from 'src/app/services/models';
 import { GestionDesProduitsService } from 'src/app/services/services/gestion-des-produits.service';
 import { QuickViewProductFComponent } from '../quick-view-product-f/quick-view-product-f.component';
 import * as $ from 'jquery';
-import 'isotope-layout'; // Import Isotope to extend jQuery
-
-declare var swal: any;
+import 'isotope-layout';
+import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
+import { WishlistService } from 'src/app/services/services/WishlistService';
 
 @Component({
   selector: 'app-businessproducts',
   templateUrl: './businessproducts.component.html',
   styleUrls: ['./businessproducts.component.scss']
 })
-export class BusinessproductsComponent implements OnInit {
+export class BusinessproductsComponent implements OnInit, OnDestroy {
   businessId!: number;
   products: Products[] = [];
   filteredProducts: Products[] = [];
@@ -24,10 +25,15 @@ export class BusinessproductsComponent implements OnInit {
   showSearch: boolean = false;
   isLoading: boolean = true;
   errorMessage?: string;
+  baseUrl: string = 'http://localhost:8080/Growthnest';
+  currentUserId: number = 1; // Utilisateur statique
+  wishlist: Set<number> = new Set();
+  private wishlistSubscription!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private produitsService: GestionDesProduitsService,
+    private wishlistService: WishlistService,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef
   ) {}
@@ -36,8 +42,15 @@ export class BusinessproductsComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.businessId = +params['businessId'];
       this.loadProducts();
+      this.loadWishlist();
       this.initializeJQuery();
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.wishlistSubscription) {
+      this.wishlistSubscription.unsubscribe();
+    }
   }
 
   private loadProducts(): void {
@@ -59,24 +72,54 @@ export class BusinessproductsComponent implements OnInit {
     });
   }
 
+  private loadWishlist(): void {
+    this.wishlistSubscription = this.wishlistService.wishlistItems$.subscribe({
+      next: (wishlistItems) => {
+        this.wishlist = new Set(wishlistItems.map(item => item.idProduct));
+        console.log('BusinessproductsComponent: Wishlist updated:', Array.from(this.wishlist));
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('BusinessproductsComponent: Error loading wishlist:', err);
+      }
+    });
+  }
+
+  addToWishlist(product: Products): void {
+    if (!product.idProduct) return;
+
+    if (this.wishlist.has(product.idProduct)) {
+      // Supprimer de la wishlist
+      this.wishlistService.removeFromWishlist(product.idProduct);
+      Swal.fire(product.name, 'Retiré de la wishlist !', 'info');
+    } else {
+      // Ajouter à la wishlist
+      this.wishlistService.addToWishlist(product.idProduct);
+      Swal.fire(product.name, 'Ajouté à la wishlist !', 'success');
+    }
+  }
+
+  isInWishlist(productId: number | undefined): boolean {
+    return productId ? this.wishlist.has(productId) : false;
+  }
+
   searchProducts(): void {
     this.applyFilters();
   }
 
-  sortProducts(sortOption: string): void {
+  sortProducts(event: MouseEvent, sortOption: string): void {
+    event.preventDefault();
     this.sortBy = sortOption;
     this.applyFilters();
   }
 
   applyFilters(): void {
     let result = [...this.products];
-
     if (this.searchQuery) {
       result = result.filter(product =>
         product.name.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     }
-
     switch (this.sortBy) {
       case 'name':
         result.sort((a, b) => a.name.localeCompare(b.name));
@@ -90,40 +133,29 @@ export class BusinessproductsComponent implements OnInit {
       default:
         break;
     }
-
     this.filteredProducts = result;
     this.cdr.detectChanges();
   }
 
   toggleFilter(): void {
     this.showFilter = !this.showFilter;
-    if (this.showFilter) {
-      this.showSearch = false;
-    }
+    if (this.showFilter) this.showSearch = false;
   }
 
   toggleSearch(): void {
     this.showSearch = !this.showSearch;
-    if (this.showSearch) {
-      this.showFilter = false;
-    }
-  }
-
-  addToWishlist(product: Products): void {
-    swal(product.name, "is added to wishlist!", "success");
-    // Optionally, add API call to save to wishlist
+    if (this.showSearch) this.showFilter = false;
   }
 
   addToCart(product: Products): void {
-    // Existing placeholder logic
-    // Implement cart addition here
+    Swal.fire('Info', `${product.name} ajouté au panier !`, 'info');
   }
 
   openQuickView(product: Products): void {
     if (product.idProduct) {
       this.dialog.open(QuickViewProductFComponent, {
         data: { productId: product.idProduct },
-        width: '800px',
+        width: '1000px',
         panelClass: 'quick-view-dialog'
       });
     }
@@ -131,23 +163,21 @@ export class BusinessproductsComponent implements OnInit {
 
   private initializeJQuery(): void {
     setTimeout(() => {
-      // Initialize Isotope for grid filtering
+      // Initialiser Isotope pour la grille
       ($('.isotope-grid') as any).isotope({
         itemSelector: '.isotope-item',
         layoutMode: 'fitRows'
       });
-
-      // Wishlist button interactivity
-      $('.js-addwish-b2').each((index: number, element: HTMLElement) => {
-        const $element = $(element);
-        const nameProduct = $element.parent().parent().find('.js-name-b2').text();
-        $element.on('click', (e: JQuery.ClickEvent<HTMLElement>) => {
-          e.preventDefault();
-          swal(nameProduct, "is added to wishlist!", "success");
-          $element.addClass('js-addedwish-b2');
-          $element.off('click');
-        });
-      });
     }, 100);
+  }
+
+  getLogoUrl(logo: string | null | undefined): string {
+    return logo ? `${this.baseUrl}/uploads/products/${logo.split('/').pop()}` : 'assets/images/banner-07.jpg';
+  }
+
+  onImageError(event: Event, business: Products): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'assets/images/banner-07.jpg';
+    business.image = '';
   }
 }

@@ -15,6 +15,7 @@ export class AddBusinessComponent {
   categories = Object.values(CategorieBusiness);
   logoPreview: string | null = null;
   pdfName: string | null = null;
+  isSubmitting = false;
 
   constructor(
     private fb: FormBuilder,
@@ -89,6 +90,7 @@ export class AddBusinessComponent {
 
   onSubmit(): void {
     if (this.businessForm.valid) {
+      this.isSubmitting = true;
       this.businessForm.disable();
       const businessData = {
         name: this.businessForm.value.name,
@@ -96,33 +98,26 @@ export class AddBusinessComponent {
         categorieBusiness: this.businessForm.value.categorieBusiness,
         instagramPageName: this.businessForm.value.instagramPageName || null,
         averageRating: 0,
-        ratingCount: 0
+        ratingCount: 0,
+        ownerId: '1' // Explicitly set to match backend
       };
       const logoFile = this.businessForm.get('logo')?.value;
       const pdfFile = this.businessForm.get('pdf')?.value;
-  
+
       console.log('Submitting business:', JSON.stringify(businessData));
       console.log('Logo file:', logoFile ? `${logoFile.name} (type: ${logoFile.type})` : 'None');
       console.log('PDF file:', pdfFile ? `${pdfFile.name} (type: ${pdfFile.type})` : 'None');
-  
+
       this.businessService.addBusiness(businessData, logoFile, pdfFile).subscribe({
         next: (newBusiness: Business) => {
-          this.snackBar.open('Business créé avec succès !', 'Fermer', {
+          this.snackBar.open('Business créé avec succès ! En attente de validation.', 'Fermer', {
             duration: 3000,
             panelClass: ['success-snackbar'],
           });
-          this.businessService.triggerRefresh();
-          this.router.navigate(['/admin/my-business', newBusiness.idBusiness], {
-            state: { freshCreation: true },
-          });
-          this.businessForm.reset();
-          this.logoPreview = null;
-          this.pdfName = null;
-          const logoInput = document.getElementById('logoInput') as HTMLInputElement;
-          const pdfInput = document.getElementById('pdfInput') as HTMLInputElement;
-          if (logoInput) logoInput.value = '';
-          if (pdfInput) pdfInput.value = '';
-          this.businessForm.enable();
+          this.resetForm();
+          this.isSubmitting = false;
+          // Optional: Stay on page for testing, or redirect to AdminDashboard
+         //  this.router.navigate(['/admin/pending-businesses']);
         },
         error: (err) => {
           console.error('Erreur détaillée:', {
@@ -134,6 +129,7 @@ export class AddBusinessComponent {
             message: err.message
           });
           this.handleError(err);
+          this.isSubmitting = false;
           this.businessForm.enable();
         }
       });
@@ -141,6 +137,25 @@ export class AddBusinessComponent {
       this.markFormAsTouched();
     }
   }
+
+  private resetForm(): void {
+    this.businessForm.reset({
+      name: '',
+      description: '',
+      categorieBusiness: null,
+      instagramPageName: '',
+      logo: null,
+      pdf: null
+    });
+    this.logoPreview = null;
+    this.pdfName = null;
+    const logoInput = document.getElementById('logoInput') as HTMLInputElement;
+    const pdfInput = document.getElementById('pdfInput') as HTMLInputElement;
+    if (logoInput) logoInput.value = '';
+    if (pdfInput) pdfInput.value = '';
+    this.businessForm.enable();
+  }
+
   private handleError(error: any): void {
     let errorMessage = 'Erreur lors de la création du business';
     if (error.error?.message) {

@@ -29,6 +29,7 @@ export class BusinessDetailBComponent implements OnInit, OnDestroy {
   isLoadingProducts = false;
   displayedColumns: string[] = ['name', 'description', 'price', 'stock', 'image', 'update', 'delete'];
   private destroy$ = new Subject<void>();
+  baseUrl: string = 'http://localhost:8080/Growthnest';
 
   constructor(
     private route: ActivatedRoute,
@@ -168,9 +169,15 @@ export class BusinessDetailBComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  getImageUrl(imagePath: string): string {
-    return `http://localhost:8080${imagePath}`;
+  getLogoUrl(logo: string | null | undefined): string {
+    // Use lowercase 'uploads' in the URL path
+    return logo ? `${this.baseUrl}/uploads/products/${logo.split('/').pop()}` : 'assets/images/banner-07.jpg';
+  }
+  
+  onImageError(event: Event, business: Products): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'assets/images/banner-07.jpg';
+    business.image = ''; // Prevent repeated failed attempts
   }
 
   ngOnDestroy(): void {

@@ -43,6 +43,15 @@ public class Business {
     private Integer ratingCount = 0;
     @Column(name = "business_pdf", length = 255) // Optional PDF path
     String businessPdf;
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT '1'")
+    private String ownerId = "1";
+    @Enumerated(EnumType.STRING)
+    private BusinessStatus status;
+
+    public enum BusinessStatus {
+        PENDING, APPROVED, REJECTED
+    }
+
 
     @OneToMany(mappedBy = "business",cascade = CascadeType.ALL)
     @JsonIgnore
@@ -50,6 +59,15 @@ public class Business {
     public Business() {
         this.averageRating = 0.0;
         this.ratingCount = 0;
+        this.status = BusinessStatus.PENDING;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getBusinessPdf() {
@@ -100,7 +118,13 @@ public class Business {
         logo = logo;
     }*/
 
+    public BusinessStatus getStatus() {
+        return status;
+    }
 
+    public void setStatus(BusinessStatus status) {
+        this.status = status;
+    }
 
     public Set<Products> getProducts() {
         return Products;

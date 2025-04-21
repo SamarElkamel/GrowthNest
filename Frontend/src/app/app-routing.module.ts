@@ -10,6 +10,8 @@ import { BusinessproductsComponent } from './pages/products/businessproducts/bus
 import { BusinessDetailBComponent } from './pages/business/business-detail-b/business-detail-b.component';
 import { AddProductComponent } from './pages/products/add-product/add-product.component';
 import { BusinessDetailsComponent } from './pages/business/business-details/business-details.component';
+import { AdminDashboardComponent } from './pages/business/admin-dashboard/admin-dashboard.component';
+import { WishlistComponent } from './pages/products/wishlist/wishlist.component';
 
 export const Approutes: Routes = [
 
@@ -18,6 +20,7 @@ export const Approutes: Routes = [
       path: '',
       component: HomeComponent 
     },
+   
     {
       path: 'business/:businessId/products',
       component: BusinessproductsComponent
@@ -28,6 +31,7 @@ export const Approutes: Routes = [
       title: 'Liste des small business'
     },
     { path: 'business-details/:idB', component: BusinessDetailsComponent,title: 'business details' },
+    { path: 'wishlist', component: WishlistComponent },
    
   
     // BackOffice
@@ -57,7 +61,8 @@ export const Approutes: Routes = [
       },
       { path: 'listBusiness', component: BusinessListComponent },
       { path: 'businesses/add', component: AddBusinessComponent },
-     
+      { path: 'pending-businesses', component: AdminDashboardComponent, title: 'Pending Businesses' }
+    
     ]
     
   },

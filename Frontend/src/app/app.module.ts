@@ -47,6 +47,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { BusinessDetailsComponent } from './pages/business/business-details/business-details.component';
 import { RatingComponent } from './pages/business/rating/rating.component';
 import { LoggingInterceptor } from './interceptor/logging.interceptor';
+import { AdminDashboardComponent } from './pages/business/admin-dashboard/admin-dashboard.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { WishlistComponent } from './pages/products/wishlist/wishlist.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @NgModule({
   declarations: [
@@ -68,9 +72,12 @@ import { LoggingInterceptor } from './interceptor/logging.interceptor';
     UpdateBusinessDialogComponent,
     BusinessDetailsComponent,
     RatingComponent,
+    AdminDashboardComponent,
+    WishlistComponent,
+
    
     
-  
+     
   ],
   imports: [
     CommonModule,
@@ -81,6 +88,7 @@ import { LoggingInterceptor } from './interceptor/logging.interceptor';
     HttpClientModule,
     NgbModule,
     RouterModule.forRoot(Approutes, { useHash: false }),
+    FormsModule,
     FullComponent,
     NavigationComponent,
     SidebarComponent,
@@ -97,6 +105,7 @@ import { LoggingInterceptor } from './interceptor/logging.interceptor';
     MatCardModule,
     MatTableModule,
     MatSelectModule,
+    MatPaginatorModule,
   
   ],
   providers: [

@@ -1,0 +1,41 @@
+<div class="wishlist-container">
+  <h2 class="wishlist-title">My Wishlist</h2>
+
+  <!-- Loading State -->
+  <div class="wishlist-state" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading wishlist...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="wishlist-state" *ngIf="errorMessage">
+    <i class="zmdi zmdi-alert-triangle"></i>
+    <p>{{ errorMessage }}</p>
+    <button class="retry-btn" (click)="loadWishlist()">Retry</button>
+  </div>
+
+  <!-- Empty State -->
+  <div class="wishlist-state" *ngIf="wishlistItems.length === 0 && !isLoading && !errorMessage">
+    <i class="zmdi zmdi-favorite-outline"></i>
+    <p>Your wishlist is empty.</p>
+    <a routerLink="/business/1/products" class="shop-now-btn">Shop Now</a>
+  </div>
+
+  <!-- Wishlist Items -->
+  <div class="wishlist-grid" *ngIf="wishlistItems.length > 0 && !isLoading && !errorMessage">
+    <div class="wishlist-card" *ngFor="let product of wishlistItems">
+      <div class="wishlist-card-image">
+        <img [src]="getLogoUrl(product.image)" [alt]="product.name || 'Product image'" (error)="onImageError($event, product)">
+      </div>
+      <div class="wishlist-card-content">
+        <a [routerLink]="['/products', product.idProduct]" class="wishlist-card-title">
+          {{ product.name || 'N/A' }}
+        </a>
+        <p class="wishlist-card-price">
+          {{ product.price != null ? (product.price | currency:'USD':'symbol':'1.2-2') : 'N/A' }}
+        </p>
+        <button class="remove-btn" (click)="removeFromWishlist(product)">Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
