@@ -12,15 +12,15 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { FullComponent } from './backoffice/layouts/full/full.component';
+import { FullComponent } from './BackOffice/layouts/full/full.component';
 
 
-import { NavigationComponent } from './backoffice/shared/header/navigation.component';
-import { SidebarComponent } from './backoffice/shared/sidebar/sidebar.component';
+import { NavigationComponent } from './BackOffice/shared/header/navigation.component';
+import { SidebarComponent } from './BackOffice/shared/sidebar/sidebar.component';
 
 import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SpinnerComponent } from './backoffice/shared/spinner.component';
+import { SpinnerComponent } from './BackOffice/shared/spinner.component';
 import { BusinessListComponent } from './pages/business/business-list/business-list.component';
 import { AddBusinessComponent } from './pages/business/add-business/add-business.component';
 import { BusinessListFrontComponent } from './pages/business/business-list-front/business-list-front.component';

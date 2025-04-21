@@ -4,9 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GestionDesProduitsService } from 'src/app/services/services';
 
-
-
-
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
@@ -32,7 +29,7 @@ export class AddProductComponent {
     if (id) {
       this.businessId = +id;
     } else {
-      console.error('ID du business non fourni');
+      console.error('Business ID not provided');
       return;
     }
 
@@ -49,7 +46,7 @@ export class AddProductComponent {
     if (file) {
       this.selectedImage = file;
       
-      // Générer la prévisualisation
+      // Generate preview
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;
@@ -70,10 +67,10 @@ export class AddProductComponent {
         stock: this.productForm.value.stock
       };
 
-      // Ajouter les données du produit
+      // Add product data
       formData.append('product', JSON.stringify(productData));
       
-      // Ajouter l'image si elle existe
+      // Add image if it exists
       if (this.selectedImage) {
         formData.append('image', this.selectedImage);
       }
@@ -83,16 +80,16 @@ export class AddProductComponent {
         formData: formData
       }).subscribe({
         next: (res: any) => {
-          this.snackBar.open('Produit ajouté avec succès', 'Fermer', { duration: 3000 });
+          this.snackBar.open('Product added successfully', 'Close', { duration: 3000 });
           this.router.navigate(['admin/my-business', this.businessId]);
         },
         error: (err) => {
-          console.error('Erreur détaillée :', err);
-          let errorMessage = 'Erreur lors de l\'ajout du produit';
+          console.error('Detailed error:', err);
+          let errorMessage = 'Error adding product';
           if (err.status === 403) {
-            errorMessage += ' : Accès interdit (problème de sécurité)';
+            errorMessage += ': Access forbidden (security issue)';
           }
-          this.snackBar.open(errorMessage, 'Fermer', { duration: 5000 });
+          this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
           this.isLoading = false;
         },
         complete: () => {

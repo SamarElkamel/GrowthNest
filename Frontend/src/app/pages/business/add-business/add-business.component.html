@@ -1,12 +1,12 @@
 <div class="add-business-container">
-  <h1>Ajouter un Business</h1>
-  <form [formGroup]="businessForm" (ngSubmit)="onSubmit()" aria-label="Formulaire d'ajout de business">
+  <h1>Add a Business</h1>
+  <form [formGroup]="businessForm" (ngSubmit)="onSubmit()" aria-label="Business addition form">
     <div class="form-group">
-      <label for="name">Nom du Business</label>
+      <label for="name">Business Name</label>
       <input
         id="name"
         formControlName="name"
-        placeholder="Entrez le nom du business"
+        placeholder="Enter business name"
         [ngClass]="{
           'invalid': name.touched && name.invalid,
           'valid': name.touched && name.valid
@@ -14,9 +14,9 @@
         aria-required="true"
       />
       <div *ngIf="name.touched && name.invalid" class="error">
-        <div *ngIf="name.errors?.['required']">Le nom est requis.</div>
-        <div *ngIf="name.errors?.['minlength']">Le nom doit avoir au moins 3 caractères.</div>
-        <div *ngIf="name.errors?.['maxlength']">Le nom ne doit pas dépasser 50 caractères.</div>
+        <div *ngIf="name.errors?.['required']">Name is required.</div>
+        <div *ngIf="name.errors?.['minlength']">Name must be at least 3 characters.</div>
+        <div *ngIf="name.errors?.['maxlength']">Name cannot exceed 50 characters.</div>
       </div>
     </div>
 
@@ -25,7 +25,7 @@
       <input
         id="description"
         formControlName="description"
-        placeholder="Entrez la description"
+        placeholder="Enter description"
         [ngClass]="{
           'invalid': description.touched && description.invalid,
           'valid': description.touched && description.valid
@@ -33,37 +33,37 @@
         aria-required="true"
       />
       <div *ngIf="description.touched && description.invalid" class="error">
-        <div *ngIf="description.errors?.['required']">La description est requise.</div>
-        <div *ngIf="description.errors?.['minlength']">La description doit avoir au moins 10 caractères.</div>
-        <div *ngIf="description.errors?.['maxlength']">La description ne doit pas dépasser 255 caractères.</div>
+        <div *ngIf="description.errors?.['required']">Description is required.</div>
+        <div *ngIf="description.errors?.['minlength']">Description must be at least 10 characters.</div>
+        <div *ngIf="description.errors?.['maxlength']">Description cannot exceed 255 characters.</div>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="instagramPageName">Nom de la page Instagram</label>
+      <label for="instagramPageName">Instagram Page Name</label>
       <input
         id="instagramPageName"
         formControlName="instagramPageName"
-        placeholder="Entrez le nom de la page Instagram (optionnel)"
+        placeholder="Enter Instagram page name (optional)"
         [ngClass]="{
           'invalid': instagramPageName.touched && instagramPageName.invalid,
           'valid': instagramPageName.touched && instagramPageName.valid
         }"
       />
       <div *ngIf="instagramPageName.touched && instagramPageName.invalid" class="error">
-        <div *ngIf="instagramPageName.errors?.['maxlength']">Le nom ne doit pas dépasser 30 caractères.</div>
-        <div *ngIf="instagramPageName.errors?.['pattern']">Utilisez uniquement des lettres, chiffres, points ou tirets bas.</div>
+        <div *ngIf="instagramPageName.errors?.['maxlength']">Name cannot exceed 30 characters.</div>
+        <div *ngIf="instagramPageName.errors?.['pattern']">Use only letters, numbers, periods or underscores.</div>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="categorieBusiness">Catégorie</label>
+      <label for="categorieBusiness">Category</label>
       <select id="categorieBusiness" formControlName="categorieBusiness" aria-required="true">
-        <option [ngValue]="null" disabled>Sélectionnez une catégorie</option>
+        <option [ngValue]="null" disabled>Select a category</option>
         <option *ngFor="let category of categories" [ngValue]="category">{{ category }}</option>
       </select>
       <div *ngIf="categorieBusiness.touched && categorieBusiness.invalid" class="error">
-        <div *ngIf="categorieBusiness.errors?.['required']">La catégorie est requise.</div>
+        <div *ngIf="categorieBusiness.errors?.['required']">Category is required.</div>
       </div>
     </div>
 
@@ -75,32 +75,32 @@
         accept="image/jpeg,image/png"
         (change)="onLogoSelected($event)"
         style="display: none;"
-        aria-label="Sélectionner un logo"
+        aria-label="Select logo"
       />
-      <button type="button" (click)="triggerFileInput('logo')" [disabled]="isSubmitting">Choisir un logo</button>
+      <button type="button" (click)="triggerFileInput('logo')" [disabled]="isSubmitting">Choose Logo</button>
       <div *ngIf="logoPreview" class="preview">
-        <img [src]="logoPreview" alt="Prévisualisation du logo" style="max-width: 200px;" />
+        <img [src]="logoPreview" alt="Logo preview" style="max-width: 200px;" />
       </div>
     </div>
 
     <div class="form-group">
-      <label for="pdfInput">Document PDF</label>
+      <label for="pdfInput">PDF Document</label>
       <input
         id="pdfInput"
         type="file"
         accept="application/pdf"
         (change)="onPdfSelected($event)"
         style="display: none;"
-        aria-label="Sélectionner un PDF"
+        aria-label="Select PDF"
       />
-      <button type="button" (click)="triggerFileInput('pdf')" [disabled]="isSubmitting">Choisir un PDF</button>
+      <button type="button" (click)="triggerFileInput('pdf')" [disabled]="isSubmitting">Choose PDF</button>
       <div *ngIf="pdfName" class="preview">
-        <p>Fichier sélectionné : {{ pdfName }}</p>
+        <p>Selected file: {{ pdfName }}</p>
       </div>
     </div>
 
-    <button type="submit" [disabled]="businessForm.invalid || isSubmitting" aria-label="Ajouter le business">
-      {{ isSubmitting ? 'Envoi en cours...' : 'Ajouter le Business' }}
+    <button type="submit" [disabled]="businessForm.invalid || isSubmitting" aria-label="Add business">
+      {{ isSubmitting ? 'Submitting...' : 'Add Business' }}
     </button>
   </form>
-</div> 
+</div>

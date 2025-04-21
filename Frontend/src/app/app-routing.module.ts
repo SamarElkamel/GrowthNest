@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { FullComponent } from './backoffice/layouts/full/full.component';
 import { BusinessListComponent } from './pages/business/business-list/business-list.component';
 import { AddBusinessComponent } from './pages/business/add-business/add-business.component';
 import { HomeComponent } from './FrontOffice/home/home.component';
@@ -12,6 +11,7 @@ import { AddProductComponent } from './pages/products/add-product/add-product.co
 import { BusinessDetailsComponent } from './pages/business/business-details/business-details.component';
 import { AdminDashboardComponent } from './pages/business/admin-dashboard/admin-dashboard.component';
 import { WishlistComponent } from './pages/products/wishlist/wishlist.component';
+import { FullComponent } from './BackOffice/layouts/full/full.component';
 
 export const Approutes: Routes = [
 
@@ -49,15 +49,15 @@ export const Approutes: Routes = [
       {
       
         path: 'dashboard',
-        loadChildren: () => import('./backoffice/dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import('./BackOffice/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
         path: 'about',
-        loadChildren: () => import('./backoffice/about/about.module').then(m => m.AboutModule)
+        loadChildren: () => import('./BackOffice/about/about.module').then(m => m.AboutModule)
       },
       {
         path: 'component',
-        loadChildren: () => import('./backoffice/component/component.module').then(m => m.ComponentsModule)
+        loadChildren: () => import('./BackOffice/component/component.module').then(m => m.ComponentsModule)
       },
       { path: 'listBusiness', component: BusinessListComponent },
       { path: 'businesses/add', component: AddBusinessComponent },
