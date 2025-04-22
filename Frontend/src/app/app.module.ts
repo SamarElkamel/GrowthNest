@@ -51,6 +51,7 @@ import { AdminDashboardComponent } from './pages/business/admin-dashboard/admin-
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { WishlistComponent } from './pages/products/wishlist/wishlist.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { LayoutComponent } from './FrontOffice/layout/layout.component';
 
 @NgModule({
   declarations: [
@@ -60,9 +61,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     BusinessListComponent,
     AddBusinessComponent,
     BusinessListFrontComponent,
-    HomeComponent,
-    FooterComponent,
-    HeaderComponent,
+    
     BusinessDetailCardComponent,
     BusinessproductsComponent,
     QuickViewProductFComponent,
@@ -74,6 +73,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     RatingComponent,
     AdminDashboardComponent,
     WishlistComponent,
+    
 
    
     
