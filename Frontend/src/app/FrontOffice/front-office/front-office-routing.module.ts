@@ -11,8 +11,7 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['ROLE_USER', 'ROLE_BusinessOwner', 'ROLE_MarketingAgent'] } 
+
   },
   {
     path: 'profile',
