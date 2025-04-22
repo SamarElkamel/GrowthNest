@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderResponse } from 'src/app/models/order-response.model';
-import { OrderService } from 'src/app/services/order.service';
+import { OrderResponse } from 'src/app/services/models/order-response.model';
+import { OrderService } from 'src/app/services/services/order.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderDetailsModalComponent } from 'src/app/BackOffice/component/order-details-modals/order-details-modals.component';
 @Component({

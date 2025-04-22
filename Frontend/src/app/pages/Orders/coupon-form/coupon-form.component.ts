@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { CouponService } from 'src/app/services/coupon.service';
+import { CouponService } from 'src/app/services/services/coupon.service';
 
 @Component({
   selector: 'app-coupon-form',

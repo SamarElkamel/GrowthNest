@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService } from 'src/app/services/cart.service';
+import { CartService } from 'src/app/services/services/cart.service';
 import { loadStripe, Stripe, StripeCardElement } from '@stripe/stripe-js';
 
 interface OrderItem {

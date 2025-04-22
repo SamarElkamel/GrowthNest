@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Product } from 'src/app/models/produits.model';
+import { Product } from 'src/app/services/models/produits.model';
 
-import { CartService } from 'src/app/services/cart.service';
-import { ProduitService } from 'src/app/services/produit.service';
+import { CartService } from 'src/app/services/services/cart.service';
+import { ProduitService } from 'src/app/services/services/produit.service';
 @Component({
   selector: 'app-produits',
   templateUrl: './produits.component.html',

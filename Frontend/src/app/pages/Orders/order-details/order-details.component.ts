@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { OrderService } from 'src/app/services/order.service'; // adjust path as needed
+import { OrderService } from 'src/app/services/services/order.service'; // adjust path as needed
 
 @Component({
   selector: 'app-order-details',

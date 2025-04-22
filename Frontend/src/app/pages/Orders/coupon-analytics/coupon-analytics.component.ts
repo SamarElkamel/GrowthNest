@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataset } from 'chart.js';
-import { CouponAnalytics } from 'src/app/models/coupons.mode';
-import { CouponService } from 'src/app/services/coupon.service';
+import { CouponAnalytics } from 'src/app/services/models/coupons.mode';
+import { CouponService } from 'src/app/services/services/coupon.service';
 
 @Component({
   selector: 'app-coupon-analytics',

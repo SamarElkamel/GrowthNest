@@ -1,36 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { OrderListComponent } from './pages/Orders/order-list/order-list.component';
-import { FullComponent } from './layouts/full/full.component';
+import { FullComponent } from './BackOffice/layouts/full/full.component';
 import { CouponListComponent } from './pages/Orders/coupon-list/coupon-list.component';
 import { CouponFormComponent } from './pages/Orders/coupon-form/coupon-form.component';
-import { HomeComponent } from './FrontOffice/home/home.component';
-import { FrontLayoutComponent } from './layouts/front-layout/front-layout.component';
-import { BackLayoutComponent } from './layouts/back-layout/back-layout.component';
-import { CartPageComponent } from './pages/cart-page/cart-page.component';
-import { ProduitsComponent } from './pages/produits/produits.component';
-import { OrderHistoryComponent } from './pages/order-history/order-history.component';
-import { PaymentComponent } from './pages/payment/payment.component';
+
 
 export const Approutes: Routes = [
-  // FrontOffice layout
-  {
-    path: '',
-    component: FrontLayoutComponent,
-    children: [
-      { path: '', component: HomeComponent }, 
-      { path: '', component: HomeComponent },
-      { path: 'cart', component: CartPageComponent },
-      {path:  'produits', component: ProduitsComponent},
-      { path: 'orders/history', component: OrderHistoryComponent },
-      { path: 'payment', component: PaymentComponent },
-
-      // public home
-      //{ path: 'about', loadChildren: () => import('./FrontOffice/about/about.module').then(m => m.AboutModule) },
-      // add other public-facing modules here
-    ]
-  },
-
+  
+  { path: '', loadChildren: () => import('./FrontOffice/front-office/front-office.module').then(m => m.FrontOfficeModule) },
   // BackOffice layout
   {
     path: 'admin',

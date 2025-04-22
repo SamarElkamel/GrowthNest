@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import { PointsService } from 'src/app/services/points.service';
+import { PointsService } from 'src/app/services/services/points.service';
 
 @Component({
   selector: 'app-header',

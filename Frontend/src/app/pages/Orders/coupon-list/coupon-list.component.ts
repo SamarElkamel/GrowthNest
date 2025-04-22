@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Coupon, CouponAnalytics } from 'src/app/models/coupons.mode';
-import { CouponService } from 'src/app/services/coupon.service';
+import { Coupon, CouponAnalytics } from 'src/app/services/models/coupons.mode';
+import { CouponService } from 'src/app/services/services/coupon.service';
 
 @Component({
   selector: 'app-coupon-list',
