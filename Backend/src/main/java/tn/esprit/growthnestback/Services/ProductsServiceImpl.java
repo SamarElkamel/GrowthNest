@@ -7,6 +7,7 @@ import tn.esprit.growthnestback.Entities.Products;
 import tn.esprit.growthnestback.Repository.BusinessRepository;
 import tn.esprit.growthnestback.Repository.ProductsRepository;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -15,6 +16,8 @@ public class ProductsServiceImpl implements IProductsService{
     ProductsRepository productsRepository;
     @Autowired
     BusinessRepository businessRepository;
+    @Autowired
+    private BarcodeService barcodeService;
 
     @Override
     public List<Products> GetAllProducts() {
@@ -48,10 +51,19 @@ public class ProductsServiceImpl implements IProductsService{
 
     @Override
     public Products createProduct(Long businessId, Products product) {
-        Business business = businessRepository.findById(businessId).orElseThrow(()-> new RuntimeException("Business not found with id: " + businessId));;
-product.setBusiness(business);
-return productsRepository.save(product);
+        Business business = businessRepository.findById(businessId)
+                .orElseThrow(() -> new RuntimeException("Business not found with id: " + businessId));
+        product.setBusiness(business);
+        Products savedProduct = productsRepository.save(product);
+        try {
+            String barcodePath = barcodeService.generateBarcode(savedProduct.getIdProduct().toString());
+            savedProduct.setBarcodePath(barcodePath);
+            return productsRepository.save(savedProduct);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to generate barcode for product: " + e.getMessage());
+        }
     }
+
 
 
 }

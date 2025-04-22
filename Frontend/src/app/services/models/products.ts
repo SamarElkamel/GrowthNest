@@ -11,6 +11,7 @@ export interface Products {
   name: string;
   price?: number;
   stock: number;
+  
 }
 export interface Wishlist {
   id: number;

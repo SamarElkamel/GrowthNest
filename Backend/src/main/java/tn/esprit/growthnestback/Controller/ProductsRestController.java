@@ -8,20 +8,22 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.growthnestback.Entities.Products;
 import tn.esprit.growthnestback.Services.IProductsService;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,13 +61,12 @@ public class ProductsRestController {
             @PathVariable("businessId") Long businessId,
             @RequestPart("product") String productJson,
             @RequestPart(value = "image", required = false) MultipartFile image) throws Exception {
-
         ObjectMapper mapper = new ObjectMapper();
         Products product = mapper.readValue(productJson, Products.class);
 
         if (image != null && !image.isEmpty()) {
             String imageUrl = this.uploadProductImage(image);
-            product.setImage(imageUrl); // Utilisez setImage() au lieu de setImagePath()
+            product.setImage(imageUrl);
         }
 
         return iProductsService.createProduct(businessId, product);
@@ -140,6 +141,20 @@ public class ProductsRestController {
                 return ".jpg";
             }
             return ".png";
+    }
+    @Operation(description = "Obtenir l'image du code-barres d’un produit")
+    @GetMapping(value = "/barcode/{idP}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<FileSystemResource> getBarcodeImage(@PathVariable("idP") Long id) {
+        Products product = iProductsService.GetProductById(id);
+        if (product.getBarcodePath() == null) {
+            throw new RuntimeException("Barcode not found for product with id: " + id);
         }
+        FileSystemResource file = new FileSystemResource(product.getBarcodePath());
+        if (!file.exists()) {
+            throw new RuntimeException("Barcode file not found: " + product.getBarcodePath());
+        }
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(file);
+    }
+
 
 }

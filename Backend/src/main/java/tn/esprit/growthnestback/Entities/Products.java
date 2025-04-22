@@ -32,9 +32,19 @@ public class Products {
     @Min(value = 0, message = "Le stock doit être supérieur ou égal à 0")    Long stock;
 
     String image;
+     String barcodePath; // New field for barcode image
+
     @ManyToOne
     @JsonBackReference
     Business business;
+
+    public String getBarcodePath() {
+        return barcodePath;
+    }
+
+    public void setBarcodePath(String barcodePath) {
+        this.barcodePath = barcodePath;
+    }
 
     public Long getIdProduct() {
         return idProduct;

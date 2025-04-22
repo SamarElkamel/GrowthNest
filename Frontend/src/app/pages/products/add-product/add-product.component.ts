@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,7 +9,7 @@ import { GestionDesProduitsService } from 'src/app/services/services';
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.scss']
 })
-export class AddProductComponent {
+export class AddProductComponent implements OnInit {
   productForm!: FormGroup;
   businessId!: number;
   isLoading = false;
@@ -30,6 +30,7 @@ export class AddProductComponent {
       this.businessId = +id;
     } else {
       console.error('Business ID not provided');
+      this.snackBar.open('Business ID not provided', 'Close', { duration: 5000 });
       return;
     }
 
@@ -45,8 +46,6 @@ export class AddProductComponent {
     const file = event.target.files[0];
     if (file) {
       this.selectedImage = file;
-      
-      // Generate preview
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;
@@ -58,7 +57,6 @@ export class AddProductComponent {
   onSubmit(): void {
     if (this.productForm.valid) {
       this.isLoading = true;
-      
       const formData = new FormData();
       const productData = {
         name: this.productForm.value.name,
@@ -66,11 +64,7 @@ export class AddProductComponent {
         price: this.productForm.value.price,
         stock: this.productForm.value.stock
       };
-
-      // Add product data
       formData.append('product', JSON.stringify(productData));
-      
-      // Add image if it exists
       if (this.selectedImage) {
         formData.append('image', this.selectedImage);
       }
@@ -88,6 +82,8 @@ export class AddProductComponent {
           let errorMessage = 'Error adding product';
           if (err.status === 403) {
             errorMessage += ': Access forbidden (security issue)';
+          } else if (err.status === 400) {
+            errorMessage += ': Invalid product data';
           }
           this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
           this.isLoading = false;
