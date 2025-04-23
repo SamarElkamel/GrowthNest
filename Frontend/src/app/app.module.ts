@@ -1,4 +1,3 @@
-
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -9,17 +8,27 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
-
+import { CodeInputModule } from 'angular-code-input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { FullComponent } from './BackOffice/layouts/full/full.component';
 
 
-import { NavigationComponent } from './BackOffice/shared/header/navigation.component';
-import { SidebarComponent } from './BackOffice/shared/sidebar/sidebar.component';
+
 
 import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
+import { SelectRoleComponent } from './pages/select-role/select-role.component';
+import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { UserProfileComponent } from './FrontOffice/user-profile/user-profile.component';
+import { EditProfileComponent } from './FrontOffice/edit-profile/edit-profile.component';
+import { ChangePasswordComponent } from './FrontOffice/change-password/change-password.component';
+import { NavigationComponent } from './BackOffice/shared/header/navigation.component';
+import { SidebarComponent } from './BackOffice/shared/sidebar/sidebar.component';
 import { SpinnerComponent } from './BackOffice/shared/spinner.component';
 import { BusinessListComponent } from './pages/business/business-list/business-list.component';
 import { AddBusinessComponent } from './pages/business/add-business/add-business.component';
@@ -52,16 +61,25 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { WishlistComponent } from './pages/products/wishlist/wishlist.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { LayoutComponent } from './FrontOffice/layout/layout.component';
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
     AppComponent,
-   
     SpinnerComponent,
+    LoginComponent,
+    RegisterComponent,
+    ActivateAccountComponent,
+    SelectRoleComponent,
+    ForgetPasswordComponent,
+    ResetPasswordComponent,
+    UserProfileComponent,
+    EditProfileComponent,
+    ChangePasswordComponent,
     BusinessListComponent,
     AddBusinessComponent,
     BusinessListFrontComponent,
-    
+   
     BusinessDetailCardComponent,
     BusinessproductsComponent,
     QuickViewProductFComponent,
@@ -73,40 +91,34 @@ import { LayoutComponent } from './FrontOffice/layout/layout.component';
     RatingComponent,
     AdminDashboardComponent,
     WishlistComponent,
-    
 
-   
-    
-     
+
+
   ],
   imports: [
-    CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
-    RouterModule.forRoot(Approutes, { useHash: false }),
-    FormsModule,
     FullComponent,
     NavigationComponent,
     SidebarComponent,
-    MatIconModule,
+    RouterModule.forRoot(Approutes, { useHash: false }),
+    CodeInputModule,
+    RecaptchaV3Module,
     MatDialogModule,
     MatButtonModule,
-    CommonModule,
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatFormFieldModule, // Pour mat-form-field
-    MatInputModule, // Pour mat-input et textarea
-    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     MatSelectModule,
     MatPaginatorModule,
-  
   ],
   providers: [
     {
@@ -114,7 +126,11 @@ import { LayoutComponent } from './FrontOffice/layout/layout.component';
       useClass: PathLocationStrategy
     },
     HttpClient,
-    { provide: HTTP_INTERCEPTORS, useClass: LoggingInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: LoggingInterceptor, multi: true },
+    {
+      provide: RECAPTCHA_V3_SITE_KEY,
+      useValue: '6LfIuhsrAAAAAIK8Zpv-E_7v8SrOXEUIEntvIP1Z'
+    }
   ],
   bootstrap: [AppComponent]
 })

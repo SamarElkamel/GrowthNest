@@ -1,23 +1,31 @@
 import { Component, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/services';
+
 
 declare var $: any;
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
-  imports:[NgbDropdownModule],
+  imports: [NgbDropdownModule],
   templateUrl: './navigation.component.html'
 })
 export class NavigationComponent implements AfterViewInit {
   @Output() toggleSidebar = new EventEmitter<void>();
-
   public showSearch = false;
 
-  constructor(private modalService: NgbModal) {
+  constructor(
+    private modalService: NgbModal,
+    private router: Router,
+    private authService: AuthenticationService
+  ) {}
+
+  logout(): void {
+    this.authService.logout(); 
   }
 
-  // This is for Notifications
   notifications: Object[] = [
     {
       btn: 'btn-danger',
@@ -49,7 +57,6 @@ export class NavigationComponent implements AfterViewInit {
     }
   ];
 
-  // This is for Mymessages
   mymessages: Object[] = [
     {
       useravatar: 'assets/images/users/user1.jpg',
@@ -88,27 +95,29 @@ export class NavigationComponent implements AfterViewInit {
     icon: 'us'
   }
 
-  public languages: any[] = [{
-    language: 'English',
-    code: 'en',
-    type: 'US',
-    icon: 'us'
-  },
-  {
-    language: 'Español',
-    code: 'es',
-    icon: 'es'
-  },
-  {
-    language: 'Français',
-    code: 'fr',
-    icon: 'fr'
-  },
-  {
-    language: 'German',
-    code: 'de',
-    icon: 'de'
-  }]
+  public languages: any[] = [
+    {
+      language: 'English',
+      code: 'en',
+      type: 'US',
+      icon: 'us'
+    },
+    {
+      language: 'Español',
+      code: 'es',
+      icon: 'es'
+    },
+    {
+      language: 'Français',
+      code: 'fr',
+      icon: 'fr'
+    },
+    {
+      language: 'German',
+      code: 'de',
+      icon: 'de'
+    }
+  ];
 
   ngAfterViewInit() { }
 }

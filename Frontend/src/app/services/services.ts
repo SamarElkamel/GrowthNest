@@ -5,3 +5,4 @@
 export { GestionDesBusinessService } from './services/gestion-des-business.service';
 export { GestionDesProduitsService } from './services/gestion-des-produits.service';
 export { AuthenticationService } from './services/authentication.service';
+export { UserManagementService } from './services/user-management.service';

@@ -9,6 +9,7 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 import { GestionDesBusinessService } from './services/gestion-des-business.service';
 import { GestionDesProduitsService } from './services/gestion-des-produits.service';
 import { AuthenticationService } from './services/authentication.service';
+import { UserManagementService } from './services/user-management.service';
 
 /**
  * Module that provides all services and configuration.
@@ -21,6 +22,7 @@ import { AuthenticationService } from './services/authentication.service';
     GestionDesBusinessService,
     GestionDesProduitsService,
     AuthenticationService,
+    UserManagementService,
     ApiConfiguration
   ],
 })
@@ -37,7 +39,7 @@ export class ApiModule {
     }
   }
 
-  constructor( 
+  constructor(
     @Optional() @SkipSelf() parentModule: ApiModule,
     @Optional() http: HttpClient
   ) {

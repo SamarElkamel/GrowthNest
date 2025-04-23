@@ -379,7 +379,7 @@ public class BusinessRestController {
             if (logo != null && !logo.isEmpty()) {
                 String fileName = handleFileUpload(logo, LOGO_DIR);
                 existingBusiness.setLogo("/uploads/logos/" + fileName);
-                deleteOldFile(businessUpdates.getLogo(), LOGO_DIR); // Supprimer l'ancien APRÈS mise à jour
+                deleteOldFile(businessUpdates.getLogo(), LOGO_DIR);
             }
 
             // Gestion PDF

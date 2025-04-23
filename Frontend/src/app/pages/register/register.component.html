@@ -1,0 +1,94 @@
+<section class="fullscreen-container" id="back" style="background-color: #2b2b2b;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-xl-10">
+        <div class="card login-card" style="width: 60%; margin: auto;">
+          <div class="row g-0">
+            <div class="col-md-6 col-lg-5 d-none d-md-block">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
+                   alt="register form" class="img-fluid login-image" id="logimg" />
+            </div>
+            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+              <div class="card-body p-4 p-lg-5 text-black">
+
+                <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
+                  <p *ngFor="let msg of errorMsg">{{ msg }}</p>
+                </div>
+
+                <div class="d-flex align-items-center mb-3 pb-1">
+                  <img src="assets/images/logos/logo-icon.png" alt="Logo" class="logo-img me-3" />
+                </div>
+
+                <!-- Role selection -->
+                <div class="mb-3">
+                  <label class="form-label">Choose Your Role</label>
+                  <select class="form-select" [(ngModel)]="registerRequest.role" name="role" (change)="onRoleChange()">
+                    <option value="" disabled selected>Select your role</option>
+                    <option value="USER">User</option>
+                    <option value="BuisnessOwner">Business Owner</option>
+                    <option value="MarketingAgent">Marketing Agent</option>
+                  </select>
+                </div>
+
+                <!-- User or BusinessOwner fields -->
+                <div class="mb-3" *ngIf="!isMarketingAgent">
+                  <label for="firstname" class="form-label">First Name</label>
+                  <input [(ngModel)]="registerRequest.firstName" type="text" class="form-control" id="firstname" placeholder="First Name">
+                </div>
+                <div class="mb-3" *ngIf="!isMarketingAgent">
+                  <label for="lastname" class="form-label">Last Name</label>
+                  <input [(ngModel)]="registerRequest.lastname" type="text" class="form-control" id="lastname" placeholder="Last Name">
+                </div>
+
+                <!-- MarketingAgent field -->
+                <div class="mb-3" *ngIf="isMarketingAgent">
+                  <label for="companyname" class="form-label">Company Name</label>
+                  <input [(ngModel)]="registerRequest.firstName" type="text" class="form-control" id="companyname" placeholder="Company Name">
+                </div>
+
+                <div class="mb-3">
+                  <label for="login" class="form-label">Email address</label>
+                  <input [(ngModel)]="registerRequest.email" type="email" class="form-control" id="login" placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input [(ngModel)]="registerRequest.password" type="password" class="form-control" id="password" placeholder="Password">
+                </div>
+
+                <!-- Date of Birth / Creation -->
+                <div class="mb-3">
+                  <label for="dateOfBirth" class="form-label">
+                    {{ isMarketingAgent ? 'Date of Creation' : 'Date of Birth' }}
+                  </label>
+                  <input [(ngModel)]="registerRequest.dateOfBirth"
+                         type="date"
+                         class="form-control"
+                         id="dateOfBirth"
+                         placeholder="Enter date" />
+                </div>
+
+                <label for="image" class="form-label">{{ isMarketingAgent ? 'Upload Your Logo' : 'Upload Profile Photo' }}</label>
+                <div class="custom-file">
+                  <input (change)="onFileSelected($event)" class="custom-file-input" type="file" id="image" />
+                  <img *ngIf="previewUrl" [src]="previewUrl" class="img-fluid mt-2" style="max-height: 150px;" />
+                </div>
+
+                <div class="pt-3 mb-4">
+                  <button (click)="register()" type="button" class="btn btn-dark btn-lg btn-block" id="log">Create Account</button>
+                </div>
+
+                <div>
+                  Already have an account?&nbsp;
+                  <button (click)="login()" type="button" class="btn btn-link custom-register-btn">
+                    Login
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

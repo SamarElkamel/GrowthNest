@@ -6,7 +6,6 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
@@ -18,10 +17,13 @@ import { confirm } from '../fn/authentication/confirm';
 import { Confirm$Params } from '../fn/authentication/confirm';
 import { register } from '../fn/authentication/register';
 import { Register$Params } from '../fn/authentication/register';
+import { Router } from '@angular/router';
+
+
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService extends BaseService {
-  constructor(config: ApiConfiguration, http: HttpClient) {
+  constructor(config: ApiConfiguration, http: HttpClient,private router: Router) {
     super(config, http);
   }
 
@@ -103,5 +105,17 @@ export class AuthenticationService extends BaseService {
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+
+
+isAuthenticated(): boolean {
+  return localStorage.getItem('token') !== null;
+}
+
+
 
 }

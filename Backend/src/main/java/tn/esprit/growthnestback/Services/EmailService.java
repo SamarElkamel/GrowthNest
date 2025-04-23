@@ -24,7 +24,6 @@ public class EmailService {
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
 
-
     @Async
     public void sendEmail(
             String to,
@@ -32,12 +31,10 @@ public class EmailService {
             EmailTemplateName emailTemplate,
             String confirmationUrl,
             String activationCode,
-            String subject ) throws MessagingException {  String templateName;
-        if (emailTemplate == null) {
-            templateName = "confirm-email";
-        } else {
-            templateName = emailTemplate.name();
-        }
+            String subject) throws MessagingException {
+
+        String templateName = (emailTemplate != null) ? emailTemplate.getName() : "confirm-email";
+
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(
                 mimeMessage,
@@ -49,6 +46,7 @@ public class EmailService {
         properties.put("username", username);
         properties.put("confirmationUrl", confirmationUrl);
         properties.put("activation_code", activationCode);
+        properties.put("resetUrl", confirmationUrl);
 
         Context context = new Context();
         context.setVariables(properties);
@@ -57,11 +55,10 @@ public class EmailService {
         helper.setTo(to);
         helper.setSubject(subject);
 
-        String template = templateEngine.process("ACTIVATE_ACCOUNT", context);
 
+        String template = templateEngine.process(templateName, context);
         helper.setText(template, true);
 
         mailSender.send(mimeMessage);
     }
-
 }

@@ -1,5 +1,6 @@
 package tn.esprit.growthnestback.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -56,6 +57,10 @@ public class Business {
     @OneToMany(mappedBy = "business",cascade = CascadeType.ALL)
     @JsonIgnore
     Set<Products> Products;
+    @ManyToOne
+    @JoinColumn(name = "user_id") // Nom de la colonne FK
+    @JsonBackReference // Empêche la sérialisation JSON circulaire
+    private User user; // Nom en minuscule
     public Business() {
         this.averageRating = 0.0;
         this.ratingCount = 0;

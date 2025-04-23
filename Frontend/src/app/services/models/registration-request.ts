@@ -5,6 +5,9 @@
 export interface RegistrationRequest {
   email: string;
   firstName: string;
-  lastname: string;
+  lastname?: string;
+  image?: string;
   password: string;
+  role: string;
+  dateOfBirth: string;
 }

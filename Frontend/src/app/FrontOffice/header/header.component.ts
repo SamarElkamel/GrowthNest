@@ -1,6 +1,9 @@
 import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Products } from 'src/app/services/models';
+import { AuthenticationService } from 'src/app/services/services';
+import { TokenService } from 'src/app/services/token/token.service';
 import { WishlistService } from 'src/app/services/services/WishlistService';
 
 @Component({
@@ -11,8 +14,15 @@ import { WishlistService } from 'src/app/services/services/WishlistService';
 export class HeaderComponent implements OnInit, OnDestroy {
   wishlistItems: Products[] = [];
   private wishlistSubscription!: Subscription;
+  isScrolled = false;
 
-  constructor(private wishlistService: WishlistService) {}
+  constructor(
+    private authService: AuthenticationService,
+    private tokenService: TokenService,
+    private router: Router,
+    private wishlistService: WishlistService
+  ) {
+  }
 
   ngOnInit(): void {
     this.wishlistSubscription = this.wishlistService.wishlistItems$.subscribe({
@@ -25,17 +35,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     });
   }
-
   ngOnDestroy(): void {
     if (this.wishlistSubscription) {
       this.wishlistSubscription.unsubscribe();
     }
   }
 
-  isScrolled = false;
+
+  onMyAccountClick(): void {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/profile']);
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  logout(): void {
+    this.tokenService.clearToken();
+    this.router.navigate(['/login']);
+  }
 
   @HostListener('window:scroll', [])
   onScroll(): void {
     this.isScrolled = window.scrollY > 30;
   }
+
+
 }
