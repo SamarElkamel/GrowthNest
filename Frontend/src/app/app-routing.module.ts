@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { OrderListComponent } from './pages/Orders/order-list/order-list.component';
 import { CouponListComponent } from './pages/Orders/coupon-list/coupon-list.component';
-import { CouponFormComponent } from './pages/Orders/coupon-form/coupon-form.component';
+
 import { FullComponent } from './BackOffice/layouts/full/full.component';
 import { LayoutComponent } from './FrontOffice/layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -18,6 +18,7 @@ import { BusinessDetailBComponent } from './pages/business/business-detail-b/bus
 import { AddProductComponent } from './pages/products/add-product/add-product.component';
 import { AdminDashboardComponent } from './pages/business/admin-dashboard/admin-dashboard.component';
 import { RoleGuard } from './role.guard';
+import { CouponFormComponent } from './pages/Orders/coupon-form/coupon-form.component';
 
 export const Approutes: Routes = [
   // Authentication Routes
@@ -29,6 +30,12 @@ export const Approutes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent },
 
   // User List Route (Root Level, Admin Access)
+  {
+    path: 'users',
+    component: UserListComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN'] },
+  },
 
   // FrontOffice Routes
   {
@@ -73,6 +80,7 @@ export const Approutes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['ROLE_ADMIN'] },
       },
+
       {
         path: 'users',
         component: UserListComponent,
@@ -89,6 +97,7 @@ export const Approutes: Routes = [
       { path: 'coupons/create', component: CouponFormComponent ,
         canActivate: [RoleGuard],
         data: { roles: ['ROLE_ADMIN'] },},
+
      
     ],
   },

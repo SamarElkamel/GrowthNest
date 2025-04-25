@@ -3,11 +3,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
+import { CodeInputModule } from 'angular-code-input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { CodeInputModule } from 'angular-code-input';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha';
 import { provideCharts } from 'ng2-charts';

@@ -21,6 +21,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isScrolled = false;
   userId = 1; 
   points: number = 0;
+
+
   constructor(
     private authService: AuthenticationService,
     private tokenService: TokenService,
@@ -44,6 +46,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       next: (data) => this.points = data.availablePoints,
       error: () => this.points = 0
     });
+
   }
   ngOnDestroy(): void {
     if (this.wishlistSubscription) {

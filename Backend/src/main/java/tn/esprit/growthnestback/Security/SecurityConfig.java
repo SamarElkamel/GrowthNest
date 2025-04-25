@@ -64,7 +64,9 @@ public class SecurityConfig {
                                 "/api/cart/**",
                                 "/api/coupons/**",
                                 "/api/products/**",
-                                "/api/payment/**"
+                                "/api/payment/**",
+
+                                "/wishlist/**"
                         )
                         .permitAll()
                         .requestMatchers("/users/**").hasRole("ADMIN")

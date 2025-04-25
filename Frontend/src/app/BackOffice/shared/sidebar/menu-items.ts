@@ -65,6 +65,7 @@ export const ROUTES: RouteInfo[] = [
     extralink: false,
     submenu: []
   },
+
   {
     path: '/component/buttons',
     title: 'Button',
@@ -120,5 +121,5 @@ export const ROUTES: RouteInfo[] = [
     class: '',
     extralink: false,
     submenu: []
-  }
+  },
 ];

@@ -62,6 +62,7 @@ public class EmailService {
         mailSender.send(mimeMessage);
     }
 
+
     public void sendHtmlOrderConfirmation(String toEmail, String subject, String htmlContent) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -77,5 +78,6 @@ public class EmailService {
             throw new RuntimeException("Failed to send HTML email", e);
         }
     }
+
 
 }
