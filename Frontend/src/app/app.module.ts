@@ -94,6 +94,7 @@ import { StatisticsComponent } from './pages/EventUser/statistics/statistics.com
 import { NotificationComponent } from './pages/EventAdmin/notification/notification.component';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { CalendarEventComponent } from './pages/EventUser/calendar-event/calendar-event.component';
 
 @NgModule({
   declarations: [
@@ -149,6 +150,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     StatisticsComponent,
     NotificationComponent,
     UserListComponent,
+    CalendarEventComponent,
    
   ],
   imports: [

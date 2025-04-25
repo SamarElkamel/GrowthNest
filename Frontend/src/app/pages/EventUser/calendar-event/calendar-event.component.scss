@@ -1,0 +1,19 @@
+.calendar-container {
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.loading-message,
+.error-message {
+    padding: 20px;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.error-message {
+    color: #d9534f;
+}
