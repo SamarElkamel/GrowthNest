@@ -3,9 +3,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
+
 import { CodeInputModule } from 'angular-code-input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
@@ -26,14 +26,15 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
+import { FullComponent } from './BackOffice/layouts/full/full.component';
+import { NavigationComponent } from './BackOffice/shared/header/navigation.component';
+import { SidebarComponent } from './BackOffice/shared/sidebar/sidebar.component';
+
 // Routing & Components
 import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SpinnerComponent } from './BackOffice/shared/spinner.component';
-import { FullComponent } from './BackOffice/layouts/full/full.component';
 import { BackLayoutComponent } from './BackOffice/layouts/back-layout/back-layout.component';
-import { NavigationComponent } from './BackOffice/shared/header/navigation.component';
-import { SidebarComponent } from './BackOffice/shared/sidebar/sidebar.component';
 
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
@@ -74,6 +75,26 @@ import { WishlistComponent } from './pages/products/wishlist/wishlist.component'
 
 import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import { UserListComponent } from './BackOffice/component/users-list/users-list.component';
+import { HomeComponent } from './FrontOffice/home/home.component';
+import { FooterComponent } from './FrontOffice/footer/footer.component';
+import { HeaderComponent } from './FrontOffice/header/header.component';
+
+import { EventListComponent } from './pages/EventAdmin/event-list/event-list.component';
+import { EventDetailsComponent } from './pages/EventAdmin/event-details/event-details.component';
+import { EventHistoryComponent } from './pages/EventAdmin/event-history/event-history.component';
+import { EventRegistrationsComponent } from './pages/EventAdmin/event-registrations/event-registrations.component';
+import { EventAddComponent } from './pages/EventAdmin/add-event/add-event.component';
+import { EventUpdateComponent } from './pages/EventAdmin/update-event/update-event.component';
+import { UserReservationsComponent } from './pages/EventUser/user-reservations/user-reservations.component';
+import { AddReservationComponent } from './pages/EventUser/add-reservation/add-reservation.component';
+import { UpdateReservationComponent } from './pages/EventUser/update-reservation/update-reservation.component';
+import { EventUserListComponent } from './pages/EventUser/event-user-list/event-user-list.component';
+import { EventUserDetailsComponent } from './pages/EventUser/event-user-details/event-user-details.component';
+import { ManageEventRegistrationsComponent } from './pages/EventAdmin/manage-event-registrations/manage-event-registrations.component';
+import { StatisticsComponent } from './pages/EventUser/statistics/statistics.component';
+import { NotificationComponent } from './pages/EventAdmin/notification/notification.component';
+
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 @NgModule({
   declarations: [
@@ -83,10 +104,8 @@ import { UserListComponent } from './BackOffice/component/users-list/users-list.
     OrderDetailsComponent,
     CouponListComponent,
     CouponFormComponent,
-    BackLayoutComponent,
     CouponAnalyticsComponent,
     CartPageComponent,
-  
     OrderHistoryComponent,
     PaymentComponent,
     AddressPickerComponent,
@@ -112,9 +131,29 @@ import { UserListComponent } from './BackOffice/component/users-list/users-list.
     BusinessDetailsComponent,
     RatingComponent,
     AdminDashboardComponent,
-    WishlistComponent, 
- 
-
+    WishlistComponent,
+    HomeComponent,
+    FooterComponent,
+    HeaderComponent,
+    FullComponent,
+    NavigationComponent,
+    SidebarComponent,
+    BackLayoutComponent,
+    EventListComponent,
+    EventDetailsComponent,
+    EventHistoryComponent,
+    EventRegistrationsComponent,
+    EventAddComponent,
+    EventUpdateComponent,
+    UserReservationsComponent,
+    AddReservationComponent,
+    UpdateReservationComponent,
+    EventUserListComponent,
+    EventUserDetailsComponent,
+    ManageEventRegistrationsComponent,
+    StatisticsComponent,
+    NotificationComponent,
+    UserListComponent,
   ],
   imports: [
     BrowserModule,
@@ -139,10 +178,7 @@ import { UserListComponent } from './BackOffice/component/users-list/users-list.
     MatTableModule,
     MatSelectModule,
     MatPaginatorModule,
-    NavigationComponent,
-    FullComponent,
-    SidebarComponent
-   
+    FullCalendarModule
   ],
   providers: [
     provideCharts(),
@@ -154,13 +190,13 @@ import { UserListComponent } from './BackOffice/component/users-list/users-list.
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoggingInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: RECAPTCHA_V3_SITE_KEY,
-      useValue: '6LfIuhsrAAAAAIK8Zpv-E_7v8SrOXEUIEntvIP1Z'
-    }
+      useValue: '6LfIuhsrAAAAAIK8Zpv-E_7v8SrOXEUIEntvIP1Z',
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

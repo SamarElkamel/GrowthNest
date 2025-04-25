@@ -10,6 +10,9 @@ import { GestionDesBusinessService } from './services/gestion-des-business.servi
 import { GestionDesProduitsService } from './services/gestion-des-produits.service';
 import { AuthenticationService } from './services/authentication.service';
 import { UserManagementService } from './services/user-management.service';
+import { RegistrationManagementService } from './services/registration-management.service';
+import { NotificationManagementService } from './services/notification-management.service';
+import { EventManagementService } from './services/event-management.service';
 
 /**
  * Module that provides all services and configuration.
@@ -23,6 +26,10 @@ import { UserManagementService } from './services/user-management.service';
     GestionDesProduitsService,
     AuthenticationService,
     UserManagementService,
+    RegistrationManagementService,
+    NotificationManagementService,
+    EventManagementService,
+    AuthenticationService,
     ApiConfiguration
   ],
 })

@@ -1,0 +1,114 @@
+<div class="glass-form-container">
+  <!-- Floating Header -->
+  <div class="form-header">
+    <button class="soft-back-btn" routerLink="/admin/events">
+      <span class="material-symbols-outlined"></span>
+      ← back to Events 
+    </button>
+    <h2 class="soft-glow">Update Event</h2>
+    <p class="soft-subtitle">Edit your event details</p>
+  </div>
+
+  <!-- Status Indicators -->
+  <div *ngIf="isLoading" class="soft-status loading">
+    <div class="pulse-loader"></div>
+    <span>Loading event...</span>
+  </div>
+  <div *ngIf="error" class="soft-status error">
+    <span class="material-symbols-outlined">error</span>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- Glass Morphism Form -->
+  <form (ngSubmit)="updateEvent(form)" *ngIf="!isLoading && !error" #form="ngForm" class="glass-form">
+    <!-- Title Field -->
+    <div class="form-group">
+      <label>Event Title</label>
+      <div class="input-wrapper">
+        <input type="text" [(ngModel)]="event.title" name="title" required #title="ngModel">
+        <div class="input-glow"></div>
+      </div>
+      <div *ngIf="title.invalid && (title.dirty || title.touched)" class="validation-error">
+        <div *ngIf="title.errors?.['required']">Event title is required</div>
+      </div>
+    </div>
+
+    <!-- Date/Status Row -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date</label>
+        <div class="input-wrapper">
+          <input type="date" [(ngModel)]="event.date" name="date" required [min]="minDate"
+                 (change)="validateDate()" #dateInput="ngModel">
+          <div class="input-glow"></div>
+        </div>
+        <div *ngIf="dateError" class="validation-error">
+          {{ dateError }}
+        </div>
+        <div *ngIf="dateInput.invalid && (dateInput.dirty || dateInput.touched)" class="validation-error">
+          <div *ngIf="dateInput.errors?.['required']">Event date is required</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Status</label>
+        <div class="input-wrapper">
+          <select [(ngModel)]="event.status" name="status" required
+                  (change)="validateStatus()" #statusSelect="ngModel">
+            <option value="PLANNED">Planned</option>
+            <option value="ONGOING">Ongoing</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELED">Canceled</option>
+          </select>
+          <div class="input-glow"></div>
+        </div>
+        <div *ngIf="statusError" class="validation-warning">
+          {{ statusError }}
+        </div>
+        <div *ngIf="statusSelect.invalid && (statusSelect.dirty || statusSelect.touched)" class="validation-error">
+          <div *ngIf="statusSelect.errors?.['required']">Status is required</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Location Field -->
+    <div class="form-group">
+      <label>Location</label>
+      <div class="input-wrapper">
+        <input type="text" [(ngModel)]="event.location" name="location">
+        <div class="input-glow"></div>
+      </div>
+    </div>
+
+    <!-- Number of Places Field -->
+    <div class="form-group">
+      <label>Number of Places</label>
+      <div class="input-wrapper">
+        <input type="number" [(ngModel)]="event.numberOfPlaces" name="numberOfPlaces" 
+               min="1" #numberOfPlaces="ngModel">
+        <div class="input-glow"></div>
+      </div>
+      <div *ngIf="numberOfPlaces.invalid && (numberOfPlaces.dirty || numberOfPlaces.touched)" class="validation-error">
+        <div *ngIf="numberOfPlaces.errors?.['min']">Number of places must be at least 1</div>
+      </div>
+    </div>
+
+    <!-- Description Field -->
+    <div class="form-group">
+      <label>Description</label>
+      <div class="input-wrapper">
+        <textarea [(ngModel)]="event.description" name="description" rows="4"></textarea>
+        <div class="input-glow"></div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="soft-submit-btn" 
+            [disabled]="isLoading || form.invalid || dateError">
+      <span class="btn-content">
+        {{ isLoading ? 'Updating...' : 'Confirm Changes' }}
+      </span>
+      <span class="btn-glow"></span>
+    </button>
+  </form>
+</div>

@@ -20,6 +20,16 @@ import { AdminDashboardComponent } from './pages/business/admin-dashboard/admin-
 import { RoleGuard } from './role.guard';
 import { CouponFormComponent } from './pages/Orders/coupon-form/coupon-form.component';
 
+import { EventListComponent } from './pages/EventAdmin/event-list/event-list.component';
+
+import { EventUpdateComponent } from './pages/EventAdmin/update-event/update-event.component';
+import { EventRegistrationsComponent } from './pages/EventAdmin/event-registrations/event-registrations.component';
+import { EventHistoryComponent } from './pages/EventAdmin/event-history/event-history.component';
+import { EventAddComponent } from './pages/EventAdmin/add-event/add-event.component';
+import { EventDetailsComponent } from './pages/EventAdmin/event-details/event-details.component';
+import { ManageEventRegistrationsComponent } from './pages/EventAdmin/manage-event-registrations/manage-event-registrations.component';
+import { StatisticsComponent } from './pages/EventUser/statistics/statistics.component';
+import { NotificationComponent } from './pages/EventAdmin/notification/notification.component';
 export const Approutes: Routes = [
   // Authentication Routes
   { path: 'login', component: LoginComponent },
@@ -97,8 +107,15 @@ export const Approutes: Routes = [
       { path: 'coupons/create', component: CouponFormComponent ,
         canActivate: [RoleGuard],
         data: { roles: ['ROLE_ADMIN'] },},
-
-     
+        { path: 'events', component: EventListComponent },
+        { path: 'events/add', component:EventAddComponent },
+        { path: 'events/history', component: EventHistoryComponent },
+        {path: 'events/notif',component:NotificationComponent},
+        {path: 'events/:id/manage-registrations', component: ManageEventRegistrationsComponent},
+        { path: 'events/:id', component: EventDetailsComponent},
+        { path: 'events/update/:id', component: EventUpdateComponent },
+        { path: 'events/registrations/:id', component: EventRegistrationsComponent },
+        {path: 'events/statistics', component:StatisticsComponent},
     ],
   },
 

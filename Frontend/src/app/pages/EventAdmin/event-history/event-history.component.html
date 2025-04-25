@@ -1,0 +1,48 @@
+<div class="event-history-container">
+  <!-- Header Section with Back Button -->
+  <div class="history-header">
+    <button class="back-button" routerLink="/admin/events">
+      ← Back
+    </button>
+    <h2>Event History</h2>
+    <p class="subtitle">Past events and their details</p>
+  </div>
+
+  <!-- Status Messages -->
+  <div *ngIf="isLoading" class="status-message loading">
+    Loading event history...
+  </div>
+  <div *ngIf="error" class="status-message error">
+    {{ error }}
+  </div>
+
+  <!-- Events Table -->
+  <div class="history-card" *ngIf="!isLoading && !error">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Event Title</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Places</th> <!-- New column -->
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of events">
+            <td class="event-title">{{ event.title }}</td>
+            <td>{{ event.date | date:'mediumDate' }}</td>
+            <td>{{ event.location }}</td>
+            <td>{{ event.numberOfPlaces || 'Unlimited' }}</td> <!-- Display numberOfPlaces -->
+            <td>
+              <span class="status-badge" [ngClass]="'status-' + event.status">
+                {{ event.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
