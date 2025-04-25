@@ -6,16 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.growthnestback.Entities.Coupons;
-import tn.esprit.growthnestback.Entities.Product;
+import tn.esprit.growthnestback.Entities.Products;
 import tn.esprit.growthnestback.Entities.User;
 import tn.esprit.growthnestback.Repository.CouponRepository;
-import tn.esprit.growthnestback.Repository.ProductRepository;
+import tn.esprit.growthnestback.Repository.ProductsRepository;
 import tn.esprit.growthnestback.Repository.UserRepository;
 import tn.esprit.growthnestback.dto.CouponAnalyticsDTO;
 import tn.esprit.growthnestback.dto.CouponsResponseDTO;
 import tn.esprit.growthnestback.dto.CreateCouponRequestDTO;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class CouponServiceImpl implements ICouponService{
     @Autowired
     private  UserRepository userRepository;
     @Autowired
-    private  ProductRepository productRepository;
+    private ProductsRepository productRepository;
     @Override
     public Coupons createCoupon(CreateCouponRequestDTO request) {
         if (couponRepository.findByCodeIgnoreCase(request.code()).isPresent()) {
@@ -51,7 +50,7 @@ public class CouponServiceImpl implements ICouponService{
             throw new RuntimeException("Coupon usage limit reached.");
         }
         if (!request.global() && request.productIds() != null) {
-            List<Product> products = productRepository.findAllById(request.productIds());
+            List<Products> products = productRepository.findAllById(request.productIds());
             coupon.setApplicableProducts(products);
         }
 
@@ -107,7 +106,7 @@ public class CouponServiceImpl implements ICouponService{
                 coupon.getMaxUses(),
                 coupon.getUsageCount(),
                 coupon.getApplicableProducts().stream()
-                        .map(Product::getName)
+                        .map(Products::getName)
                         .toList()
         );
     }

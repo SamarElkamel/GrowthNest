@@ -4,8 +4,7 @@ import { RouterModule } from '@angular/router';
 import { LayoutComponent } from '../layout/layout.component';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { HomeComponent } from '../home/home.component'; 
-
+import { HomeComponent } from '../home/home.component';
 import { FrontOfficeRoutingModule } from './front-office-routing.module';
 
 @NgModule({
@@ -13,15 +12,15 @@ import { FrontOfficeRoutingModule } from './front-office-routing.module';
     LayoutComponent,
     HeaderComponent,
     FooterComponent,
-    HomeComponent  
+    HomeComponent
   ],
   imports: [
     CommonModule,
-    RouterModule, 
+    RouterModule,
     FrontOfficeRoutingModule
   ],
   exports: [
-    LayoutComponent 
+    LayoutComponent
   ]
 })
 export class FrontOfficeModule { }

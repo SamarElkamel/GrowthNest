@@ -1,0 +1,15 @@
+/* Change text color */
+.stext-101.cl0 {
+    color: #ffffff; /* White text color */
+  }
+  
+  /* Change background color */
+  .stext-101.bg1 {
+    background-color: #fb9678; /* Orange background */
+  }
+  
+  /* Change the hover effect (when button is hovered) */
+  .stext-101.bg1:hover {
+    background-color: #fca68c;; /* Dark red on hover */
+  }
+  

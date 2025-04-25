@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,7 +38,8 @@ public class Coupons {
     private User owner;
 
     @ManyToMany
-    private List<Product> applicableProducts;
+
+    private List<Products> applicableProducts;
     private Integer maxUses;
     private Integer usageCount = 0;
 }

@@ -78,12 +78,12 @@ public class CartRestController {
         return ResponseEntity.ok(cartService.checkoutCartUser(
                 request.userId(),
                 request.deliveryAddress(),
-                request.paymentMethod(),
-                request.redeemedPoints()
+                request.paymentMethod()
+
         ));
     }
 
-    @GetMapping("/points/{userId}")
+   /* @GetMapping("/points/{userId}")
     public ResponseEntity<UserPointsDTO> getUserPoints(@PathVariable Long userId) {
         UserPoints points = userPointsRepo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -94,7 +94,7 @@ public class CartRestController {
                 points.getRedeemedPoints(),
                 available
         ));
-    }
+    }*/
     @PostMapping("/apply-points")
     public ResponseEntity<Map<String, Object>> applyPoints(@RequestBody RedeemPointsRequest request) {
         UserPoints points = userPointsRepo.findById(request.userId())

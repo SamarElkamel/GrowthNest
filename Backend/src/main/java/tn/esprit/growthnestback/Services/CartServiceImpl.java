@@ -32,7 +32,7 @@ public class CartServiceImpl implements ICartService {
     private  UserRepository userRepository;
     @Autowired
 
-    private  ProductRepository productRepository;
+    private  ProductsRepository productRepository;
     @Autowired
 
     private  OrderDetailsRepository orderDetailsRepository;
@@ -55,10 +55,10 @@ public class CartServiceImpl implements ICartService {
     public OrderResponseDTO updateItemQuantity(Long userId, Long productId, int quantity) {
         Order cart = getOrCreateCart(userId);
         Optional<OrderDetails> existing = cart.getOrderDetails().stream()
-                .filter(d -> d.getProduct().getId().equals(productId))
+                .filter(d -> d.getProduct().getIdProduct().equals(productId))
                 .findFirst();
 
-        Product product = productRepository.findById(productId)
+        Products product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
         if (existing.isPresent()) {
@@ -82,7 +82,7 @@ public class CartServiceImpl implements ICartService {
         Order cart = getOrCreateCart(userId);
 
         cart.getOrderDetails().removeIf(d -> {
-            boolean match = d.getProduct().getId().equals(productId);
+            boolean match = d.getProduct().getIdProduct().equals(productId);
             if (match) orderDetailsRepository.delete(d);
             return match;
         });
@@ -138,7 +138,7 @@ public class CartServiceImpl implements ICartService {
     private OrderResponseDTO mapOrderToDTO(Order order) {
         List<OrderItemDTO> items = order.getOrderDetails().stream()
                 .map(d -> new OrderItemDTO(
-                        d.getProduct().getId(),
+                        d.getProduct().getIdProduct(),
                         d.getProduct().getName(),
                         d.getPriceAtTime(),
                         d.getQuantity()
@@ -186,11 +186,11 @@ public class CartServiceImpl implements ICartService {
             Long productId = entry.getKey();
             Integer quantity = entry.getValue();
 
-            Product product = productRepository.findById(productId)
+            Products product = productRepository.findById(productId)
                     .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
 
             Optional<OrderDetails> existingItem = cart.getOrderDetails().stream()
-                    .filter(d -> d.getProduct().getId().equals(productId))
+                    .filter(d -> d.getProduct().getIdProduct().equals(productId))
                     .findFirst();
 
             if (existingItem.isPresent()) {
@@ -209,7 +209,7 @@ public class CartServiceImpl implements ICartService {
             total = total.add(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
 
             items.add(new OrderItemDTO(
-                    product.getId(),
+                    product.getIdProduct(),
                     product.getName(),
                     product.getPrice().doubleValue(),
                     quantity
@@ -262,35 +262,22 @@ public class CartServiceImpl implements ICartService {
 
         return mapOrderToDTO(cart);
     }
-    public OrderResponseDTO checkoutCartUser(Long userId, String deliveryAddress, String paymentMethod, int redeemedPoints) {
+    public OrderResponseDTO checkoutCartUser(Long userId, String deliveryAddress, String paymentMethod) {
+        // 1. Load cart
         Order cart = orderRepository.findByUserIdAndStatus(userId, OrderStatus.CART)
                 .orElseThrow(() -> new EntityNotFoundException("No active cart to checkout"));
 
-        double discount = redeemedPoints * 0.01;
-
+        // 2. Update cart
         cart.setStatus(OrderStatus.PENDING);
         cart.setDeliveryAddress(deliveryAddress);
         cart.setPaymentMethod(paymentMethod);
-        cart.setDiscountAmount(discount); // ✅ store discount (double)
-
         orderRepository.save(cart);
 
-        // 🪙 Update UserPoints
-        UserPoints point = UserPointsRepo.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("UserPoints not found"));
+        // 3. Add points based on order total
+        //points.addPoints(userId, BigDecimal.valueOf(cart.getTotalAmount()));
 
-        int available = point.getTotalPoints() - point.getRedeemedPoints();
-        if (redeemedPoints > available) {
-            throw new IllegalArgumentException("Insufficient points to redeem.");
-        }
-
-        point.setRedeemedPoints(point.getRedeemedPoints() + redeemedPoints);
-        UserPointsRepo.save(point);
-
-        // 📧 Confirmation Email
-        double finalTotal = cart.getTotalAmount() - discount;
-
-        String html = """
+        // 8. Email Confirmation
+       String html = """
 <!DOCTYPE html>
 <html>
   <head>
@@ -362,7 +349,6 @@ public class CartServiceImpl implements ICartService {
         <p>We’ve received your order <b>#%d</b>.</p>
 
         <div class="summary">
-          <p><strong>Total:</strong> $%.2f</p>
           <p><strong>Discount:</strong> -$%.2f</p>
           <p><strong>Final Total:</strong> $%.2f</p>
           <p><strong>Payment Method:</strong> %s</p>
@@ -383,15 +369,13 @@ public class CartServiceImpl implements ICartService {
 """.formatted(
                 cart.getUser().getFirstname(),
                 cart.getId(),
+                cart.getDiscountAmount(),
                 cart.getTotalAmount(),
-                discount,
-                finalTotal,
                 cart.getPaymentMethod(),
                 cart.getDeliveryAddress()
         );
 
-        points.addPoints(userId, BigDecimal.valueOf(finalTotal));
-        mailService.sendHtmlOrderConfirmation(cart.getUser().getEmail(), "Your GrowthNest Order Confirmation", html);
+     // mailService.sendHtmlOrderConfirmation(cart.getUser().getEmail(), "Your GrowthNest Order Confirmation", html);
 
         return mapOrderToDTO(cart);
     }

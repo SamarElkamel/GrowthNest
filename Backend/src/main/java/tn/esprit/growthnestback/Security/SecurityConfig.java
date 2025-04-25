@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -28,66 +30,68 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
-     private final JwtFilter jwtAuthFilter;
-     private final AuthenticationProvider authenticationProvider;
+    private final JwtFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;
 
+    @Bean
+    public PasswordEncoder BCryptPasswordEncoderr() {
+        return new BCryptPasswordEncoder();
+    }
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(withDefaults())
-               // .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**"))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers(
-
-                                        "/auth/**",
-                                        "/v2/api-docs",
-                                        "/v3/api-docs",
-                                        "/v3/api-docs/**",
-                                        "/swagger-resources",
-                                        "/swagger-resources/**",
-                                        "/configuration/ui",
-                                        "/configuration/security",
-                                        "/swagger-ui/**",
-                                        "/webjars/**",
-                                        "/swagger-ui.html",
-                                        "/api/orders/**",
-                                        "/api/order-details/**",
-                                        "/api/cart/**",
-                                        "/api/coupons/**",
-                                        "/api/products/**",
-                                        "/api/payment/**"
-
-
-                                )
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers(
+                                "/auth/**",
+                                "/users/**",
+                                "/v2/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/webjars/**",
+                                "/ws/**",
+                                "/ws-raw/**",
+                                "/business/**",
+                                "/Products/**",
+                                "/uploads/**",
+                                "/wishlist/**",
+                                "/api/orders/**",
+                                "/api/order-details/**",
+                                "/api/cart/**",
+                                "/api/coupons/**",
+                                "/api/products/**",
+                                "/api/payment/**"
+                        )
+                        .permitAll()
+                        .requestMatchers("/users/**").hasRole("ADMIN")
+                        .requestMatchers("/profile").hasAnyRole("USER", "BUSINESSOWNER", "MARKETINGAGENT")
+                        .anyRequest().authenticated()
                 )
-                .sessionManagement(session->session.sessionCreationPolicy(STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
 
         return http.build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS" , "PATCH"));
-        config.setAllowedHeaders(Arrays.asList("*"));
-        config.setAllowCredentials(true);  // only if you’re using cookies/auth
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
-    }
 
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+                        .allowedHeaders("*");
+            }
+        };
+    }
+}
 
 
 

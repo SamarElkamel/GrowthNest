@@ -1,0 +1,21 @@
+.stars {
+  display: flex;
+  cursor: pointer;
+}
+.star {
+  font-size: 24px;
+  color: #ccc;
+  margin-right: 5px;
+}
+.star.selected {
+  color: #ffd700;
+}
+.star.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}

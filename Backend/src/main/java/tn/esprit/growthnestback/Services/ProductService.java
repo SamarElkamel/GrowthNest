@@ -3,8 +3,8 @@ package tn.esprit.growthnestback.Services;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import tn.esprit.growthnestback.Entities.Product;
-import tn.esprit.growthnestback.Repository.ProductRepository;
+import tn.esprit.growthnestback.Entities.Products;
+import tn.esprit.growthnestback.Repository.ProductsRepository;
 
 import java.util.List;
 
@@ -12,18 +12,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductsRepository productRepository;
 
-    public List<Product> getAll() {
+    public List<Products> getAll() {
         return productRepository.findAll();
     }
 
-    public Product getById(Long id) {
+    public Products getById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
     }
 
-    public Product create(Product product) {
+    public Products create(Products product) {
         return productRepository.save(product);
     }
 

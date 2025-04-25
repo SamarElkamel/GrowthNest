@@ -1,0 +1,76 @@
+<!-- quick-view-product-f.component.html -->
+<div class="product-quick-view">
+    <button mat-icon-button class="close-btn" (click)="close()" aria-label="Fermer">
+      <mat-icon>close</mat-icon>
+    </button>
+  
+    <div *ngIf="isLoading" class="loading-overlay">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  
+    <div *ngIf="product && !isLoading" class="product-content">
+      <div class="product-gallery">
+        <div class="image-container">
+          <img  [src]="getLogoUrl(product.image)"   
+               [alt]="product.name"
+               class="product-image">
+          <div class="image-gradient"></div>
+        </div>
+       
+      </div>
+  
+      <div class="product-info">
+        <div class="product-header">
+          <h1 class="product-title">{{product.name}}</h1>
+          <p class="product-description">{{product.description}}</p>
+        </div>
+  
+        <div class="product-pricing">
+          <div class="price-display">
+            <span class="price">{{product.price | currency:'TND':'DT ':'1.3-3'}}</span>
+            <div class="tax-badge">
+              <mat-icon>verified</mat-icon>
+              <span>TVA incluse</span>
+            </div>
+          </div>
+  
+          <div class="stock-status" [class.low-stock]="product.stock < 5">
+            <div class="status-indicator"></div>
+            <span class="stock-label">{{product.stock}} unités disponibles</span>
+          </div>
+        </div>
+  
+        <div class="quantity-selector">
+          <button mat-icon-button (click)="adjustQuantity(-1)" [disabled]="quantity === 1">
+            <mat-icon>remove_circle_outline</mat-icon>
+          </button>
+          <input type="number" [(ngModel)]="quantity" min="1" [max]="product.stock">
+          <button mat-icon-button (click)="adjustQuantity(1)" [disabled]="quantity === product.stock">
+            <mat-icon>add_circle_outline</mat-icon>
+          </button>
+        </div>
+  
+        <button (click)="addToCart(product)"  class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" [disabled]="product.stock === 0">
+          <mat-icon>shopping_bag</mat-icon>
+          Ajouter au panier • {{quantity}}
+        </button>
+  
+        <div class="seller-info" *ngIf="product.business">
+          <div class="seller-card">
+            <div class="store-icon">
+              <mat-icon>storefront</mat-icon>
+            </div>
+            <div class="seller-details">
+              <h3 class="seller-name">{{product.business.name}}</h3>
+              <div class="seller-rating">
+                <div class="rating-stars">
+                  <mat-icon *ngFor="let star of [1,2,3,4,5]">star</mat-icon>
+                </div>
+                <span class="rating-count">128 avis</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

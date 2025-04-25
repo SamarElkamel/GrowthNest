@@ -1,0 +1,120 @@
+/* Style for the Profile Image and Buttons */
+.card .ms-4.mt-5.d-flex.flex-column {
+    margin-bottom: 20px;  /* Add space below the profile image */
+  }
+  
+  /* Style the Edit Profile button */
+  .edit-btn {
+    border: 2px solid #000;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 5px 15px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .edit-btn:hover {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+  
+  /* Style the Logout button to make it round */
+  .logout-btn {
+    border: 2px solid #000;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-top: 10px;
+    padding: 5px;
+    text-align: center;
+    line-height: 30px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .logout-btn:hover {
+    background-color: #dc3545;
+    color: white;
+    border-color: #dc3545;
+  }
+  
+  .logout-btn i {
+    font-size: 20px;
+  }
+  
+  /* Add some margin at the top of the profile section */
+  .card .rounded-top {
+    margin-bottom: 30px; /* Space between profile image area and the card body */
+  }
+  
+  /* Ensure proper spacing between profile details and about section */
+  .card-body {
+    margin-top: 20px;
+  }
+  
+  #butt {
+    background-color: #fb9678;
+    border: none; 
+   
+  }
+  
+  #butt:hover {
+    background-color: #fca68c;          
+  }
+ 
+
+  #title
+  {
+   padding-top: 100px;
+  }
+
+  .profile-image-container {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .profile-image-container img {
+    transition: transform 0.3s;
+  }
+  
+  .profile-image-container:hover img {
+    transform: scale(1.1);
+  }
+  
+  .modal {
+    display: block !important;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Make sure the modal is above other content */
+  }
+
+  /* Modal container */
+  .modal-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px; /* Set the width as desired */
+    max-width: 90%;
+  }
+
+  /* Modal content */
+  .modal-content {
+    text-align: center;
+  }
+
+  /* Modal buttons */
+  .modal-footer button {
+    margin: 0 10px;
+  }
+
+  

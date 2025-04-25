@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service;
 import tn.esprit.growthnestback.Entities.*;
 import tn.esprit.growthnestback.Repository.OrderDetailsRepository;
 import tn.esprit.growthnestback.Repository.OrderRepository;
-import tn.esprit.growthnestback.Repository.ProductRepository;
+import tn.esprit.growthnestback.Repository.ProductsRepository;
 import tn.esprit.growthnestback.Repository.UserRepository;
-import tn.esprit.growthnestback.dto.CreateOrderRequestDTO;
-import tn.esprit.growthnestback.dto.OrderDetailDTO;
 import tn.esprit.growthnestback.dto.OrderItemDTO;
 import tn.esprit.growthnestback.dto.OrderResponseDTO;
 
@@ -20,8 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +27,7 @@ public class OrderServiceImp implements IOrderService {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
-    private  ProductRepository productRepository;
+    private ProductsRepository productRepository;
     @Autowired
     private  OrderDetailsRepository orderDetailsRepository;
     @Autowired
@@ -41,7 +37,7 @@ public class OrderServiceImp implements IOrderService {
     private OrderResponseDTO mapOrderToDTO(Order order) {
         List<OrderItemDTO> items = order.getOrderDetails().stream()
                 .map(detail -> new OrderItemDTO(
-                        detail.getProduct().getId(),
+                        detail.getProduct().getIdProduct(),
                         detail.getProduct().getName(),
                         detail.getPriceAtTime(),
                         detail.getQuantity()
@@ -123,7 +119,7 @@ public class OrderServiceImp implements IOrderService {
                     .multiply(BigDecimal.valueOf(detail.getQuantity())));
 
             items.add(new OrderItemDTO(
-                    detail.getProduct().getId(),
+                    detail.getProduct().getIdProduct(),
                     detail.getProduct().getName(),
                     detail.getProduct().getPrice().doubleValue(),
                     detail.getQuantity()

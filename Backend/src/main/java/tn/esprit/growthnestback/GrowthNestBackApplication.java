@@ -22,18 +22,5 @@ public class GrowthNestBackApplication {
     public static void main(String[] args) {
         SpringApplication.run(GrowthNestBackApplication.class, args);
     }
-/*
-    @Bean
-    public CommandLineRunner runner(RoleRepository roleRepository) {
-        return args -> {
-            // Check if the role exists using the RoleName enum value
-            if (roleRepository.findByName(RoleName.USER).isEmpty()) {
-                // Save the role if it doesn't exist
-                roleRepository.save(
-                        Role.builder().name(RoleName.USER).build()
-                );
-            }
-        };
-    }
-*/
+
 }

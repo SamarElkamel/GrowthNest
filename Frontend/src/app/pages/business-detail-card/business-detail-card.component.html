@@ -1,0 +1,33 @@
+<div class="dialog-container">
+    <!-- En-tête -->
+    <div class="dialog-header">
+      <h2 mat-dialog-title>{{ data.name }}</h2>
+      <button mat-icon-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  
+    <!-- Contenu principal -->
+    <mat-dialog-content>
+      <div class="content-wrapper">
+        <!-- Section Catégorie -->
+        <div class="detail-item">
+          <mat-icon>category</mat-icon>
+          <span class="category-badge">{{ data.categorieBusiness }}</span>
+        </div>
+  
+        <!-- Section Description -->
+        <div class="detail-item">
+          <mat-icon>description</mat-icon>
+          <p class="description-text">{{ data.description }}</p>
+        </div>
+      </div>
+    </mat-dialog-content>
+  
+    <!-- Actions -->
+    <mat-dialog-actions align="end">
+      <button mat-raised-button color="primary" (click)="dialogRef.close()">
+        Fermer
+      </button>
+    </mat-dialog-actions>
+  </div>

@@ -13,6 +13,7 @@ import { CommonModule, NgIf } from '@angular/common';
   templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent implements OnInit {
+  businessId: number | null = null;
   showMenu = '';
   showSubMenu = '';
   public sidebarnavItems:RouteInfo[]=[];
@@ -35,4 +36,5 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.sidebarnavItems = ROUTES.filter(sidebarnavItem => sidebarnavItem);
   }
+  
 }

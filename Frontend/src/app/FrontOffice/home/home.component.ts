@@ -1,5 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { ProduitsComponent } from "../../pages/produits/produits.component";
+
+
 
 declare var $: any;
 
@@ -7,7 +8,6 @@ declare var $: any;
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  
 })
 export class HomeComponent implements AfterViewInit {
 

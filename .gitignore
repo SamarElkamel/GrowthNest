@@ -1,5 +1,7 @@
+# General Help File
 HELP.md
-target/
+
+# Maven Wrapper (if applicable)
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -25,10 +27,47 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
+/build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
-"Frontend/.angular/cache" 
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+### Frontend and Node ###
+**/node_modules/
+npm-debug.log
+yarn-error.log
+
+### Compiled output ###
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+### IDEs and editors ###
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db

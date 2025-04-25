@@ -1,7 +1,8 @@
 package tn.esprit.growthnestback.Entities;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -10,13 +11,17 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -26,30 +31,54 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails, Principal {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstname;
     private String lastname;
-    private LocalDate dateOfBirth;
+    @Lob
+    private String image;
+
     @Column(unique = true)
     private String email;
     private String password;
     private boolean accountLocked;
     private boolean enabled;
+    private LocalDateTime resetTokenExpiration;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
+
     @LastModifiedDate
     @Column(insertable = false)
-    private LocalDateTime LastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
     @ManyToOne
     @JoinColumn(name="ID_ROLE", referencedColumnName="id")
-    private Role role ;
+    private Role role;
 
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "date_of_birth")
+    @PastOrPresent(message = "Date of birth cannot be in the future")
+    private LocalDate dateOfBirth;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLogin;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<Business> Businesses;
+
+
+    public Set<Business> getBusiness() {
+        return Businesses;
+    }
+
+    public void setBusiness(Set<Business> business) {
+        Businesses = business;
+    }
 
     @Override
     public String getName() {
@@ -63,8 +92,9 @@ public class User implements UserDetails, Principal {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + this.role.getName()));
     }
+
 
     @Override
     public String getPassword() {
@@ -96,8 +126,7 @@ public class User implements UserDetails, Principal {
         return enabled;
     }
 
-    public String fullName()
-    {
+    public String fullName() {
         return firstname + " " + lastname;
     }
 
@@ -125,12 +154,12 @@ public class User implements UserDetails, Principal {
         this.lastname = lastname;
     }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
+    public String getImage() {
+        return image;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setImage(String image) {
+        this.image = image; // Store image path or URL
     }
 
     public String getEmail() {
@@ -166,11 +195,11 @@ public class User implements UserDetails, Principal {
     }
 
     public LocalDateTime getLastModifiedDate() {
-        return LastModifiedDate;
+        return lastModifiedDate;
     }
 
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        LastModifiedDate = lastModifiedDate;
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Role getRole() {
@@ -181,4 +210,36 @@ public class User implements UserDetails, Principal {
         this.role = role;
     }
 
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+        this.resetTokenExpiration = LocalDateTime.now().plusHours(1);
+    }
+
+    public void setResetTokenExpiration(LocalDateTime resetTokenExpiration) {
+        this.resetTokenExpiration = resetTokenExpiration;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public LocalDateTime getResetTokenExpiration() {
+        return resetTokenExpiration;
+    }
 }

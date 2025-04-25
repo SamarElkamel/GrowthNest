@@ -1,0 +1,119 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Users</h4>
+
+    <!-- Search Bar -->
+    <div class="search-bar mb-3 d-flex align-items-center">
+      <input
+        type="text"
+        [(ngModel)]="query"
+        (input)="onInputChange()"
+        placeholder="Search users"
+        class="form-control search-input"
+      />
+      <i class="bi bi-search ms-2 search-icon"></i>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filters mb-4 d-flex justify-content-between flex-wrap">
+      <!-- User State Filter -->
+      <div class="filter-item mb-2 mb-md-0">
+        <label for="userState" class="form-label">Account State</label>
+        <select [(ngModel)]="selectedUserState" (change)="onFilterChange()" class="form-select" id="userState">
+          <option value="">All Account States</option>
+          <option value="enabled">Activated</option>
+          <option value="disabled">Disactivated</option>
+        </select>
+      </div>
+
+     
+
+      <!-- Role Filter -->
+      <div class="filter-item mb-2 mb-md-0">
+        <label for="role" class="form-label">Role</label>
+        <select [(ngModel)]="selectedRole" (change)="onFilterChange()" class="form-select" id="role">
+          <option value="">All Roles</option>
+          <option *ngFor="let role of roles" [value]="role.name">{{ role.name }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- User Table -->
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th class="text-dark font-medium fs-4">User</th>
+            <th class="text-dark font-medium fs-4">Created Date</th>
+            <th class="text-dark font-medium fs-4">Date of Birth</th> 
+            <th class="text-dark font-medium fs-4">Last Login</th>
+            <th class="text-dark font-medium fs-4">Account State</th>
+            <th class="text-dark font-medium fs-4">Role</th>
+            <th class="text-dark font-medium fs-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of displayedUsers">
+            <td>
+              <div class="d-flex align-items-center">
+                <img alt="user" width="45" class="rounded-circle" [src]="'data:image/jpeg;base64,' + user.image" />
+                <div class="ms-3">
+                  <h5 class="mb-0 font-medium">{{ user.firstname }} {{ user.lastname }}</h5>
+                  <span>{{ user.email }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="fs-4">{{ user.createdDate | date:'medium' }}</td>
+            <td class="fs-4">{{ user.dateOfBirth | date:'dd-MM-yyyy' }}</td> 
+            <td class="fs-4">
+              {{ user.lastLogin ? (user.lastLogin | date:'medium') : 'Never' }}
+            </td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'bg-danger': !user.enabled,
+                'bg-success': user.enabled
+              }">{{ user.enabled ? 'Activated' : 'Disactivated' }}</span>
+            </td>
+           
+            <td>
+              {{ user.role?.name || 'No role assigned' }}
+            </td>
+          
+            <td>
+              <button 
+                class="btn btn-outline-dark btn-sm px-2 py-1 small-button"
+                [ngClass]="{
+                  'btn-outline-danger': user?.enabled, 
+                  'btn-outline-success': !user?.enabled
+                }"
+                (click)="toggleLock(user)">
+                <i 
+                  class="bi me-1" 
+                  [ngClass]="{
+                    'bi-lock': user?.enabled, 
+                    'bi-unlock': !user?.enabled
+                  }"
+                  style="font-size: 0.8rem;"
+                ></i>
+                <span style="font-size: 0.75rem;">{{ user?.enabled ? 'Lock' : 'Unlock' }}</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="users.length > 0" class="pagination">
+      <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
+      <span *ngFor="let page of pages">
+        <button (click)="goToPage(page)" [class.active]="page === currentPage" class="btn btn-light">
+          {{ page }}
+        </button>
+      </span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
+    </div>
+
+    <p *ngIf="users.length === 0">No users available.</p>
+  </div>
+</div>

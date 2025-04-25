@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,6 +9,7 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class AppComponent {
   title = 'app';
+
   currentUrl = '';
 
   constructor(private router: Router) {
@@ -16,8 +18,5 @@ export class AppComponent {
         this.currentUrl = event.urlAfterRedirects;
       }
     });
-  }
-  isFrontOfficePage(): boolean {
-    return !this.router.url.startsWith('/admin');
   }
 }
