@@ -9,24 +9,22 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface DownloadInvitation$Params {
-  idR: number;
+export interface MarkAllAsRead$Params {
 }
 
-export function downloadInvitation(http: HttpClient, rootUrl: string, params: DownloadInvitation$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<string>>> {
-  const rb = new RequestBuilder(rootUrl, downloadInvitation.PATH, 'get');
+export function markAllAsRead(http: HttpClient, rootUrl: string, params?: MarkAllAsRead$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  const rb = new RequestBuilder(rootUrl, markAllAsRead.PATH, 'put');
   if (params) {
-    rb.path('idR', params.idR, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<string>>;
+      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
     })
   );
 }
 
-downloadInvitation.PATH = '/Registration/downloadInvitation/{idR}';
+markAllAsRead.PATH = '/Notification/markAllAsRead';

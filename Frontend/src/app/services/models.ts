@@ -8,6 +8,7 @@ export { Event } from './models/event';
 export { EventWithReservationCount } from './models/event-with-reservation-count';
 export { GrantedAuthority } from './models/granted-authority';
 export { LocalTime } from './models/local-time';
+export { Notification } from './models/notification';
 export { Registration } from './models/registration';
 export { RegistrationRequest } from './models/registration-request';
 export { Role } from './models/role';

@@ -37,6 +37,11 @@ import { EventUserListComponent } from './pages/EventUser/event-user-list/event-
 import { EventUserDetailsComponent } from './pages/EventUser/event-user-details/event-user-details.component';
 import { ManageEventRegistrationsComponent } from './pages/EventAdmin/manage-event-registrations/manage-event-registrations.component';
 
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { StatisticsComponent } from './pages/EventUser/statistics/statistics.component';
+import { NotificationComponent } from './pages/EventAdmin/notification/notification.component';
+
+
 
 
 
@@ -59,6 +64,10 @@ import { ManageEventRegistrationsComponent } from './pages/EventAdmin/manage-eve
     EventUserDetailsComponent,
     EventUserListComponent,
     ManageEventRegistrationsComponent,
+    StatisticsComponent,
+    NotificationComponent,
+    
+    
     
    
  
@@ -77,6 +86,7 @@ import { ManageEventRegistrationsComponent } from './pages/EventAdmin/manage-eve
     FullComponent,
     NavigationComponent,
     SidebarComponent,
+    FullCalendarModule,
 
     
   ],

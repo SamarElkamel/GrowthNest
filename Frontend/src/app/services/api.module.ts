@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { RegistrationManagementService } from './services/registration-management.service';
+import { NotificationManagementService } from './services/notification-management.service';
 import { EventManagementService } from './services/event-management.service';
 import { AuthenticationService } from './services/authentication.service';
 
@@ -19,6 +20,7 @@ import { AuthenticationService } from './services/authentication.service';
   declarations: [],
   providers: [
     RegistrationManagementService,
+    NotificationManagementService,
     EventManagementService,
     AuthenticationService,
     ApiConfiguration

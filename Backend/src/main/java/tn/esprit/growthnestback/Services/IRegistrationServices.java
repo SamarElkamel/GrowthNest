@@ -5,6 +5,7 @@ import tn.esprit.growthnestback.Entities.Registration;
 import tn.esprit.growthnestback.Entities.ReservationStatus;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IRegistrationServices {
     public List<Registration> DisplayAllRegistartion();
@@ -17,4 +18,5 @@ public interface IRegistrationServices {
     Registration updateRegistrationStatus(Long registrationId, ReservationStatus newStatus);
 
 
+    Map<String, Object> getAnalyticsData();
 }

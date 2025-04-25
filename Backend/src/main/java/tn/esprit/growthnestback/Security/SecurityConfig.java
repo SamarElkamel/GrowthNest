@@ -53,7 +53,8 @@ public class SecurityConfig {
                                         "/webjars/**",
                                         "/swagger-ui.html",
                                         "/Event/**",
-                                        "/Registration/**"
+                                        "/Registration/**",
+                                "/Notification/**"
 
                                 )
                                 .permitAll()

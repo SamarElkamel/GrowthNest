@@ -5,40 +5,30 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import tn.esprit.growthnestback.Entities.Event;
-import tn.esprit.growthnestback.Entities.Registration;
-import tn.esprit.growthnestback.Entities.ReservationStatus;
-import tn.esprit.growthnestback.Entities.User;
+import tn.esprit.growthnestback.Entities.*;
 import tn.esprit.growthnestback.Repository.EventRepository;
+import tn.esprit.growthnestback.Repository.NotificationRepository;
 import tn.esprit.growthnestback.Repository.RegistrationRepository;
 import tn.esprit.growthnestback.Repository.UserRepository;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
 @Transactional
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationServiceImpl implements IRegistrationServices{
+public class RegistrationServiceImpl implements IRegistrationServices {
     @Autowired
     RegistrationRepository registrationRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
     EventRepository eventRepository;
+    @Autowired
+    NotificationRepository notificationRepository;
 
     @Override
     public List<Registration> DisplayAllRegistartion() {
@@ -50,8 +40,6 @@ public class RegistrationServiceImpl implements IRegistrationServices{
         return registrationRepository.findById(idR).get();
     }
 
-
-
     @Override
     public Registration updateRegistration(Registration registration) {
         return registrationRepository.save(registration);
@@ -61,14 +49,17 @@ public class RegistrationServiceImpl implements IRegistrationServices{
     public void deleteRegistration(Long idR) {
         registrationRepository.deleteById(idR);
     }
+
     @Override
     public List<Registration> DisplayRegistrationsByEvent(Long eventId) {
         return registrationRepository.findByEventId(eventId);
     }
+
     @Override
     public List<Registration> getUserReservations(Long userId) {
         return registrationRepository.findByUserId(userId);
     }
+
     @Override
     public Registration addRegistration(Registration registration) {
         Long userId = registration.getUser().getId();
@@ -100,13 +91,21 @@ public class RegistrationServiceImpl implements IRegistrationServices{
         Registration newRegistration = new Registration();
         newRegistration.setUser(user);
         newRegistration.setEvent(event);
-        newRegistration.setStatus(ReservationStatus.PENDING); // Initial status
+        newRegistration.setStatus(ReservationStatus.PENDING);
         newRegistration.setReservationDate(new Date());
 
-        return registrationRepository.save(newRegistration);
+        Registration savedRegistration = registrationRepository.save(newRegistration);
+
+        // Step 5: Create notification for admin
+        String message = String.format("New registration for event '%s' by user '%s'",
+                event.getTitle(), user.getUsername());
+        Notification notification = new Notification(savedRegistration, message);
+        notificationRepository.save(notification);
+
+        return savedRegistration;
     }
-@Override
-    // New method for admin to confirm/cancel registration
+
+    @Override
     public Registration updateRegistrationStatus(Long registrationId, ReservationStatus newStatus) {
         Registration registration = registrationRepository.findById(registrationId)
                 .orElseThrow(() -> new EntityNotFoundException("Registration not found"));
@@ -134,5 +133,16 @@ public class RegistrationServiceImpl implements IRegistrationServices{
         return registrationRepository.save(registration);
     }
 
-
+    @Override
+    public Map<String, Object> getAnalyticsData() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalRegistrations", registrationRepository.count());
+        stats.put("confirmed", registrationRepository.countByStatus(ReservationStatus.CONFIRMED));
+        stats.put("cancelled", registrationRepository.countByStatus(ReservationStatus.CANCELED));
+        stats.put("pending", registrationRepository.countByStatus(ReservationStatus.PENDING));
+        stats.put("uniqueUsers", registrationRepository.countDistinctByUser());
+        stats.put("mostPopularEvent", registrationRepository.findMostRegisteredEvent());
+        stats.put("unreadNotifications", notificationRepository.countByIsReadFalse());
+        return stats;
+    }
 }

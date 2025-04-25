@@ -9,24 +9,28 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface DownloadInvitation$Params {
-  idR: number;
+export interface GetStatistics$Params {
 }
 
-export function downloadInvitation(http: HttpClient, rootUrl: string, params: DownloadInvitation$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<string>>> {
-  const rb = new RequestBuilder(rootUrl, downloadInvitation.PATH, 'get');
+export function getStatistics(http: HttpClient, rootUrl: string, params?: GetStatistics$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+[key: string]: {
+};
+}>> {
+  const rb = new RequestBuilder(rootUrl, getStatistics.PATH, 'get');
   if (params) {
-    rb.path('idR', params.idR, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<string>>;
+      return r as StrictHttpResponse<{
+      [key: string]: {
+      };
+      }>;
     })
   );
 }
 
-downloadInvitation.PATH = '/Registration/downloadInvitation/{idR}';
+getStatistics.PATH = '/Registration/statistics';

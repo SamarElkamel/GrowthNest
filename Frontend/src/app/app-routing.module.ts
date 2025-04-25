@@ -17,6 +17,9 @@ import { EventUserDetailsComponent } from './pages/EventUser/event-user-details/
 import { UpdateReservationComponent } from './pages/EventUser/update-reservation/update-reservation.component';
 import { UserReservationsComponent } from './pages/EventUser/user-reservations/user-reservations.component';
 import { ManageEventRegistrationsComponent } from './pages/EventAdmin/manage-event-registrations/manage-event-registrations.component';
+import { StatisticsComponent } from './pages/EventUser/statistics/statistics.component';
+import { NotificationComponent } from './pages/EventAdmin/notification/notification.component';
+
 
 export const Approutes: Routes = [
   // Front Office Routes (Public)
@@ -28,7 +31,8 @@ export const Approutes: Routes = [
   {path: 'events/user', component:EventUserListComponent},
   {path: 'events/user/add' , component:AddReservationComponent},
   {path : 'events/user/reservations', component:UserReservationsComponent},
-  
+  {path: 'events/statistics', component:StatisticsComponent},
+ 
   {path: 'events/user/:id',component:EventUserDetailsComponent},
   {path : 'events/user/update/:id' , component:UpdateReservationComponent},
  
@@ -54,6 +58,7 @@ export const Approutes: Routes = [
       { path: 'events', component: EventListComponent },
       { path: 'events/add', component:EventAddComponent },
       { path: 'events/history', component: EventHistoryComponent },
+      {path: 'events/notif',component:NotificationComponent},
       {path: 'events/:id/manage-registrations', component: ManageEventRegistrationsComponent},
       { path: 'events/:id', component: EventDetailsComponent},
       { path: 'events/update/:id', component: EventUpdateComponent },

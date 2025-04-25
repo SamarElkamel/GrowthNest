@@ -13,6 +13,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { addRegistration } from '../fn/registration-management/add-registration';
 import { AddRegistration$Params } from '../fn/registration-management/add-registration';
+import { bulkUpdateRegistrationStatus } from '../fn/registration-management/bulk-update-registration-status';
+import { BulkUpdateRegistrationStatus$Params } from '../fn/registration-management/bulk-update-registration-status';
 import { deleteRegistration } from '../fn/registration-management/delete-registration';
 import { DeleteRegistration$Params } from '../fn/registration-management/delete-registration';
 import { display } from '../fn/registration-management/display';
@@ -23,6 +25,8 @@ import { displayRegistration } from '../fn/registration-management/display-regis
 import { DisplayRegistration$Params } from '../fn/registration-management/display-registration';
 import { downloadInvitation } from '../fn/registration-management/download-invitation';
 import { DownloadInvitation$Params } from '../fn/registration-management/download-invitation';
+import { getStatistics } from '../fn/registration-management/get-statistics';
+import { GetStatistics$Params } from '../fn/registration-management/get-statistics';
 import { getUserReservations } from '../fn/registration-management/get-user-reservations';
 import { GetUserReservations$Params } from '../fn/registration-management/get-user-reservations';
 import { Registration } from '../models/registration';
@@ -95,6 +99,35 @@ export class RegistrationManagementService extends BaseService {
     );
   }
 
+  /** Path part for operation `bulkUpdateRegistrationStatus()` */
+  static readonly BulkUpdateRegistrationStatusPath = '/Registration/bulkUpdateStatus';
+
+  /**
+   * Bulk update registration statuses
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `bulkUpdateRegistrationStatus()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  bulkUpdateRegistrationStatus$Response(params: BulkUpdateRegistrationStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Registration>>> {
+    return bulkUpdateRegistrationStatus(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Bulk update registration statuses
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `bulkUpdateRegistrationStatus$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  bulkUpdateRegistrationStatus(params: BulkUpdateRegistrationStatus$Params, context?: HttpContext): Observable<Array<Registration>> {
+    return this.bulkUpdateRegistrationStatus$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<Registration>>): Array<Registration> => r.body)
+    );
+  }
+
   /** Path part for operation `addRegistration()` */
   static readonly AddRegistrationPath = '/Registration/addRegistration';
 
@@ -150,6 +183,47 @@ export class RegistrationManagementService extends BaseService {
   getUserReservations(params: GetUserReservations$Params, context?: HttpContext): Observable<Array<Registration>> {
     return this.getUserReservations$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<Registration>>): Array<Registration> => r.body)
+    );
+  }
+
+  /** Path part for operation `getStatistics()` */
+  static readonly GetStatisticsPath = '/Registration/statistics';
+
+  /**
+   * Get registration statistics
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getStatistics()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getStatistics$Response(params?: GetStatistics$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+[key: string]: {
+};
+}>> {
+    return getStatistics(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get registration statistics
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getStatistics$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getStatistics(params?: GetStatistics$Params, context?: HttpContext): Observable<{
+[key: string]: {
+};
+}> {
+    return this.getStatistics$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+[key: string]: {
+};
+}>): {
+[key: string]: {
+};
+} => r.body)
     );
   }
 
