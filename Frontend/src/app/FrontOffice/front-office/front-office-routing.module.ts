@@ -25,6 +25,7 @@ import { AddReservationComponent } from '../../pages/EventUser/add-reservation/a
 import { EventUserDetailsComponent } from '../../pages/EventUser/event-user-details/event-user-details.component';
 import { UpdateReservationComponent } from '../../pages/EventUser/update-reservation/update-reservation.component';
 import { UserReservationsComponent } from '../../pages/EventUser/user-reservations/user-reservations.component';
+import { CalendarEventComponent } from 'src/app/pages/EventUser/calendar-event/calendar-event.component';
 
 
 const routes: Routes = [
@@ -35,67 +36,66 @@ const routes: Routes = [
   { path: 'cart', component: CartPageComponent },
   { path: 'orders/history', component: OrderHistoryComponent },
   { path: 'payment', component: PaymentComponent },
- 
-      {
-        path: 'business/:businessId/products',
-        component: BusinessproductsComponent
-      },
-      {
-        path: 'businesses',
-        component: BusinessListFrontComponent,
-        title: 'Liste des small business'
-      },
-      {
-        path: 'business-details/:idB',
-        component: BusinessDetailsComponent,
-        title: 'business details'
-      },
-      {
-        path: 'wishlist',
-        component: WishlistComponent
-      },
-      {
-        path: 'profile',
-        component: UserProfileComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ROLE_USER', 'ROLE_BusinessOwner', 'ROLE_MarketingAgent'] }
-      },
-      {
-        path: 'updateprofile',
-        component: EditProfileComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ROLE_USER', 'ROLE_BusinessOwner', 'ROLE_MarketingAgent'] }
-      },
-      {
-        path: 'EditPassword',
-        component: ChangePasswordComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ROLE_USER', 'ROLE_BusinessOwner', 'ROLE_MarketingAgent'] }
-      },
-      {
-        path: 'my-business/:idBusiness',
-        component: BusinessDetailBComponent,
-      }, {
-        path: 'add-product/:idBusiness',
-        component: AddProductComponent,
-      },
-      {
-        path: 'businesses/add',
-        component: AddBusinessComponent,
-      },
-      {
-        path: 'pending-businesses',
-        component: AdminDashboardComponent,
-        title: 'Pending Businesses',
-      },
-      {path: 'events/user', component:EventUserListComponent},
-      {path: 'events/user/add' , component:AddReservationComponent},
-      {path : 'events/user/reservations', component:UserReservationsComponent},
-      
-     
-      {path: 'events/user/:id',component:EventUserDetailsComponent},
-      {path : 'events/user/update/:id' , component:UpdateReservationComponent},
-  
+
+  {
+    path: 'business/:businessId/products',
+    component: BusinessproductsComponent
+  },
+  {
+    path: 'businesses',
+    component: BusinessListFrontComponent,
+    title: 'Liste des small business'
+  },
+  {
+    path: 'business-details/:idB',
+    component: BusinessDetailsComponent,
+    title: 'business details'
+  },
+  {
+    path: 'wishlist',
+    component: WishlistComponent
+  },
+  {
+    path: 'profile',
+    component: UserProfileComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_USER', 'ROLE_BusinessOwner', 'ROLE_MarketingAgent'] }
+  },
+  {
+    path: 'updateprofile',
+    component: EditProfileComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_USER', 'ROLE_BusinessOwner', 'ROLE_MarketingAgent'] }
+  },
+  {
+    path: 'EditPassword',
+    component: ChangePasswordComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_USER', 'ROLE_BusinessOwner', 'ROLE_MarketingAgent'] }
+  },
+  {
+    path: 'my-business/:idBusiness',
+    component: BusinessDetailBComponent,
+  }, {
+    path: 'add-product/:idBusiness',
+    component: AddProductComponent,
+  },
+  {
+    path: 'businesses/add',
+    component: AddBusinessComponent,
+  },
+  {
+    path: 'pending-businesses',
+    component: AdminDashboardComponent,
+    title: 'Pending Businesses',
+  },
+  { path: 'events/calendar', component: CalendarEventComponent },
+  { path: 'events/user', component: EventUserListComponent },
+  { path: 'events/user/add', component: AddReservationComponent },
+  { path: 'events/user/reservations', component: UserReservationsComponent },
+  { path: 'events/user/:id', component: EventUserDetailsComponent },
+  { path: 'events/user/update/:id', component: UpdateReservationComponent },
+
 ];
 
 @NgModule({
