@@ -7,7 +7,7 @@ import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common
 import { Routes, RouterModule } from '@angular/router';
 
 import { CodeInputModule } from 'angular-code-input';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha';
@@ -45,7 +45,7 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { UserProfileComponent } from './FrontOffice/user-profile/user-profile.component';
 import { EditProfileComponent } from './FrontOffice/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './FrontOffice/change-password/change-password.component';
-import { LayoutComponent } from './FrontOffice/layout/layout.component';
+
 
 import { OrderListComponent } from './pages/Orders/order-list/order-list.component';
 import { OrderDetailsComponent } from './pages/Orders/order-details/order-details.component';
@@ -75,9 +75,8 @@ import { WishlistComponent } from './pages/products/wishlist/wishlist.component'
 
 import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import { UserListComponent } from './BackOffice/component/users-list/users-list.component';
-import { HomeComponent } from './FrontOffice/home/home.component';
-import { FooterComponent } from './FrontOffice/footer/footer.component';
-import { HeaderComponent } from './FrontOffice/header/header.component';
+
+
 
 import { EventListComponent } from './pages/EventAdmin/event-list/event-list.component';
 import { EventDetailsComponent } from './pages/EventAdmin/event-details/event-details.component';
@@ -109,7 +108,6 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     OrderHistoryComponent,
     PaymentComponent,
     AddressPickerComponent,
-    LoginComponent,
     RegisterComponent,
     ActivateAccountComponent,
     SelectRoleComponent,
@@ -132,12 +130,9 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     RatingComponent,
     AdminDashboardComponent,
     WishlistComponent,
-    HomeComponent,
-    FooterComponent,
-    HeaderComponent,
-    FullComponent,
-    NavigationComponent,
-    SidebarComponent,
+    
+   
+    LoginComponent,
     BackLayoutComponent,
     EventListComponent,
     EventDetailsComponent,
@@ -154,6 +149,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     StatisticsComponent,
     NotificationComponent,
     UserListComponent,
+   
   ],
   imports: [
     BrowserModule,
@@ -164,6 +160,9 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     RouterModule.forRoot(Approutes, { useHash: false }),
     LeafletModule,
     CodeInputModule,
+    FullComponent,
+    NavigationComponent,
+    SidebarComponent,
     RecaptchaV3Module,
     SweetAlert2Module.forRoot(),
     NgbModule,
@@ -178,7 +177,8 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     MatTableModule,
     MatSelectModule,
     MatPaginatorModule,
-    FullCalendarModule
+    FullCalendarModule,
+    NgbPaginationModule,
   ],
   providers: [
     provideCharts(),

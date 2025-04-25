@@ -2,27 +2,33 @@ import { Component, OnInit } from '@angular/core';
 import { Registration } from '../../../services/models';
 import { RegistrationManagementService } from '../../../services/services/registration-management.service';
 import { saveAs } from 'file-saver';
+import { TokenService } from 'src/app/services/token/token.service';
 
 @Component({
   selector: 'app-user-reservations',
   templateUrl: './user-reservations.component.html'
 })
 export class UserReservationsComponent implements OnInit {
+  userId!:number;
   reservations: Registration[] = [];
   isLoading = true;
   error: string | null = null;
   pdfLoading: { [key: number]: boolean } = {};
 
-  constructor(private registrationService: RegistrationManagementService) {}
+  constructor(private registrationService: RegistrationManagementService,
+    private tokenService:TokenService
+  ) {}
 
   ngOnInit() {
+    this.userId= Number(this.tokenService.getUserId());
     this.loadReservations();
+    
   }
 
   loadReservations() {
-    const userId = 1; // Static user ID for testing; replace with auth later
+    
     this.isLoading = true;
-    this.registrationService.getUserReservations({ userId }).subscribe(
+    this.registrationService.getUserReservations({ userId: this.userId }).subscribe(
       (response) => {
         this.reservations = response || [];
         this.isLoading = false;

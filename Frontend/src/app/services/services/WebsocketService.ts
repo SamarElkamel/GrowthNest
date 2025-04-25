@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Notification } from '../models/notification';
+import { NotificationE } from '../models/notificationE';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
   private client: Client;
-  private notificationsSubject = new BehaviorSubject<Notification[]>(this.loadNotifications());
-  notifications$: Observable<Notification[]> = this.notificationsSubject.asObservable();
+  private notificationsSubject = new BehaviorSubject<NotificationE[]>(this.loadNotifications());
+  notifications$: Observable<NotificationE[]> = this.notificationsSubject.asObservable();
   private isConnected = false;
 
   constructor() {
@@ -65,7 +65,7 @@ export class WebsocketService {
   private subscribeToTopicInternal(topic: string): void {
     this.client.subscribe(topic, (message) => {
       try {
-        const notification: Notification = {
+        const notification: NotificationE = {
           ...JSON.parse(message.body),
           timestamp: new Date().toISOString()
         };
@@ -94,7 +94,7 @@ export class WebsocketService {
     this.saveNotifications([]);
   }
 
-  private saveNotifications(notifications: Notification[]): void {
+  private saveNotifications(notifications: NotificationE[]): void {
     try {
       localStorage.setItem('notifications', JSON.stringify(notifications));
     } catch (e) {
@@ -102,7 +102,7 @@ export class WebsocketService {
     }
   }
 
-  private loadNotifications(): Notification[] {
+  private loadNotifications(): NotificationE[] {
     try {
       const saved = localStorage.getItem('notifications');
       return saved ? JSON.parse(saved) : [];

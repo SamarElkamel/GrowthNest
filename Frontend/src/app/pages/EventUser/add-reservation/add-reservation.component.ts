@@ -2,12 +2,14 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { Event, Registration } from '../../../services/models';
 import { RegistrationManagementService } from '../../../services/services/registration-management.service';
 import { Router } from '@angular/router';
+import { TokenService } from 'src/app/services/token/token.service';
 
 @Component({
   selector: 'app-add-reservation',
   templateUrl: './add-reservation.component.html'
 })
 export class AddReservationComponent implements OnInit {
+  userId!:number;
   @Input() event!: Event;
   @Output() reservationAdded = new EventEmitter<void>();
   
@@ -20,11 +22,13 @@ export class AddReservationComponent implements OnInit {
   error: string | null = null;
 
   constructor(
+    private tokenService : TokenService,
     private registrationService: RegistrationManagementService,
     private router: Router
   ) {}
 
   ngOnInit() {
+    this.userId= Number(this.tokenService.getUserId());
     if (this.event?.idEvent) {
       this.loadConfirmedAndPendingReservations(this.event.idEvent);
     }
@@ -56,7 +60,7 @@ export class AddReservationComponent implements OnInit {
     this.error = null;
 
     this.reservation.event = this.event;
-    this.reservation.user = { id: 1 }; // Static user ID for testing; replace with auth
+    this.reservation.user = {id : this.userId  }; // Static user ID for testing; replace with auth
 
     this.registrationService.addRegistration({ body: this.reservation }).subscribe(
       () => {

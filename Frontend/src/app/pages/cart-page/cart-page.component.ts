@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from 'src/app/services/services/cart.service';
 import { loadStripe, Stripe, StripeCardElement } from '@stripe/stripe-js';
+import { TokenService } from 'src/app/services/token/token.service';
 
 interface OrderItem {
   productId: number;
@@ -27,7 +28,7 @@ interface Cart {
   styleUrls: ['./cart-page.component.scss']
 })
 export class CartPageComponent implements OnInit {
-  userId = 1;
+  userId! : number;
   cart: Cart | null = null;
   couponCode: string = '';
   deliveryAddress: string = '';
@@ -36,9 +37,12 @@ export class CartPageComponent implements OnInit {
   pointsToRedeem = 0;
   redeeming = false;
   discount = 0;
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService,
+    private tokenService: TokenService
+  ) {}
 
   ngOnInit(): void {
+    this.userId = Number(this.tokenService.getUserId());
     this.loadCart();
   }
 

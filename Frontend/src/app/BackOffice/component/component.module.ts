@@ -13,7 +13,6 @@ import { NgbdButtonsComponent } from './buttons/buttons.component';
 import { CardsComponent } from './card/card.component';
 import { TableComponent } from "./table/table.component";
 import { OrderDetailsModalComponent } from './order-details-modals/order-details-modals.component';
-import { UserListComponent } from './users-list/users-list.component';
 
 @NgModule({
   imports: [
@@ -31,7 +30,7 @@ import { UserListComponent } from './users-list/users-list.component';
     TableComponent
   ],
   declarations: [
-    UserListComponent,
+    
   ],
 })
 export class ComponentsModule { }

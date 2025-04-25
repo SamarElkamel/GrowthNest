@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebsocketService } from 'src/app/services/services/WebsocketService';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Business } from 'src/app/services/models/business';
-import { Notification } from 'src/app/services/models/notification';
 import { Subscription } from 'rxjs';
 import { GestionDesBusinessService } from 'src/app/services/services';
 

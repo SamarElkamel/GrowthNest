@@ -3,12 +3,14 @@ import { Event, Registration } from '../../../services/models';
 import { EventManagementService } from '../../../services/services/event-management.service';
 import { RegistrationManagementService } from '../../../services/services/registration-management.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TokenService } from 'src/app/services/token/token.service';
 
 @Component({
   selector: 'app-event-user-details',
   templateUrl: './event-user-details.component.html'
 })
 export class EventUserDetailsComponent implements OnInit {
+  userId!:number;
   event: Event | null = null;
   userReservations: Registration[] = [];
   confirmedAndPendingReservations: number = 0;
@@ -19,6 +21,7 @@ export class EventUserDetailsComponent implements OnInit {
   notification: string | null = null;
 
   constructor(
+    private tokenService:TokenService,
     private eventService: EventManagementService,
     private registrationService: RegistrationManagementService,
     private route: ActivatedRoute,
@@ -26,6 +29,7 @@ export class EventUserDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.userId= Number(this.tokenService.getUserId());
     const eventId = this.route.snapshot.params['id'];
     if (eventId) {
       this.loadEventDetails(+eventId);
@@ -69,8 +73,8 @@ export class EventUserDetailsComponent implements OnInit {
   }
 
   checkUserReservation(eventId: number) {
-    const userId = 1; // Static user ID for testing; replace with auth later
-    this.registrationService.getUserReservations({ userId }).subscribe(
+     // Static user ID for testing; replace with auth later
+    this.registrationService.getUserReservations({ userId: this.userId }).subscribe(
       (reservations) => {
         this.userReservations = reservations || [];
         // Consider any registration (PENDING, CONFIRMED, CANCELED) for hasReservation

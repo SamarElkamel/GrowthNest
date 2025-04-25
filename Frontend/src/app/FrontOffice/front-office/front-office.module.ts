@@ -12,7 +12,7 @@ import { FrontOfficeRoutingModule } from './front-office-routing.module';
     LayoutComponent,
     HeaderComponent,
     FooterComponent,
-    HomeComponent
+    HomeComponent,
   ],
   imports: [
     CommonModule,

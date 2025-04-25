@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from 'src/app/services/services/order.service';
 import { OrderResponse } from 'src/app/services/models/order-response.model';
+import { TokenService } from 'src/app/services/token/token.service';
 
 @Component({
   selector: 'app-order-history',
@@ -8,12 +9,15 @@ import { OrderResponse } from 'src/app/services/models/order-response.model';
   styleUrls: ['./order-history.component.scss']
 })
 export class OrderHistoryComponent implements OnInit {
-  userId = 1;
+  userId! : number;
   orders: OrderResponse[] = [];
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService,
+    private tokenService: TokenService
+  ) {}
 
   ngOnInit(): void {
+    this.userId = Number(this.tokenService.getUserId());
     this.orderService.getOrderHistory(this.userId).subscribe({
       next: data => this.orders = data,
       error: err => console.error('Failed to load order history', err)

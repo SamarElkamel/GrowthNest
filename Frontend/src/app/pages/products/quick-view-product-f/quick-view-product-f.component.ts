@@ -4,6 +4,7 @@ import { GetProductById$Params } from 'src/app/services/fn/gestion-des-produits/
 import { Products } from 'src/app/services/models';
 import { GestionDesProduitsService } from 'src/app/services/services';
 import { CartService } from 'src/app/services/services/cart.service';
+import { TokenService } from 'src/app/services/token/token.service';
 
 @Component({
   selector: 'app-quick-view-product-f',
@@ -13,7 +14,7 @@ import { CartService } from 'src/app/services/services/cart.service';
 export class QuickViewProductFComponent {
   product: Products | null = null; 
   products: Products[] = [];
-  userId = 1;
+  userId! : number;
 // Initialisation explicite
   isLoading = true;
   baseUrl: string = 'http://localhost:8080/Growthnest';
@@ -22,10 +23,12 @@ export class QuickViewProductFComponent {
     @Inject(MAT_DIALOG_DATA) public data: { productId: number },
     private productService: GestionDesProduitsService,
     public dialogRef: MatDialogRef<QuickViewProductFComponent>,
-    private cartService: CartService
+    private cartService: CartService,
+    private tokenService:TokenService
   ) {}
 
-  ngOnInit(): void { // Utilisez ngOnInit au lieu du constructeur
+  ngOnInit(): void { 
+    this.userId = Number(this.tokenService.getUserId());
     this.loadProduct();
   }
 

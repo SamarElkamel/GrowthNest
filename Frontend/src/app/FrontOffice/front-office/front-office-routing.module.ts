@@ -13,12 +13,20 @@ import { ChangePasswordComponent } from '../change-password/change-password.comp
 import { RoleGuard } from 'src/app/role.guard';
 import { AdminDashboardComponent } from 'src/app/pages/business/admin-dashboard/admin-dashboard.component';
 import { AddBusinessComponent } from 'src/app/pages/business/add-business/add-business.component';
-import { BusinessListComponent } from 'src/app/pages/business/business-list/business-list.component';
+
 import { BusinessDetailBComponent } from 'src/app/pages/business/business-detail-b/business-detail-b.component';
 import { AddProductComponent } from 'src/app/pages/products/add-product/add-product.component';
 import { CartPageComponent } from '../../pages/cart-page/cart-page.component';
 import { OrderHistoryComponent } from '../../pages/order-history/order-history.component';
 import { PaymentComponent } from '../../pages/payment/payment.component';
+
+import { EventUserListComponent } from '../../pages/EventUser/event-user-list/event-user-list.component';
+import { AddReservationComponent } from '../../pages/EventUser/add-reservation/add-reservation.component';
+import { EventUserDetailsComponent } from '../../pages/EventUser/event-user-details/event-user-details.component';
+import { UpdateReservationComponent } from '../../pages/EventUser/update-reservation/update-reservation.component';
+import { UserReservationsComponent } from '../../pages/EventUser/user-reservations/user-reservations.component';
+
+
 const routes: Routes = [
   {
     path: '',
@@ -80,7 +88,13 @@ const routes: Routes = [
         component: AdminDashboardComponent,
         title: 'Pending Businesses',
       },
-    
+      {path: 'events/user', component:EventUserListComponent},
+      {path: 'events/user/add' , component:AddReservationComponent},
+      {path : 'events/user/reservations', component:UserReservationsComponent},
+      
+     
+      {path: 'events/user/:id',component:EventUserDetailsComponent},
+      {path : 'events/user/update/:id' , component:UpdateReservationComponent},
   
 ];
 

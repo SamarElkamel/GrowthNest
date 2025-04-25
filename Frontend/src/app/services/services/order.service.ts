@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OrderResponse } from '../models/order-response.model'; // Adjust the path as needed
+import { TokenService } from '../token/token.service';
 
 
 @Injectable({
@@ -10,9 +11,15 @@ import { OrderResponse } from '../models/order-response.model'; // Adjust the pa
 export class OrderService {
   private baseUrl = 'http://localhost:8080/Growthnest/api/orders'; 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+  private tokenService : TokenService
+  ) {}
  
   getOrders(status?: string, userId?: number, fromDate?: string, toDate?: string): Observable<OrderResponse[]> {
+    if (!userId) {
+      userId = Number(this.tokenService.getUserId());
+      console.log('userId1:', userId);
+    }
     let params = new HttpParams();
     if (status) params = params.set('status', status);
     if (userId) params = params.set('userId', userId.toString());
