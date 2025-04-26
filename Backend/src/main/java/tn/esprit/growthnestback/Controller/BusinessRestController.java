@@ -19,8 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import tn.esprit.growthnestback.Entities.Business;
 import tn.esprit.growthnestback.Services.IBusinessService;
+import tn.esprit.growthnestback.Services.TaskService;
 import tn.esprit.growthnestback.Services.UserService;
-
+import tn.esprit.growthnestback.Entities.Task;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +36,9 @@ public class BusinessRestController {
     private static final Logger logger = LoggerFactory.getLogger(BusinessRestController.class);
     @Autowired
     private final IBusinessService iBusinessService;
+    @Autowired
+    private final TaskService taskService;
+
     @Autowired
     private final UserService userService;
     @Autowired
@@ -484,5 +488,70 @@ public class BusinessRestController {
     public List<Business> getTopThreeBusinesses() {
         logger.info("Fetching top three businesses by average rating");
         return iBusinessService.getTopThreeBusinessesByRating();
+    }
+    @Operation(description = "Ajouter une tâche à un business")
+    @PostMapping("/{businessId}/tasks")
+    public ResponseEntity<Task> addTask(
+            @PathVariable Long businessId,
+            @RequestBody Task task) {
+        try {
+            Task savedTask = taskService.addTask(businessId, task);
+            return new ResponseEntity<>(savedTask, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error adding task for business ID {}: {}", businessId, e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(description = "Récupérer les tâches d'un business")
+    @GetMapping("/{businessId}/tasks")
+    public ResponseEntity<List<Task>> getTasksByBusiness(@PathVariable Long businessId) {
+        try {
+            List<Task> tasks = taskService.getTasksByBusiness(businessId);
+            return new ResponseEntity<>(tasks, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error fetching tasks for business ID {}: {}", businessId, e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(description = "Mettre à jour une tâche")
+    @PutMapping("/tasks/{taskId}")
+    public ResponseEntity<Task> updateTask(
+            @PathVariable Long taskId,
+            @RequestBody Task task) {
+        try {
+            Task updatedTask = taskService.updateTask(taskId, task);
+            return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error updating task ID {}: {}", taskId, e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(description = "Supprimer une tâche")
+    @DeleteMapping("/tasks/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+        try {
+            taskService.deleteTask(taskId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error deleting task ID {}: {}", taskId, e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(description = "Réorganiser les tâches")
+    @PostMapping("/{businessId}/tasks/reorder")
+    public ResponseEntity<Void> reorderTasks(
+            @PathVariable Long businessId,
+            @RequestBody List<Task> tasks) {
+        try {
+            taskService.reorderTasks(businessId, tasks);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error reordering tasks for business ID {}: {}", businessId, e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -31,3 +31,22 @@ export interface CreateBusinessDto {
   averageRating: number;
   ratingCount: number;
 }
+export interface Task {
+  id: number;
+  title: string;
+  description: string;
+  priority: Priority;
+  status: Status;
+  order: number;
+  business: Partial<Business>;  
+}
+export enum Priority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH'
+}
+export enum Status {
+  TODO = 'TODO',
+  DOING = 'DOING',
+  DONE = 'DONE'
+}

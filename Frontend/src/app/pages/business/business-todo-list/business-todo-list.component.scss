@@ -1,0 +1,100 @@
+.kanban-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.task-form {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+
+  mat-form-field {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  button {
+    align-self: flex-end;
+  }
+}
+
+.kanban-board {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 300px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 400px;
+  position: relative; /* Ensure proper stacking context */
+  overflow: auto; /* Allow scrolling if many tasks */
+
+  h3 {
+    margin: 0 0 16px;
+    text-align: center;
+    color: #333;
+  }
+
+  /* Ensure drop list takes full column height */
+  [cdkDropList] {
+    min-height: 300px;
+    padding: 8px;
+  }
+}
+
+.task-card {
+  margin-bottom: 12px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: move;
+  position: relative;
+  z-index: 1; /* Ensure cards are above drop list */
+
+  mat-card-header {
+    background-color: #e3f2fd;
+    padding: 8px;
+  }
+
+  mat-card-content {
+    padding: 12px;
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px;
+  }
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.3;
+  background-color: #e0e0e0;
+  border: 1px dashed #666;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-receiving {
+  background-color: #e8f5e9; /* Highlight drop target */
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}

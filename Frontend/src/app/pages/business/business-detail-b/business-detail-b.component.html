@@ -111,6 +111,12 @@
           </div>
         </div>
       </div>
+     
+<div>
+  <h1>Gérer votre business</h1>
+  <app-business-todo-list [businessId]="business.idBusiness"></app-business-todo-list>
+</div>
+
 
       <!-- Empty State -->
       <div *ngIf="filteredProducts && filteredProducts.length === 0 && !isLoadingProducts" class="empty-state">

@@ -1,0 +1,123 @@
+<div class="kanban-container">
+  <h2>Tableau des tâches</h2>
+
+  <!-- Form to add a new task -->
+  <form [formGroup]="taskForm" (ngSubmit)="addTask()" class="task-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Titre</mat-label>
+      <input matInput formControlName="title" required>
+      <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+        {{ getErrorMessage('title') }}
+      </mat-error>
+      <mat-error *ngIf="taskForm.get('title')?.hasError('minlength') || taskForm.get('title')?.hasError('maxlength')">
+        {{ getErrorMessage('title') }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+      <mat-error *ngIf="taskForm.get('description')?.hasError('maxlength')">
+        {{ getErrorMessage('description') }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Priorité</mat-label>
+      <mat-select formControlName="priority" required>
+        <mat-option *ngFor="let priority of priorityOptions" [value]="priority">
+          {{ priority }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="taskForm.get('priority')?.hasError('required')">
+        {{ getErrorMessage('priority') }}
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="taskForm.invalid">Ajouter</button>
+  </form>
+
+  <!-- Kanban Board -->
+  <div class="kanban-board" *ngIf="!isLoading; else loading">
+    <div class="kanban-column" id="todoColumn">
+      <h3>À faire</h3>
+      <div cdkDropList
+           id="todoList"
+           [cdkDropListData]="todoTasks"
+           [cdkDropListConnectedTo]="['doingList', 'doneList']"
+           (cdkDropListDropped)="drop($event)"
+           (cdkDropListEntered)="logDropEnter('todoList')">
+        <mat-card class="task-card" *ngFor="let task of todoTasks" cdkDrag [cdkDragData]="task">
+          <mat-card-header>
+            <mat-card-title>{{ task.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ task.description }}</p>
+            <p>Priorité: {{ task.priority }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-icon-button color="warn" (click)="deleteTask(task.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="kanban-column" id="doingColumn">
+      <h3>En cours</h3>
+      <div cdkDropList
+           id="doingList"
+           [cdkDropListData]="doingTasks"
+           [cdkDropListConnectedTo]="['todoList', 'doneList']"
+           (cdkDropListDropped)="drop($event)"
+           (cdkDropListEntered)="logDropEnter('doingList')">
+        <mat-card class="task-card" *ngFor="let task of doingTasks" cdkDrag [cdkDragData]="task">
+          <mat-card-header>
+            <mat-card-title>{{ task.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ task.description }}</p>
+            <p>Priorité: {{ task.priority }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-icon-button color="warn" (click)="deleteTask(task.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="kanban-column" id="doneColumn">
+      <h3>Terminé</h3>
+      <div cdkDropList
+           id="doneList"
+           [cdkDropListData]="doneTasks"
+           [cdkDropListConnectedTo]="['todoList', 'doingList']"
+           (cdkDropListDropped)="drop($event)"
+           (cdkDropListEntered)="logDropEnter('doneList')">
+        <mat-card class="task-card" *ngFor="let task of doneTasks" cdkDrag [cdkDragData]="task">
+          <mat-card-header>
+            <mat-card-title>{{ task.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ task.description }}</p>
+            <p>Priorité: {{ task.priority }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-icon-button color="warn" (click)="deleteTask(task.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="loading">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+</div>
