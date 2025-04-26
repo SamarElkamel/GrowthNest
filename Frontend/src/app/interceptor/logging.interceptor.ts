@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { TokenService } from '../services/token/token.service';
 
 @Injectable()
 export class LoggingInterceptor implements HttpInterceptor {
+  constructor(private tokenService: TokenService) {}
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.body instanceof FormData) {
-      console.log(`Request to ${req.url}: FormData contents:`);
-      const formData: FormData = req.body;
-      formData.forEach((value, key) => {
-        console.log(`${key}: ${value instanceof File ? `${value.name} (type: ${value.type})` : value}`);
+    const token = this.tokenService.getToken();
+    if (token) {
+      const authReq = req.clone({
+        headers: req.headers.set('Authorization', `Bearer ${token}`)
       });
+      return next.handle(authReq);
     }
     return next.handle(req);
   }

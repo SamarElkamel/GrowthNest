@@ -53,7 +53,7 @@ export class LoginComponent {
                     }
 
                     if (this.authRequest.email.toLowerCase() === 'admin@gmail.com') {
-                      this.router.navigate(['dashboard']);
+                      this.router.navigate(['admin/dashboard']);
                     } else {
                       this.router.navigate(['/']);
                     }

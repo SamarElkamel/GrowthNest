@@ -1,6 +1,8 @@
 package tn.esprit.growthnestback.Services;
 
 import jakarta.mail.MessagingException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import tn.esprit.growthnestback.Entities.ChangePasswordRequest;
@@ -25,8 +27,17 @@ public class UserService {
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
-    }
 
+    }
+    public static Long currentUserId() {
+        Object principal = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        if (principal instanceof User user) {
+            return user.getId();
+        }
+        throw new IllegalStateException("No logged‑in user");
+    }
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -35,7 +46,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-           // user.setAccountLocked(!user.isAccountLocked());
+            // user.setAccountLocked(!user.isAccountLocked());
             user.setEnabled(!user.isEnabled());
             return userRepository.save(user);
         }

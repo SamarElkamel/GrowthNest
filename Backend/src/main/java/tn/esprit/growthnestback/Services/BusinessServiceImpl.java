@@ -3,6 +3,7 @@ package tn.esprit.growthnestback.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.growthnestback.Entities.Business;
+import tn.esprit.growthnestback.Entities.User;
 import tn.esprit.growthnestback.Entities.UserRating;
 import tn.esprit.growthnestback.Repository.BusinessRepository;
 import tn.esprit.growthnestback.Repository.ProductsRepository;
@@ -23,6 +24,8 @@ public class BusinessServiceImpl implements IBusinessService {
     private ProductsRepository productsRepository;
     @Autowired
     private QRCodeService qrCodeService;
+    @Autowired
+    private UserService userService;
 
     public Business findById(Long id) {
         System.out.println("Fetching business with ID: " + id);
@@ -74,8 +77,14 @@ public class BusinessServiceImpl implements IBusinessService {
                 ", Logo=" + business.getLogo() +
                 ", PDF=" + business.getBusinessPdf() +
                 ", Instagram=" + business.getInstagramPageName() +
-                ", OwnerId=" + business.getOwnerId() +
                 ", Status=" + business.getStatus());
+
+        // Set the current user as the business owner
+        Long currentUserId = UserService.currentUserId();
+        User currentUser = userService.findById(currentUserId)
+                .orElseThrow(() -> new IllegalArgumentException("Current user not found with ID: " + currentUserId));
+        business.setUser(currentUser);
+
         Business saved = businessRepository.save(business);
         System.out.println("Business added: ID=" + saved.getIdBusiness() +
                 ", Name=" + saved.getName() +
@@ -87,14 +96,20 @@ public class BusinessServiceImpl implements IBusinessService {
     public Business updateBusiness(Business updatedBusiness) {
         System.out.println("Updating business ID: " + updatedBusiness.getIdBusiness());
         Business existingBusiness = findById(updatedBusiness.getIdBusiness());
+
+        // Ensure the user cannot change the owner
+        if (updatedBusiness.getUser() != null && !existingBusiness.getUser().getId().equals(updatedBusiness.getUser().getId())) {
+            throw new IllegalArgumentException("Cannot change the business owner");
+        }
+
         existingBusiness.setName(updatedBusiness.getName());
         existingBusiness.setDescription(updatedBusiness.getDescription());
         existingBusiness.setCategorieBusiness(updatedBusiness.getCategorieBusiness());
         existingBusiness.setLogo(updatedBusiness.getLogo());
         existingBusiness.setInstagramPageName(updatedBusiness.getInstagramPageName());
         existingBusiness.setBusinessPdf(updatedBusiness.getBusinessPdf());
-        existingBusiness.setOwnerId(updatedBusiness.getOwnerId());
         existingBusiness.setStatus(updatedBusiness.getStatus());
+
         Business savedBusiness = businessRepository.save(existingBusiness);
         System.out.println("Business updated: ID=" + savedBusiness.getIdBusiness() +
                 ", Name=" + savedBusiness.getName() +
@@ -115,7 +130,8 @@ public class BusinessServiceImpl implements IBusinessService {
             System.out.println("Invalid rating value: " + ratingValue);
             throw new IllegalArgumentException("La note doit être entre 1 et 5.");
         }
-        Long userId = 1L;
+
+        Long userId = UserService.currentUserId();
         System.out.println("Adding rating: userId=" + userId + ", businessId=" + businessId + ", ratingValue=" + ratingValue);
         Business business = findById(businessId);
         Optional<UserRating> existingRating = userRatingRepository.findByUserIdAndBusinessId(userId, businessId);
@@ -167,7 +183,7 @@ public class BusinessServiceImpl implements IBusinessService {
 
     @Override
     public Integer getUserRating(Long businessId) {
-        Long userId = 2L;
+        Long userId = UserService.currentUserId();
         System.out.println("Fetching rating: userId=" + userId + ", businessId=" + businessId);
         Optional<UserRating> rating = userRatingRepository.findByUserIdAndBusinessId(userId, businessId);
         Integer ratingValue = rating.map(UserRating::getRatingValue).orElse(null);

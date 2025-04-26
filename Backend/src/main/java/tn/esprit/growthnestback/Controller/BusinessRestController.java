@@ -12,13 +12,14 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.http.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import tn.esprit.growthnestback.Entities.Business;
 import tn.esprit.growthnestback.Services.IBusinessService;
+import tn.esprit.growthnestback.Services.UserService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,6 +35,9 @@ public class BusinessRestController {
     private static final Logger logger = LoggerFactory.getLogger(BusinessRestController.class);
     @Autowired
     private final IBusinessService iBusinessService;
+    @Autowired
+    private final UserService userService;
+    @Autowired
     private final SimpMessagingTemplate messagingTemplate;
     private static final String UPLOAD_DIR = "uploads/";
     private static final String LOGO_DIR = UPLOAD_DIR + "logos/";
@@ -53,6 +57,7 @@ public class BusinessRestController {
         logger.info("Logo uploaded: /uploads/logos/{}", fileName);
         return "/uploads/logos/" + fileName;
     }
+
     @Operation(description = "télécharger le PDF d'un business")
     @GetMapping(value = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> downloadBusinessPdf(@PathVariable("id") Long id) throws IOException {
@@ -68,7 +73,6 @@ public class BusinessRestController {
         }
         String baseDir = System.getProperty("user.dir") + "/" + UPLOAD_DIR + "pdfs/";
         String pdfFileName = business.getBusinessPdf();
-        // Handle full path by stripping /Uploads/pdfs/ if present
         if (pdfFileName.startsWith("/uploads/pdfs/")) {
             pdfFileName = pdfFileName.substring("/uploads/pdfs/".length());
         }
@@ -88,6 +92,7 @@ public class BusinessRestController {
 
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
+
     @Operation(description = "Ajouter un business avec logo et PDF optionnels")
     @PostMapping(value = "/addBusiness", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addBusiness(
@@ -96,11 +101,9 @@ public class BusinessRestController {
             @Parameter(description = "Logo image file (JPEG/PNG, max 5MB, optional)")
             @RequestPart(value = "logo", required = false) MultipartFile logo,
             @Parameter(description = "PDF document (max 10MB, optional)")
-            @RequestPart(value = "pdf", required = false) MultipartFile pdf,
-            @Parameter(description = "ID of the business owner (defaults to '1' if not provided)")
-            @RequestParam(value = "ownerId", defaultValue = "1") String ownerId) {
+            @RequestPart(value = "pdf", required = false) MultipartFile pdf) {
         try {
-            logger.info("Received request parts for owner: {}", ownerId);
+            logger.info("Received request to add business");
             logger.info("Business part: {}", businessJson != null ? businessJson : "null");
             logger.info("Logo part: {}", logo != null ? logo.getOriginalFilename() + " (type: " + logo.getContentType() + ", size: " + logo.getSize() + ")" : "null");
             logger.info("PDF part: {}", pdf != null ? pdf.getOriginalFilename() + " (type: " + pdf.getContentType() + ", size: " + pdf.getSize() + ")" : "null");
@@ -127,8 +130,10 @@ public class BusinessRestController {
                 return ResponseEntity.badRequest().body("Business name is required");
             }
 
-            // Set ownerId (override JSON if provided in query)
-            business.setOwnerId(ownerId);
+            // Set the current user as the business owner
+            Long currentUserId = UserService.currentUserId();
+            business.setUser(userService.findById(currentUserId)
+                    .orElseThrow(() -> new IllegalArgumentException("Current user not found with ID: " + currentUserId)));
 
             // Handle logo upload
             if (logo != null && !logo.isEmpty()) {
@@ -168,7 +173,6 @@ public class BusinessRestController {
                 logger.info("PDF uploaded: {}", pdfName);
             }
 
-            // Status is PENDING by default (handled by Business entity)
             Business savedBusiness = iBusinessService.addBusiness(business);
             logger.info("Business added: ID {}, Status: {}", savedBusiness.getIdBusiness(), savedBusiness.getStatus());
 
@@ -177,7 +181,7 @@ public class BusinessRestController {
             notification.put("businessId", savedBusiness.getIdBusiness());
             notification.put("businessName", savedBusiness.getName());
             notification.put("message", "New business pending approval: " + savedBusiness.getName());
-            notification.put("ownerId", ownerId);
+            notification.put("userId", savedBusiness.getUser().getId());
             messagingTemplate.convertAndSend("/topic/admin-notifications", notification);
             logger.info("Notification sent to admin for business ID: {}", savedBusiness.getIdBusiness());
 
@@ -216,8 +220,8 @@ public class BusinessRestController {
             notification.put("businessId", id);
             notification.put("businessName", business.getName());
             notification.put("message", "Your business '" + business.getName() + "' has been approved!");
-            messagingTemplate.convertAndSend("/topic/owner-notifications-" + business.getOwnerId(), notification);
-            logger.info("Notification sent to owner {} for approved business ID: {}", business.getOwnerId(), id);
+            messagingTemplate.convertAndSend("/topic/owner-notifications-" + business.getUser().getId(), notification);
+            logger.info("Notification sent to user {} for approved business ID: {}", business.getUser().getId(), id);
 
             return ResponseEntity.ok(updatedBusiness);
         } catch (Exception e) {
@@ -251,8 +255,8 @@ public class BusinessRestController {
             notification.put("businessId", id);
             notification.put("businessName", business.getName());
             notification.put("message", "Your business '" + business.getName() + "' has been rejected.");
-            messagingTemplate.convertAndSend("/topic/owner-notifications-" + business.getOwnerId(), notification);
-            logger.info("Notification sent to owner {} for rejected business ID: {}", business.getOwnerId(), id);
+            messagingTemplate.convertAndSend("/topic/owner-notifications-" + business.getUser().getId(), notification);
+            logger.info("Notification sent to user {} for rejected business ID: {}", business.getUser().getId(), id);
 
             return ResponseEntity.ok(updatedBusiness);
         } catch (Exception e) {
@@ -353,7 +357,6 @@ public class BusinessRestController {
             @RequestPart("business") String businessJson,
             @RequestPart(value = "logo", required = false) MultipartFile logo,
             @RequestPart(value = "pdf", required = false) MultipartFile pdf) {
-
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             Business businessUpdates = objectMapper.readValue(businessJson, Business.class);
@@ -378,7 +381,7 @@ public class BusinessRestController {
             // Gestion logo
             if (logo != null && !logo.isEmpty()) {
                 String fileName = handleFileUpload(logo, LOGO_DIR);
-                existingBusiness.setLogo("/uploads/logos/" + fileName);
+                existingBusiness.setLogo("/Uploads/logos/" + fileName);
                 deleteOldFile(businessUpdates.getLogo(), LOGO_DIR);
             }
 
@@ -386,18 +389,16 @@ public class BusinessRestController {
             if (pdf != null && !pdf.isEmpty()) {
                 String pdfName = handleFileUpload(pdf, PDF_DIR);
                 existingBusiness.setBusinessPdf(pdfName);
-                deleteOldFile(businessUpdates.getBusinessPdf(), PDF_DIR); // Supprimer l'ancien APRÈS mise à jour
+                deleteOldFile(businessUpdates.getBusinessPdf(), PDF_DIR);
             }
 
             // Conserver les valeurs non modifiables
             existingBusiness.setStatus(existingBusiness.getStatus());
-            existingBusiness.setOwnerId(existingBusiness.getOwnerId());
             existingBusiness.setAverageRating(existingBusiness.getAverageRating());
             existingBusiness.setRatingCount(existingBusiness.getRatingCount());
 
             Business updatedBusiness = iBusinessService.updateBusiness(existingBusiness);
             return ResponseEntity.ok(updatedBusiness);
-
         } catch (Exception e) {
             logger.error("Update error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body("Error updating business: " + e.getMessage());
@@ -414,9 +415,11 @@ public class BusinessRestController {
 
     private void deleteOldFile(String filePath, String directory) {
         try {
-            String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
-            Path path = Paths.get(System.getProperty("user.dir"), directory, fileName);
-            Files.deleteIfExists(path);
+            if (filePath != null && !filePath.isEmpty()) {
+                String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+                Path path = Paths.get(System.getProperty("user.dir"), directory, fileName);
+                Files.deleteIfExists(path);
+            }
         } catch (IOException e) {
             logger.warn("Error deleting old file: {}", e.getMessage());
         }

@@ -30,7 +30,7 @@ export class FullComponent implements OnInit {
 
   ngOnInit() {
     if (this.router.url === "/") {
-      this.router.navigate(["/dashboard"]);
+      this.router.navigate(["admin/dashboard"]);
     }
     this.defaultSidebar = this.sidebartype;
     this.handleSidebar();

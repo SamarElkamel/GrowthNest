@@ -1,13 +1,20 @@
-<div class="stars">
+<div class="rating-container" *ngIf="!isLoading; else loadingSpinner">
+  <div class="stars" *ngIf="!errorMessage; else errorTemplate">
     <span
       *ngFor="let star of [1, 2, 3, 4, 5]"
-      (click)="rate(star)"
-      (mouseenter)="hoverRating = star"
-      (mouseleave)="hoverRating = 0"
-      [class.selected]="star <= (hoverRating || userRating)"
-      [class.disabled]="isLoading"
       class="star"
-    >★</span>
+      [class.filled]="star <= userRating || star <= hoverRating"
+      (click)="rate(star)"
+      (mouseenter)="setHoverRating(star)"
+      (mouseleave)="clearHoverRating()"
+    >
+      ★
+    </span>
   </div>
-  <p *ngIf="userRating > 0">Vous avez noté {{ userRating }} étoile{{ userRating === 1 ? '' : 's' }}.</p>
-  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  <ng-template #errorTemplate>
+    <p class="error">{{ errorMessage }}</p>
+  </ng-template>
+</div>
+<ng-template #loadingSpinner>
+  <div class="spinner">Chargement...</div>
+</ng-template>

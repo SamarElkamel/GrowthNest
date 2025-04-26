@@ -2,22 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GestionDesBusinessService } from 'src/app/services/services';
 import { GetBusinessById$Params } from 'src/app/services/fn/gestion-des-business/get-business-by-id';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface Business {
-  
-  ownerId?: string;
-  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
   idBusiness: number;
   name: string;
   description: string;
   categorieBusiness: string;
   logo?: string;
-  bannerImage?: string;
-  image1?: string;
   averageRating: number;
   ratingCount: number;
   instagramPageName?: string;
-  businessPdf?: string; // Added to store PDF filename
+  businessPdf?: string;
+  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
 }
 
 @Component({
@@ -35,7 +32,8 @@ export class BusinessDetailsComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private businessService: GestionDesBusinessService
+    private businessService: GestionDesBusinessService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -45,6 +43,7 @@ export class BusinessDetailsComponent implements OnInit {
     } else {
       this.error = 'ID de l\'entreprise non fourni.';
       this.loading = false;
+      this.snackBar.open(this.error, 'Fermer', { duration: 5000, panelClass: ['error-snackbar'] });
       console.error('No business ID provided in route');
     }
   }
@@ -54,6 +53,7 @@ export class BusinessDetailsComponent implements OnInit {
     if (isNaN(idB)) {
       this.error = 'ID de l\'entreprise invalide.';
       this.loading = false;
+      this.snackBar.open(this.error, 'Fermer', { duration: 5000, panelClass: ['error-snackbar'] });
       console.error('Invalid business ID:', id);
       return;
     }
@@ -69,6 +69,7 @@ export class BusinessDetailsComponent implements OnInit {
       error: (err) => {
         this.error = 'Erreur lors du chargement des détails de l\'entreprise.';
         this.loading = false;
+        this.snackBar.open(this.error, 'Fermer', { duration: 5000, panelClass: ['error-snackbar'] });
         console.error('Échec du chargement du business:', err);
       }
     });
@@ -86,10 +87,9 @@ export class BusinessDetailsComponent implements OnInit {
     });
   }
 
-  // Fixed method to download PDF
   downloadPdf(): void {
     if (this.business && this.business.idBusiness) {
-      const business = this.business; // Assign to local variable for type narrowing
+      const business = this.business;
       this.businessService.downloadBusinessPdf({ id: business.idBusiness }).subscribe({
         next: (blob) => {
           const url = window.URL.createObjectURL(blob);
@@ -104,7 +104,7 @@ export class BusinessDetailsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erreur lors du téléchargement du PDF:', err);
-          alert('Impossible de télécharger le PDF. Veuillez réessayer.');
+          this.snackBar.open('Impossible de télécharger le PDF.', 'Fermer', { duration: 5000, panelClass: ['error-snackbar'] });
         }
       });
     }
@@ -117,6 +117,7 @@ export class BusinessDetailsComponent implements OnInit {
       this.loadBusinessDetails(id);
     } else {
       console.error('Cannot refresh: No business ID');
+      this.snackBar.open('Impossible de rafraîchir les détails.', 'Fermer', { duration: 5000, panelClass: ['error-snackbar'] });
     }
   }
 
@@ -125,19 +126,22 @@ export class BusinessDetailsComponent implements OnInit {
       this.router.navigate(['/business', businessId, 'products']);
     } else {
       console.error('ID Business non trouvé:', this.business);
+      this.snackBar.open('ID de l\'entreprise non trouvé.', 'Fermer', { duration: 5000, panelClass: ['error-snackbar'] });
     }
   }
 
-  
   getLogoUrl(logo: string | undefined): string {
-    // Use optional chaining and nullish coalescing for safety
     const logoFilename = logo?.split('/').pop() ?? 'default.jpg';
-    return logo ? `${this.baseUrl}/uploads/logos/${logoFilename}` : 'assets/images/banner-07.jpg';
+    return logo ? `${this.baseUrl}/Uploads/logos/${logoFilename}` : 'assets/images/banner-07.jpg';
   }
-  
-    onImageError(event: Event, business: Business): void {
-      const imgElement = event.target as HTMLImageElement;
-      imgElement.src = 'assets/images/banner-07.jpg';
-      business.logo = ''; // Prevent repeated failed attempts
-    }
+
+  onImageError(event: Event, business: Business): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'assets/images/banner-07.jpg';
+    business.logo = '';
+  }
+
+  onRatingSubmitted(): void {
+    this.refreshBusiness();
+  }
 }

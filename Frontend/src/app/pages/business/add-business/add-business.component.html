@@ -1,106 +1,125 @@
-<div class="add-business-container">
-  <h1>Add a Business</h1>
-  <form [formGroup]="businessForm" (ngSubmit)="onSubmit()" aria-label="Business addition form">
-    <div class="form-group">
-      <label for="name">Business Name</label>
-      <input
-        id="name"
-        formControlName="name"
-        placeholder="Enter business name"
-        [ngClass]="{
-          'invalid': name.touched && name.invalid,
-          'valid': name.touched && name.valid
-        }"
-        aria-required="true"
-      />
-      <div *ngIf="name.touched && name.invalid" class="error">
-        <div *ngIf="name.errors?.['required']">Name is required.</div>
-        <div *ngIf="name.errors?.['minlength']">Name must be at least 3 characters.</div>
-        <div *ngIf="name.errors?.['maxlength']">Name cannot exceed 50 characters.</div>
+<div class="business-submission">
+  <div class="header-section">
+    <div class="illustration">
+      <img src="assets/images/back-add.png" alt="Add your business">
+    </div>
+    <div class="content">
+      <h1>Showcase Your Business</h1>
+      <p>Join our community of thriving businesses. Get discovered by thousands of potential customers.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="businessForm" (ngSubmit)="onSubmit()" class="submission-form">
+    <div class="form-step active">
+      <h2><span class="step-number">1</span> Basic Information</h2>
+      
+      <div class="form-group">
+        <label>
+          <span class="label-text">Business Name</span>
+          <input formControlName="name" placeholder="e.g. The Coffee Haven">
+          <span class="helper-text">This will be your public business name</span>
+        </label>
+        <div class="validation-errors">
+          <!-- Keep existing error messages -->
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <span class="label-text">Category</span>
+          <select formControlName="categorieBusiness">
+            <option *ngFor="let category of categories" [value]="category">
+              {{ category  }}
+            </option>
+          </select>
+        </label>
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="description">Description</label>
-      <input
-        id="description"
-        formControlName="description"
-        placeholder="Enter description"
-        [ngClass]="{
-          'invalid': description.touched && description.invalid,
-          'valid': description.touched && description.valid
-        }"
-        aria-required="true"
-      />
-      <div *ngIf="description.touched && description.invalid" class="error">
-        <div *ngIf="description.errors?.['required']">Description is required.</div>
-        <div *ngIf="description.errors?.['minlength']">Description must be at least 10 characters.</div>
-        <div *ngIf="description.errors?.['maxlength']">Description cannot exceed 255 characters.</div>
+    <div class="form-step">
+      <h2><span class="step-number">2</span> Business Details</h2>
+      
+      <div class="form-group">
+        <label>
+          <span class="label-text">Description</span>
+          <textarea formControlName="description" rows="4"
+            placeholder="Describe your business..."></textarea>
+          <span class="helper-text">Tell customers what makes you unique</span>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <span class="label-text">Instagram Handle</span>
+          <div class="social-input">
+            <span class="prefix"></span>
+            <input formControlName="instagramPageName" placeholder="yourhandle">
+          </div>
+        </label>
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="instagramPageName">Instagram Page Name</label>
-      <input
-        id="instagramPageName"
-        formControlName="instagramPageName"
-        placeholder="Enter Instagram page name (optional)"
-        [ngClass]="{
-          'invalid': instagramPageName.touched && instagramPageName.invalid,
-          'valid': instagramPageName.touched && instagramPageName.valid
-        }"
-      />
-      <div *ngIf="instagramPageName.touched && instagramPageName.invalid" class="error">
-        <div *ngIf="instagramPageName.errors?.['maxlength']">Name cannot exceed 30 characters.</div>
-        <div *ngIf="instagramPageName.errors?.['pattern']">Use only letters, numbers, periods or underscores.</div>
+    <div class="form-step">
+      <h2><span class="step-number">3</span> Media Upload</h2>
+      <input 
+      type="file" 
+      id="logoInput"
+      (change)="onLogoSelected($event)"
+      accept="image/*"
+      hidden
+    >
+    <input 
+      type="file" 
+      id="pdfInput"
+      (change)="onPdfSelected($event)"
+      accept="application/pdf"
+      hidden
+    >
+  
+      <div class="upload-section">
+        <div class="upload-card" (click)="triggerFileInput('logo')">
+          <div class="upload-preview" *ngIf="logoPreview; else uploadLogo">
+            <img [src]="logoPreview" alt="Logo preview">
+            <button type="button" class="btn-change">Change Logo</button>
+          </div>
+          <ng-template #uploadLogo>
+            <div class="upload-placeholder">
+              <i class="icon-camera"></i>
+              <span>Upload Logo</span>
+              <small>PNG or JPG (max 5MB)</small>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="upload-card" (click)="triggerFileInput('pdf')">
+          <div class="upload-preview" *ngIf="pdfName; else uploadPDF">
+            <i class="icon-document"></i>
+            <span>{{ pdfName }}</span>
+            <button type="button" class="btn-change">Change PDF</button>
+          </div>
+          <ng-template #uploadPDF>
+            <div class="upload-placeholder">
+              <i class="icon-upload"></i>
+              <span>Upload PDF Brochure</span>
+              <small>PDF only (max 10MB)</small>
+            </div>
+          </ng-template>
+        </div>
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="categorieBusiness">Category</label>
-      <select id="categorieBusiness" formControlName="categorieBusiness" aria-required="true">
-        <option [ngValue]="null" disabled>Select a category</option>
-        <option *ngFor="let category of categories" [ngValue]="category">{{ category }}</option>
-      </select>
-      <div *ngIf="categorieBusiness.touched && categorieBusiness.invalid" class="error">
-        <div *ngIf="categorieBusiness.errors?.['required']">Category is required.</div>
-      </div>
+    <div class="form-actions">
+      <button type="button" class="btn-prev">Previous</button>
+      <button type="submit" class="btn-submit" [disabled]="businessForm.invalid || isSubmitting">
+        <span *ngIf="!isSubmitting">Submit Your Business</span>
+        <span *ngIf="isSubmitting" class="submitting-indicator">
+          <i class="icon-spinner"></i> Processing...
+        </span>
+      </button>
     </div>
-
-    <div class="form-group">
-      <label for="logoInput">Logo</label>
-      <input
-        id="logoInput"
-        type="file"
-        accept="image/jpeg,image/png"
-        (change)="onLogoSelected($event)"
-        style="display: none;"
-        aria-label="Select logo"
-      />
-      <button type="button" (click)="triggerFileInput('logo')" [disabled]="isSubmitting">Choose Logo</button>
-      <div *ngIf="logoPreview" class="preview">
-        <img [src]="logoPreview" alt="Logo preview" style="max-width: 200px;" />
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="pdfInput">PDF Document</label>
-      <input
-        id="pdfInput"
-        type="file"
-        accept="application/pdf"
-        (change)="onPdfSelected($event)"
-        style="display: none;"
-        aria-label="Select PDF"
-      />
-      <button type="button" (click)="triggerFileInput('pdf')" [disabled]="isSubmitting">Choose PDF</button>
-      <div *ngIf="pdfName" class="preview">
-        <p>Selected file: {{ pdfName }}</p>
-      </div>
-    </div>
-
-    <button type="submit" [disabled]="businessForm.invalid || isSubmitting" aria-label="Add business">
-      {{ isSubmitting ? 'Submitting...' : 'Add Business' }}
-    </button>
   </form>
+
+  <div class="progress-indicator">
+    <div class="progress-bar" [style.width.%]="progressPercentage"></div>
+  </div>
 </div>

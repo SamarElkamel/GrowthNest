@@ -4,6 +4,7 @@
 
 import { Products } from '../models/products';
 import { CategorieBusiness } from './businessCategory';
+
 export interface Business {
   categorieBusiness: CategorieBusiness;
   description: string;
@@ -14,17 +15,16 @@ export interface Business {
   ratingCount: number;
   instagramPageName: string;
   businessPdf?: string;
-  ownerId?: string;
   status?: 'PENDING' | 'APPROVED' | 'REJECTED';
   products?: Array<Products>;
-
+  user?: { id: string; username: string }; // Optional: Add if backend returns user details
 }
+
 export interface CreateBusinessDto {
   name: string;
   description: string;
   categorieBusiness: string;
   logo?: string;
-  ownerId?: string;
   businessPdf?: string;
   instagramPageName?: string;
   status?: 'PENDING' | 'APPROVED' | 'REJECTED';

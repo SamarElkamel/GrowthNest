@@ -1,87 +1,120 @@
-<h2 mat-dialog-title>Modifier le business</h2>
-<mat-dialog-content>
-  <form [formGroup]="businessForm">
-    <mat-form-field appearance="fill">
-      <mat-label>Nom</mat-label>
-      <input matInput formControlName="name">
-      <mat-error *ngIf="name?.hasError('required')">Le nom est obligatoire</mat-error>
-      <mat-error *ngIf="name?.hasError('minlength')">Le nom doit avoir au moins 3 caractères</mat-error>
-      <mat-error *ngIf="name?.hasError('maxlength')">Le nom ne peut pas dépasser 50 caractères</mat-error>
-    </mat-form-field>
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>Update Your Business Profile</h2>
+    <p class="subtitle">Keep your information fresh and appealing</p>
+  </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Description</mat-label>
-      <input matInput formControlName="description">
-      <mat-error *ngIf="description?.hasError('required')">La description est obligatoire</mat-error>
-      <mat-error *ngIf="description?.hasError('minlength')">La description doit avoir au moins 10 caractères</mat-error>
-      <mat-error *ngIf="description?.hasError('maxlength')">La description ne peut pas dépasser 255 caractères</mat-error>
-    </mat-form-field>
+  <mat-dialog-content>
+    <form [formGroup]="businessForm" class="modern-form">
+      <div class="form-grid">
+        <!-- Left Column -->
+        <div class="form-column">
+          <div class="input-card">
+            <label for="name">Business Name</label>
+            <mat-form-field appearance="outline">
+              <input matInput id="name" formControlName="name" placeholder="Your business name">
+              <mat-icon matSuffix>badge</mat-icon>
+              <mat-error *ngIf="name?.invalid">{{getErrorMessage('name')}}</mat-error>
+            </mat-form-field>
+          </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Page Instagram</mat-label>
-      <input matInput formControlName="instagramPageName" placeholder="Nom de la page Instagram (optionnel)">
-      <mat-error *ngIf="instagramPageName?.hasError('pattern')">
-        Caractères autorisés : lettres, chiffres, points et tirets bas
-      </mat-error>
-      <mat-error *ngIf="instagramPageName?.hasError('maxlength')">
-        Maximum 30 caractères
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Catégorie</mat-label>
-      <mat-select formControlName="categorieBusiness">
-        <mat-option *ngFor="let category of categorieBusinessOptions" [value]="category">
-          {{ category }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="categorieBusiness?.hasError('required')">La catégorie est obligatoire</mat-error>
-    </mat-form-field>
-
-    <div class="file-upload-section">
-      <!-- Logo Upload -->
-      <div class="upload-group">
-        <label>Logo actuel</label>
-        <div class="current-file" *ngIf="existingLogoUrl">
-          <img [src]="existingLogoUrl" alt="Logo actuel" class="logo-preview">
+          <div class="input-card">
+            <label for="description">Description</label>
+            <mat-form-field appearance="outline">
+              <textarea matInput id="description" formControlName="description" rows="3" placeholder="Tell customers about your business"></textarea>
+              <mat-icon matSuffix>description</mat-icon>
+              <mat-error *ngIf="description?.invalid">{{getErrorMessage('description')}}</mat-error>
+            </mat-form-field>
+          </div>
         </div>
-        <input type="file" id="logoInput" accept="image/*" hidden (change)="onLogoSelected($event)">
-        <div class="upload-controls">
-          <button mat-stroked-button type="button" (click)="triggerFileInput('logo')">
+
+        <!-- Right Column -->
+        <div class="form-column">
+          <div class="input-card">
+            <label for="instagramPageName">Instagram Handle</label>
+            <mat-form-field appearance="outline">
+              <span matPrefix></span>
+              <input matInput id="instagramPageName" formControlName="instagramPageName" placeholder="username">
+              <mat-icon matSuffix>photo_camera</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="input-card">
+            <label for="categorieBusiness">Business Category</label>
+            <mat-form-field appearance="outline">
+              <mat-select id="categorieBusiness" formControlName="categorieBusiness">
+                <mat-option *ngFor="let category of categorieBusinessOptions" [value]="category">
+                  {{ category }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>category</mat-icon>
+              <mat-error *ngIf="categorieBusiness?.invalid">Please select a category</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <!-- File Uploads -->
+      <div class="upload-section">
+        <div class="upload-card">
+          <div class="upload-header">
             <mat-icon>image</mat-icon>
-            Changer le logo
-          </button>
-          <span class="file-info" *ngIf="logoPreview">
-            Nouveau logo sélectionné
-          </span>
+            <h3>Business Logo</h3>
+          </div>
+          <div class="upload-body">
+            <div class="current-file" *ngIf="existingLogoUrl">
+              <img [src]="existingLogoUrl" alt="Current logo">
+              <div class="file-meta">
+                <span>Current logo</span>
+                <button mat-icon-button (click)="triggerFileInput('logo')" aria-label="Edit logo">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="dropzone" (click)="triggerFileInput('logo')" appDragDrop (fileDropped)="onLogoSelected($event)">
+              <mat-icon>cloud_upload</mat-icon>
+              <p>Drag & drop or click to upload</p>
+              <small>PNG, JPG (Max 2MB)</small>
+              <input type="file" id="logoInput" accept="image/*" hidden (change)="onLogoSelected($event)">
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- PDF Upload -->
-      <div class="upload-group">
-        <label>PDF actuel</label>
-        <div class="current-file" *ngIf="existingPdfName">
-          {{ existingPdfName }}
-        </div>
-        <input type="file" id="pdfInput" accept="application/pdf" hidden (change)="onPdfSelected($event)">
-        <div class="upload-controls">
-          <button mat-stroked-button type="button" (click)="triggerFileInput('pdf')">
+        <div class="upload-card">
+          <div class="upload-header">
             <mat-icon>picture_as_pdf</mat-icon>
-            Changer le PDF
-          </button>
-          <span class="file-info" *ngIf="pdfName">
-            {{ pdfName }}
-          </span>
+            <h3>Business PDF</h3>
+          </div>
+          <div class="upload-body">
+            <div class="current-file" *ngIf="existingPdfName">
+              <mat-icon>description</mat-icon>
+              <div class="file-meta">
+                <span>{{ existingPdfName }}</span>
+                <button mat-icon-button (click)="triggerFileInput('pdf')" aria-label="Edit PDF">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="dropzone" (click)="triggerFileInput('pdf')" appDragDrop (fileDropped)="onPdfSelected($event)">
+              <mat-icon>cloud_upload</mat-icon>
+              <p>Drag & drop or click to upload</p>
+              <small>PDF only (Max 5MB)</small>
+              <input type="file" id="pdfInput" accept="application/pdf" hidden (change)="onPdfSelected($event)">
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </form>
-</mat-dialog-content>
+    </form>
+  </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Annuler</button>
-  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="businessForm.invalid">
-    <mat-icon>save</mat-icon>
-    Sauvegarder
-  </button>
-</mat-dialog-actions>
+  <mat-dialog-actions>
+    <button mat-button class="cancel-btn" (click)="onCancel()" aria-label="Cancel">
+      <mat-icon>close</mat-icon>
+      Cancel
+    </button>
+    <button mat-raised-button class="save-btn" (click)="onSave()" [disabled]="businessForm.invalid" aria-label="Save changes">
+      <mat-icon>check_circle</mat-icon>
+      Save Changes
+    </button>
+  </mat-dialog-actions>
+</div>

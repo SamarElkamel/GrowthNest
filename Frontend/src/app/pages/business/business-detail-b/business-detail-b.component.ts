@@ -172,7 +172,7 @@ export class BusinessDetailBComponent implements OnInit, OnDestroy {
     }
 
     const dialogRef = this.dialog.open(UpdateBusinessDialogComponent, {
-      width: '500px',
+      width: '900px',
       data: this.business,
       autoFocus: true,
       restoreFocus: true

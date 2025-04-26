@@ -5,7 +5,7 @@
 import { HttpClient, HttpContext, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { catchError, filter, map, tap } from 'rxjs/operators';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -562,15 +562,34 @@ addBusiness(business: any, logo?: File, pdf?: File, context?: HttpContext): Obse
 static readonly UpdateBusinessWithFilesPath = '/business/updateBusinessWithFiles';
 
 updateBusinessWithFiles(formData: FormData): Observable<Business> {
+  console.log('Sending updateBusinessWithFiles request:');
+  formData.forEach((value, key) => {
+    if (key === 'business') {
+      console.log('business:', value);
+    } else {
+      console.log(`${key}:`, (value as File).name || 'null');
+    }
+  });
   return this.http.put<Business>(
     `${this.rootUrl}${GestionDesBusinessService.UpdateBusinessWithFilesPath}`,
     formData
+  ).pipe(
+    tap((response) => console.log('Update response:', response)),
+    catchError((err) => {
+      console.error('Update error:', err);
+      throw err;
+    })
   );
 }
+
 getBaseUrl(): string {
-  // Version plus robuste
-  const url = new URL(this.rootUrl);
-  return `${url.protocol}//${url.host}`;
+  try {
+    const url = new URL(this.rootUrl);
+    return `${url.protocol}//${url.host}`;
+  } catch (e) {
+    console.error('Error parsing rootUrl:', e);
+    return 'http://localhost:8080'; // Fallback
+  }
 }
 static readonly getTopThreeBusinessesPath = '/business/getTopThreeBusinesses';
 

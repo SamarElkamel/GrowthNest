@@ -26,13 +26,7 @@ export const Approutes: Routes = [
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
 
-  // User List Route (Root Level, Admin Access)
-  {
-    path: 'users',
-    component: UserListComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['ROLE_ADMIN'] },
-  },
+
 
   // FrontOffice Routes
   {
@@ -60,6 +54,13 @@ export const Approutes: Routes = [
         loadChildren: () =>
           import('./BackOffice/dashboard/dashboard.module').then((m) => m.DashboardModule),
       },
+        // User List Route (Root Level, Admin Access)
+  {
+    path: 'users',
+    component: UserListComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN'] },
+  },
       {
         path: 'about',
         loadChildren: () =>

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebsocketService } from 'src/app/services/services/WebsocketService';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Business } from 'src/app/services/models/business';
-import { Notification } from 'src/app/services/models/notification';
+import { NotificationE } from 'src/app/services/models/notificationE';
 import { Subscription } from 'rxjs';
 import { GestionDesBusinessService } from 'src/app/services/services';
 
@@ -61,13 +61,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadPendingBusinesses();
+
     try {
       this.websocketService.subscribeToTopic('/topic/admin-notifications');
       this.websocketService.subscribeToTopic('/topic/owner-notifications-1');
+
       this.subscription.add(
         this.websocketService.notifications$.subscribe(
-          notifications => {
-            const latestNotification = notifications[notifications.length - 1];
+          (NotificationE: NotificationE[]) => {
+            const latestNotification = NotificationE[NotificationE.length - 1];
             if (latestNotification) {
               this.snackBar.open(
                 `${latestNotification.message} (ID: ${latestNotification.businessId})`,
@@ -80,7 +82,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
                 }
               );
             }
-            console.log('Notifications received:', notifications);
+            console.log('Notifications received:', NotificationE);
           },
           error => console.error('Notification subscription error:', error)
         )

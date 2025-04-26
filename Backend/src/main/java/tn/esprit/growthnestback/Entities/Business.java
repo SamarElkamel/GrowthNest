@@ -61,6 +61,7 @@ public class Business {
     @JoinColumn(name = "user_id") // Nom de la colonne FK
     @JsonBackReference // Empêche la sérialisation JSON circulaire
     private User user; // Nom en minuscule
+
     public Business() {
         this.averageRating = 0.0;
         this.ratingCount = 0;

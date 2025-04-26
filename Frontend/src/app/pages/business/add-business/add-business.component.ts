@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Business, CategorieBusiness } from 'src/app/services/models';
 import { GestionDesBusinessService } from 'src/app/services/services';
+import { TokenService } from 'src/app/services/token/token.service';
 
 @Component({
   selector: 'app-add-business',
@@ -16,12 +17,14 @@ export class AddBusinessComponent {
   logoPreview: string | null = null;
   pdfName: string | null = null;
   isSubmitting = false;
+  progressPercentage: any;
 
   constructor(
     private fb: FormBuilder,
     private businessService: GestionDesBusinessService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private tokenService: TokenService // Inject TokenService
   ) {
     this.businessForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
@@ -98,15 +101,16 @@ export class AddBusinessComponent {
         categorieBusiness: this.businessForm.value.categorieBusiness,
         instagramPageName: this.businessForm.value.instagramPageName || null,
         averageRating: 0,
-        ratingCount: 0,
-        ownerId: '1' // Explicitly set to match backend
+        ratingCount: 0
       };
       const logoFile = this.businessForm.get('logo')?.value;
       const pdfFile = this.businessForm.get('pdf')?.value;
 
+      const currentUserId = this.tokenService.getUserId();
       console.log('Submitting business:', JSON.stringify(businessData));
       console.log('Logo file:', logoFile ? `${logoFile.name} (type: ${logoFile.type})` : 'None');
       console.log('PDF file:', pdfFile ? `${pdfFile.name} (type: ${pdfFile.type})` : 'None');
+      console.log('Current user ID:', currentUserId);
 
       this.businessService.addBusiness(businessData, logoFile, pdfFile).subscribe({
         next: (newBusiness: Business) => {
@@ -117,7 +121,7 @@ export class AddBusinessComponent {
           this.resetForm();
           this.isSubmitting = false;
           // Optional: Stay on page for testing, or redirect to AdminDashboard
-         //  this.router.navigate(['/admin/pending-businesses']);
+          // this.router.navigate(['/admin/pending-businesses']);
         },
         error: (err) => {
           console.error('Erreur détaillée:', {

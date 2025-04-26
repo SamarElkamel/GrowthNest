@@ -1,137 +1,125 @@
-<div class="admin-container">
-  <!-- Header -->
-  <div class="admin-header">
-    <h1>My Business</h1>
+<div class="dashboard-container">
+  <!-- Business Overview -->
+  <div class="business-hero" *ngIf="business && !isLoading">
+    <div class="hero-content">
+      <div class="business-brand">
+        <div class="logo-wrapper">
+          <img [src]="getLogoUrl(business.logo)" alt="Logo" class="business-logo" (error)="onImageError($event, business)">
+        </div>
+        <div class="business-meta">
+          <h1>{{ business.name }}</h1>
+          <div class="business-tags">
+            <span class="business-category">{{ business.categorieBusiness || 'General' }}</span>
+            <span class="status-badge" [ngClass]="business.status?.toLowerCase()">
+              {{ business.status || 'N/A' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-actions" *ngIf="isStatusApproved()">
+        <button class="action-btn primary" (click)="updateBusiness()">
+          <i class="material-icons">edit</i> Edit Profile
+        </button>
+        <button class="action-btn accent" [routerLink]="['/add-product', business.idBusiness]">
+          <i class="material-icons">add</i> New Product
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-state">
-    <mat-spinner></mat-spinner>
-    <p>Loading business details...</p>
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loading-content">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading your business details...</p>
+    </div>
   </div>
 
-  <!-- Business Details -->
-  <div *ngIf="business && !isLoading" class="business-section">
-    <!-- Limited View for PENDING or REJECTED -->
-    <div *ngIf="!isStatusApproved()" class="limited-view">
-      <mat-card class="business-card limited-card">
-        <mat-card-header>
-          <div mat-card-avatar class="business-logo">
-            <img [src]="getLogoUrl(business.logo)" alt="Business Logo" (error)="onImageError($event, business)" />
-          </div>
-          <mat-card-title>{{ business.name }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>{{ business.description || 'No description available.' }}</p>
-          <div class="business-stats">
-            <p><strong>Status:</strong> {{ business.status || 'N/A' }}</p>
-          </div>
-        </mat-card-content>
-      </mat-card>
+  <!-- Main Content -->
+  <div *ngIf="business && !isLoading" class="business-content">
+    <!-- Business Insights -->
+    <div class="insights-grid" *ngIf="isStatusApproved()">
+      <div class="insight-card">
+        <div class="insight-icon total-products">
+          <i class="material-icons">inventory_2</i>
+        </div>
+        <div class="insight-info">
+          <h3>{{ products.length }}</h3>
+          <p>Total Products</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon performance">
+          <i class="material-icons">trending_up</i>
+        </div>
+        <div class="insight-info">
+          <h3>{{ business.averageRating }}</h3>
+          <p>Average Rating</p>
+        </div>
+      </div>
     </div>
 
-    <!-- Full View for APPROVED -->
-    <div *ngIf="isStatusApproved()" class="full-view">
-      <!-- Business Summary Card -->
-      <mat-card class="business-card">
-        <mat-card-header>
-          <div mat-card-avatar class="business-logo">
-            <img [src]="getLogoUrl(business.logo)" alt="Business Logo" (error)="onImageError($event, business)" />
-          </div>
-          <mat-card-title>{{ business.name }}</mat-card-title>
-          <mat-card-subtitle>{{ business.categorieBusiness || 'General' }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p>{{ business.description || 'No description available.' }}</p>
-          <div class="business-stats">
-            <p><strong>Status:</strong> {{ business.status || 'N/A' }}</p>
-            <p><strong>Total Products:</strong> {{ products.length }}</p>
-          </div>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-raised-button color="accent" (click)="updateBusiness()">
-            <mat-icon>edit</mat-icon> Edit Business
-          </button>
-          <button mat-raised-button color="primary" [routerLink]="['/add-product', business.idBusiness]">
-            <mat-icon>add_circle</mat-icon> Add Product
-          </button>
-        </mat-card-actions>
-      </mat-card>
+    <!-- Business Description -->
+    <div class="description-card" *ngIf="business.description">
+      <h2>About Us</h2>
+      <p>{{ business.description }}</p>
+    </div>
 
-      <!-- Products Section -->
-      <div class="products-section">
-        <h2>Product List</h2>
-        <!-- Search and Filter -->
-        <div class="table-controls">
-          <mat-form-field appearance="outline" class="search-field">
-            <mat-label>Search Products</mat-label>
-            <input matInput [(ngModel)]="searchQuery" (input)="filterProducts()" placeholder="Search by name or description">
+    <!-- Products Management -->
+    <div class="products-section">
+      <div class="section-header">
+        <h2>Your Products</h2>
+        <div class="search-container">
+          <mat-form-field appearance="outline">
+            <input matInput [(ngModel)]="searchQuery" 
+                   (input)="filterProducts()" 
+                   placeholder="Search products...">
             <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
         </div>
+      </div>
 
-        <!-- Loading Products State -->
-        <div *ngIf="isLoadingProducts" class="loading-state">
-          <mat-spinner diameter="40"></mat-spinner>
-          <p>Loading products...</p>
-        </div>
+      <!-- Products Loading -->
+      <div *ngIf="isLoadingProducts" class="loading-products">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading your products...</p>
+      </div>
 
-        <!-- Products Table -->
-        <div class="products-table" *ngIf="filteredProducts && filteredProducts.length > 0 && !isLoadingProducts" [@fadeIn]>
-          <table mat-table [dataSource]="filteredProducts" matSort class="mat-elevation-z8">
-            <!-- Name Column -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header (click)="sortProducts('name')">Name</th>
-              <td mat-cell *matCellDef="let product">{{ product.name }}</td>
-            </ng-container>
-            <!-- Description Column -->
-            <ng-container matColumnDef="description">
-              <th mat-header-cell *matHeaderCellDef>Description</th>
-              <td mat-cell *matCellDef="let product">{{ product.description || 'N/A' }}</td>
-            </ng-container>
-            <!-- Price Column -->
-            <ng-container matColumnDef="price">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header (click)="sortProducts('price')">Price ($)</th>
-              <td mat-cell *matCellDef="let product">{{ product.price | number:'1.2-2' }}</td>
-            </ng-container>
-            <!-- Stock Column -->
-            <ng-container matColumnDef="stock">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header (click)="sortProducts('stock')">Stock</th>
-              <td mat-cell *matCellDef="let product">{{ product.stock }}</td>
-            </ng-container>
-            <!-- Image Column -->
-            <ng-container matColumnDef="image">
-              <th mat-header-cell *matHeaderCellDef>Image</th>
-              <td mat-cell *matCellDef="let product">
-                <img [src]="getProductImageUrl(product.image)" alt="Product Image" class="product-image" (error)="onImageError($event, product)" *ngIf="product.image">
-                <span *ngIf="!product.image">No Image</span>
-              </td>
-            </ng-container>
-            <!-- Update Column -->
-            <ng-container matColumnDef="update">
-              <th mat-header-cell *matHeaderCellDef>Update</th>
-              <td mat-cell *matCellDef="let product">
-                <button mat-icon-button color="primary" (click)="updateProduct(product)" [disabled]="isLoadingProducts">
-                  <mat-icon>edit</mat-icon>
-                </button>
-              </td>
-            </ng-container>
-            <!-- Delete Column -->
-            <ng-container matColumnDef="delete">
-              <th mat-header-cell *matHeaderCellDef>Delete</th>
-              <td mat-cell *matCellDef="let product">
-                <button mat-icon-button color="warn" (click)="deleteProduct(product.idProduct)" [disabled]="isLoadingProducts">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-            </ng-container>
-            <!-- Table Rows -->
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
+      <!-- Products Grid -->
+      <div class="products-grid" *ngIf="filteredProducts && filteredProducts.length > 0 && !isLoadingProducts">
+        <div class="product-card" *ngFor="let product of filteredProducts">
+          <div class="product-image">
+            <img [src]="getProductImageUrl(product.image)" alt="Product image" (error)="onImageError($event, product)">
+            <div class="product-actions">
+              <button class="icon-btn edit" (click)="updateProduct(product)">
+                <i class="material-icons">edit</i>
+              </button>
+              <button class="icon-btn delete" (click)="deleteProduct(product.idProduct)">
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3>{{ product.name }}</h3>
+            <p class="description">{{ product.description || 'No description' }}</p>
+            <div class="product-meta">
+              <span class="price">{{ product.price | currency }}</span>
+              <span class="stock" [ngClass]="{ 'low-stock': product.stock < 10 }">
+                {{ product.stock }} in stock
+              </span>
+            </div>
+          </div>
         </div>
-        <!-- No Products Message -->
-        <p *ngIf="filteredProducts && filteredProducts.length === 0 && !isLoadingProducts" [@fadeIn]>No products found.</p>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="filteredProducts && filteredProducts.length === 0 && !isLoadingProducts" class="empty-state">
+        <img src="assets/images/empty-products.svg" alt="No products">
+        <h3>No Products Found</h3>
+        <p>Start by adding your first product</p>
+        <button class="action-btn accent" [routerLink]="['/add-product', business.idBusiness]">
+          <i class="material-icons">add</i> Add Product
+        </button>
       </div>
     </div>
   </div>
