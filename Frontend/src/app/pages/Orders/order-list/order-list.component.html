@@ -1,0 +1,106 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- Header -->
+        <h4 class="card-title">Order Table</h4>
+        <h5 class="card-subtitle text-muted mb-4">Overview of customer orders</h5>
+
+        <!-- Filter Form -->
+        <form (ngSubmit)="applyFilters()" class="row g-3 align-items-end mb-4 p-3 border rounded bg-light">
+          <!-- Status -->
+          <div class="col-md-3">
+            <label for="status" class="form-label">Status</label>
+            <select [(ngModel)]="filters.status" name="status" id="status" class="form-select">
+              <option value="">All</option>
+              <option value="PENDING">Pending</option>
+              <option value="DELIVERED">Delivered</option>
+              <option value="CANCELLED">Cancelled</option>
+             
+            </select>
+          </div>
+
+          <!-- Start Date -->
+          <div class="col-md-3">
+            <label for="startDate" class="form-label">Start Date</label>
+            <input type="date" [(ngModel)]="filters.startDate" name="startDate" id="startDate" class="form-control">
+          </div>
+
+          <!-- End Date -->
+          <div class="col-md-3">
+            <label for="endDate" class="form-label">End Date</label>
+            <input type="date" [(ngModel)]="filters.endDate" name="endDate" id="endDate" class="form-control">
+          </div>
+
+          <!-- Buttons -->
+          <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-50">
+              <i class="bi bi-filter"></i> Filter
+            </button>
+            <button type="button" class="btn btn-secondary w-50" (click)="resetFilters()">
+              <i class="bi bi-x-circle"></i> Reset
+            </button>
+          </div>
+        </form>
+
+        <!-- Orders Table -->
+        <div class="table-responsive">
+          <table class="table align-middle text-nowrap table-bordered table-striped">
+            <thead class="table-light">
+              <tr>
+                <th class="text-dark fw-semibold">ID</th>
+                <th class="text-dark fw-semibold">Status</th>
+                <th class="text-dark fw-semibold">Total</th>
+                <th class="text-dark fw-semibold">Payment</th>
+                <th class="text-dark fw-semibold">Coupon</th>
+                <th class="text-dark fw-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of orders">
+                <td>{{ order.orderId }}</td>
+
+                <td>
+                  <div class="d-inline-block" ngbDropdown>
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      id="dropdown-{{ order.orderId }}"
+                      ngbDropdownToggle
+                    >
+                      {{ order.status }}
+                    </button>
+                    <div ngbDropdownMenu [attr.aria-labelledby]="'dropdown-' + order.orderId">
+                      <button
+                        class="dropdown-item"
+                        *ngFor="let s of statuses"
+                        [disabled]="s === order.status"
+                        (click)="updateStatus(order, s)"
+                      >
+                        {{ s }}
+                      </button>
+                    </div>
+                  </div>
+                </td>
+
+                <td>{{ order.totalAmount | currency }}</td>
+                <td>{{ order.paymentMethod }}</td>
+                <td>{{ order.couponCode || 'N/A' }}</td>
+
+                <td>
+                  <button
+                    class="btn btn-sm btn-info me-2"
+                    (click)="openOrderDetails(order.orderId)"
+                  >
+                    Details
+                  </button>
+                  
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

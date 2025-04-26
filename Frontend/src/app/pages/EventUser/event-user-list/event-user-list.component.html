@@ -1,0 +1,190 @@
+<section class="bg0 p-t-90 p-b-60">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-lg-9 p-b-80">
+        <div class="p-r-45 p-r-0-lg">
+          <!-- Loading State -->
+          <div *ngIf="isLoading" class="text-center p-t-50 p-b-50">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <p class="mtext-112 cl2 p-t-20">Loading events...</p>
+          </div>
+          
+          <!-- Error State -->
+          <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+
+          <!-- Event List -->
+          <div *ngIf="!isLoading && !error">
+            <div class="p-b-63" *ngFor="let event of filteredEvents">
+              <div class="hov-img0 how-pos5-parent" (click)="viewEventDetails(event.event?.idEvent!)" style="cursor: pointer;">
+                <img src="assets/images/aa.jpg" 
+                     alt="IMG-EVENT" 
+                     class="img-fluid w-100"
+                     style="height: 300px; object-fit: cover;">
+
+                <div class="flex-col-c-m size-123 bg9 how-pos5">
+                  <span class="ltext-107 cl2 txt-center">
+                    {{ event.event?.date | date: 'dd' }}
+                  </span>
+                  <span class="stext-109 cl3 txt-center">
+                    {{ event.event?.date | date: 'MMM yyyy' }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="p-t-32">
+                <h4 class="p-b-15">
+                  <a href="javascript:void(0);" 
+                     class="ltext-108 cl2 hov-cl1 trans-04"
+                     (click)="viewEventDetails(event.event?.idEvent!)">
+                    {{ event.event?.title || 'Untitled Event' }}
+                  </a>
+                </h4>
+
+                <div class="flex-w flex-sb-m p-t-18">
+                  <span class="flex-w flex-m stext-111 cl2 p-r-30 m-tb-10">
+                    <span>
+                      <i class="zmdi zmdi-pin mr-2"></i>
+                      {{ event.event?.location || 'Location not specified' }}
+                      <span class="cl12 m-l-4 m-r-6">|</span>
+                    </span>
+                    <span>
+                      <i class="zmdi zmdi-time mr-2"></i>
+                      {{ event.event?.date | date: 'shortTime' }}
+                      <span class="cl12 m-l-4 m-r-6">|</span>
+                    </span>
+                    <span>
+                      <i class="zmdi zmdi-accounts mr-2"></i>
+                      {{ event.reservationCount || 0 }} / 
+                      {{ event.event?.numberOfPlaces || 'Unlimited' }} attending
+                      <ng-container *ngIf="event.event?.numberOfPlaces">
+                        ({{ getRemainingPlaces(event) }} remaining)
+                      </ng-container>
+                    </span>
+                  </span>
+
+                  <a href="javascript:void(0);" 
+                     class="stext-101 cl2 hov-cl1 trans-04 m-tb-10"
+                     (click)="viewEventDetails(event.event?.idEvent!)">
+                    View Details
+                    <i class="fa fa-long-arrow-right m-l-9"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- No Events Message -->
+            <div *ngIf="filteredEvents.length === 0" class="text-center p-t-50 p-b-50">
+              <img src="assets/images/empty-events.png" alt="No events" class="mb-4" style="max-width: 200px;">
+              <h4 class="mtext-112 cl2 p-b-10">
+                {{ searchQuery ? 'No matching events found' : 'No events available' }}
+              </h4>
+              <p class="stext-117 cl6">
+                {{ searchQuery ? 'Try adjusting your search query' : 'There are currently no events scheduled. Please check back later.' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-md-4 col-lg-3 p-b-80">
+        <div class="side-menu">
+          <!-- Search -->
+          <div class="bor17 of-hidden pos-relative">
+            <input class="stext-103 cl2 plh4 size-116 p-l-28 p-r-55" 
+                   type="text" 
+                   [(ngModel)]="searchQuery"
+                   (input)="filterEvents()"
+                   placeholder="Search events...">
+            <button class="flex-c-m size-122 ab-t-r fs-18 cl4 hov-cl1 trans-04">
+              <i class="zmdi zmdi-search"></i>
+            </button>
+          </div>
+
+          <!-- My Reservations Button -->
+          <div class="p-t-65">
+            <div class="form-actions">
+              <a routerLink="/events/user/reservations" class="btn-submit" style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.75rem;
+                text-decoration: none;
+                padding: 0.8rem 1.5rem;
+                background: #4361ee;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-size: 1rem;
+                width: 100%;
+                text-align: center;
+              ">
+                <i class="fas fa-calendar-check"></i>
+                <span>View My Reservations</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Upcoming Events -->
+          <div class="p-t-55" *ngIf="events.length > 1">
+            <h4 class="mtext-112 cl2 p-b-20">Upcoming Events</h4>
+            <ul>
+              <li class="flex-w flex-t p-b-15" *ngFor="let event of events.slice(1,4)">
+                <div class="wrap-pic-w size-214 hov-ovelay1 m-r-15">
+                  <img src="assets/images/aa.jpg" 
+                       alt="UPCOMING EVENT"
+                       style="width: 70px; height: 70px; object-fit: cover;">
+                </div>
+                <div class="size-215 flex-col-t p-t-5">
+                  <a href="javascript:void(0);" 
+                     class="stext-116 cl8 hov-cl1 trans-04"
+                     (click)="viewEventDetails(event.event?.idEvent!)">
+                    {{ event.event?.title }}
+                  </a>
+                  <span class="stext-116 cl6 p-t-3">
+                    {{ event.event?.date | date: 'shortDate' }}
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="p-t-65">
+            <div class="form-actions">
+              <a routerLink="/events/calendar" class="btn-submit" style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.75rem;
+                text-decoration: none;
+                padding: 0.8rem 1.5rem;
+                background: #4361ee;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-size: 1rem;
+                width: 100%;
+                text-align: center;
+              ">
+                <i class="fas fa-calendar-check"></i>
+                <span>View Calendar</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

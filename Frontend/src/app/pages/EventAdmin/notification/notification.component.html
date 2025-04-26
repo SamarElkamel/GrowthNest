@@ -1,0 +1,127 @@
+<div class="notification-container container-fluid py-4">
+  <div class="management-header text-center mb-4">
+    <h2 class="display-5 fw-bold text-primary">Pending Registration Notifications</h2>
+    <p class="lead text-muted">Manage event registration requests</p>
+  </div>
+
+  <div class="action-buttons d-flex mb-4">
+    <button class="btn btn-primary me-2" (click)="markAllAsRead()" [disabled]="isLoading">
+      <i class="fas fa-check-circle me-2"></i>Mark All as Read
+    </button>
+    <button class="btn btn-outline-secondary" (click)="goBack()" [disabled]="isLoading">
+      <i class="fas fa-arrow-left me-2"></i>Back
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="alert alert-info text-center">
+    <div class="spinner-border text-primary me-2" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    Loading notifications...
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show">
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = null" aria-label="Close"></button>
+  </div>
+
+  <div class="card shadow-sm" *ngIf="!isLoading && !error && notifications.length > 0">
+    <div class="card-header bg-white border-bottom-0">
+      <h5 class="card-title mb-0">Notifications</h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th width="50px">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" (change)="toggleSelectAll($event)" [disabled]="isLoading">
+              </div>
+            </th>
+            <th>Message</th>
+            <th>Event</th>
+            <th>User</th>
+            <th>Date</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let notification of paginatedNotifications" class="align-middle">
+            <td>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" 
+                       [(ngModel)]="selectedRegistrations[notification.registration?.idRegist || 0]"
+                       (change)="updateSelection(notification.registration?.idRegist || 0)"
+                       [disabled]="isLoading || !notification.registration?.idRegist">
+              </div>
+            </td>
+            <td class="fw-semibold">{{ notification.message || 'No message' }}</td>
+            <td>
+              <span class="badge bg-info bg-opacity-10 text-info">
+                {{ notification.registration?.event?.title || 'Unknown event' }}
+              </span>
+            </td>
+            <td>
+              <span class="badge bg-primary bg-opacity-10 text-primary">
+                {{ notification.registration?.user?.username || 'Unknown user' }}
+              </span>
+            </td>
+            <td>
+              <span class="text-muted">{{ notification.createdAt | date:'medium' }}</span>
+            </td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-outline-success" 
+                        (click)="updateStatus(notification.registration?.idRegist || 0, 'CONFIRMED')"
+                        [disabled]="isLoading || !notification.registration?.idRegist">
+                  <i class="fas fa-check me-1"></i>Confirm
+                </button>
+                <button class="btn btn-outline-danger" 
+                        (click)="updateStatus(notification.registration?.idRegist || 0, 'CANCELED')"
+                        [disabled]="isLoading || !notification.registration?.idRegist">
+                  <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <button class="btn btn-outline-primary" 
+                        (click)="markAsRead(notification.idNotification || 0)"
+                        [disabled]="isLoading || !notification.idNotification">
+                  <i class="fas fa-eye me-1"></i>Mark Read
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alert alert-info text-center" *ngIf="!isLoading && !error && notifications.length === 0">
+    No pending registration notifications.
+  </div>
+
+  <div class="bulk-actions sticky-bottom bg-white p-3 shadow-sm mt-3" *ngIf="hasSelectedRegistrations">
+    <div class="d-flex justify-content-between align-items-center">
+      <h6 class="mb-0">{{ getSelectedCount() }} selected</h6>
+      <div>
+        <button class="btn btn-success me-2" (click)="bulkUpdate('CONFIRMED')" [disabled]="isLoading">
+          <i class="fas fa-check-double me-1"></i>Confirm Selected
+        </button>
+        <button class="btn btn-danger" (click)="bulkUpdate('CANCELED')" [disabled]="isLoading">
+          <i class="fas fa-trash-alt me-1"></i>Cancel Selected
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center mt-4" *ngIf="!isLoading && notifications.length > pageSize">
+    <ngb-pagination
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="collectionSize"
+      [maxSize]="5"
+      [boundaryLinks]="true"
+      (pageChange)="refreshNotifications()"
+      aria-label="Notification pagination"
+      class="d-flex justify-content-center">
+    </ngb-pagination>
+  </div>
+</div>

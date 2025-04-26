@@ -11,9 +11,9 @@ export interface User {
   authorities?: Array<GrantedAuthority>;
   createdDate?: string;
   credentialsNonExpired?: boolean;
-  email: string;
+  email?: string;
   enabled?: boolean;
-  firstname: string;
+  firstname?: string;
   id?: number;
   image?: string;
   lastModifiedDate?: string;
@@ -22,6 +22,6 @@ export interface User {
   password?: string;
   role?: Role;
   username?: string;
-  dateOfBirth: string;
+  dateOfBirth?: string;
   lastLogin?: Date;
 }

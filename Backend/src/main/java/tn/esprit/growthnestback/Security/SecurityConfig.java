@@ -58,6 +58,21 @@ public class SecurityConfig {
                                 "/business/**",
                                 "/Products/**",
                                 "/uploads/**",
+                                "/wishlist/**",
+                                "/api/orders/**",
+                                "/api/order-details/**",
+                                "/api/cart/**",
+                                "/api/coupons/**",
+                                "/api/products/**",
+                                "/api/payment/**",
+                                                    "/Event/**",
+                                        "/Registration/**",
+                                "/Notification/**",
+                
+                    
+
+                              
+
                                 "/wishlist/**"
                         )
                         .permitAll()
@@ -72,7 +87,8 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
+
+
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -84,8 +100,8 @@ public class SecurityConfig {
             }
         };
     }
-
-
-
-
 }
+
+
+
+

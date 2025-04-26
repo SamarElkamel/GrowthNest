@@ -1,0 +1,28 @@
+<div class="payment-wrapper">
+  <h2 class="title">Payment Details</h2>
+
+  <div class="form-box">
+    <!-- Card Number -->
+    <label for="card-number">Card Number</label>
+    <div id="card-number" class="stripe-input"></div>
+
+    <!-- Expiry Date -->
+    <label for="card-expiry">Expiry (MM/YY)</label>
+    <div id="card-expiry" class="stripe-input"></div>
+
+    <!-- CVC -->
+    <label for="card-cvc">CVC</label>
+    <div id="card-cvc" class="stripe-input"></div>
+
+    
+
+    <!-- Pay Button -->
+    <button class="pay-btn" (click)="handlePayment()" [disabled]="loading || !clientSecret">
+      {{ loading ? 'Processing...' : 'Pay Now' }}
+    </button>
+
+    <div *ngIf="paymentSuccess" class="success-msg">
+      🎉 Payment successful! You earned 500 Seeds!
+    </div>
+  </div>
+</div>

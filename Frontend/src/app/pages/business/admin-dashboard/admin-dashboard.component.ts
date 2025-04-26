@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebsocketService } from 'src/app/services/services/WebsocketService';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Business } from 'src/app/services/models/business';
-import { NotificationE } from 'src/app/services/models/notificationE';
 import { Subscription } from 'rxjs';
+import { NotificationE } from 'src/app/services/models/notificationE';
 import { GestionDesBusinessService } from 'src/app/services/services';
 
 @Component({
@@ -61,11 +61,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadPendingBusinesses();
-
     try {
       this.websocketService.subscribeToTopic('/topic/admin-notifications');
       this.websocketService.subscribeToTopic('/topic/owner-notifications-1');
-
       this.subscription.add(
         this.websocketService.notifications$.subscribe(
           (NotificationE: NotificationE[]) => {

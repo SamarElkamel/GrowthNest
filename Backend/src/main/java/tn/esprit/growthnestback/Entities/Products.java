@@ -8,6 +8,8 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -27,7 +29,9 @@ public class Products {
     @Size(min = 10, max = 500, message = "La description doit contenir entre 10 et 500 caractères")
     String description;
     @Positive(message = "Le prix doit être strictement supérieur à 0")
-    Float price;
+
+    BigDecimal price;
+
     @NotNull(message = "Le stock est obligatoire")
     @Min(value = 0, message = "Le stock doit être supérieur ou égal à 0")    Long stock;
 
@@ -70,13 +74,15 @@ public class Products {
         this.description = description;
     }
 
-    public Float getPrice() {
+
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
-        this.price = price;
-    }
+    public void setPrice(BigDecimal price) {
+        this.price = price; }
+
+
 
     public Long getStock() {
         return stock;

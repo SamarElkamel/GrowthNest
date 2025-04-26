@@ -1,0 +1,224 @@
+/* Soft Futuristic Color Palette */
+$primary-soft: #3e2be8;
+$secondary-soft: #0c669a;
+$glass-white: rgba(255, 255, 255, 0.85);
+$glass-border: rgba(255, 255, 255, 0.3);
+$soft-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+
+/* Base Container */
+.glass-form-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  border: 1px solid $glass-border;
+  box-shadow: $soft-shadow;
+}
+
+/* Header Styles */
+.form-header {
+  margin-bottom: 2rem;
+  text-align: center;
+  
+  h2 {
+    color: $primary-soft;
+    font-weight: 600;
+    font-size: 2rem;
+    margin: 0.5rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .soft-subtitle {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+/* Back Button */
+.soft-back-btn {
+  background: none;
+  border: none;
+  color: $primary-soft;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 auto 1rem;
+  
+ 
+  
+  .material-symbols-outlined {
+    font-size: 1.2rem;
+  }
+}
+
+/* Status Indicators */
+.soft-status {
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  
+  &.loading {
+    background: rgba($primary-soft, 0.1);
+    color: $primary-soft;
+  }
+  
+  &.error {
+    background: rgba(255, 100, 100, 0.1);
+    color: #FF6464;
+  }
+  
+  .material-symbols-outlined {
+    font-size: 1.4rem;
+  }
+}
+
+.pulse-loader {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba($primary-soft, 0.3);
+  border-top-color: $primary-soft;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Glass Form */
+.glass-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  position: relative;
+  
+  label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.7);
+    padding-left: 0.5rem;
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 1rem;
+    background: $glass-white;
+    border: 1px solid $glass-border;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    
+    &:focus {
+      outline: none;
+      border-color: $primary-soft;
+      box-shadow: 0 0 0 3px rgba($primary-soft, 0.2);
+      
+      ~ .input-glow {
+        opacity: 1;
+      }
+    }
+  }
+  
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+}
+
+.input-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  background: linear-gradient(45deg, 
+    rgba($primary-soft, 0.1), 
+    rgba($secondary-soft, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Submit Button */
+.soft-submit-btn {
+  position: relative;
+  background: linear-gradient(45deg, $primary-soft, $secondary-soft);
+  color: white;
+  border: none;
+  padding: 1.1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 12px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  box-shadow: 0 4px 15px rgba($primary-soft, 0.3);
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($primary-soft, 0.4);
+    
+    .btn-glow {
+      transform: translateX(100%);
+    }
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .btn-content {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .btn-glow {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.3), 
+      transparent);
+    transition: transform 0.6s ease;
+  }
+}
+
+/* Animations */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

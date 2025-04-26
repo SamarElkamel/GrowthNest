@@ -3,6 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GetProductById$Params } from 'src/app/services/fn/gestion-des-produits/get-product-by-id';
 import { Products } from 'src/app/services/models';
 import { GestionDesProduitsService } from 'src/app/services/services';
+import { CartService } from 'src/app/services/services/cart.service';
+import { TokenService } from 'src/app/services/token/token.service';
 
 @Component({
   selector: 'app-quick-view-product-f',
@@ -10,17 +12,23 @@ import { GestionDesProduitsService } from 'src/app/services/services';
   styleUrls: ['./quick-view-product-f.component.scss']
 })
 export class QuickViewProductFComponent {
-  product: Products | null = null; // Initialisation explicite
+  product: Products | null = null; 
+  products: Products[] = [];
+  userId! : number;
+// Initialisation explicite
   isLoading = true;
   baseUrl: string = 'http://localhost:8080/Growthnest';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { productId: number },
     private productService: GestionDesProduitsService,
-    public dialogRef: MatDialogRef<QuickViewProductFComponent>
+    public dialogRef: MatDialogRef<QuickViewProductFComponent>,
+    private cartService: CartService,
+    private tokenService:TokenService
   ) {}
 
-  ngOnInit(): void { // Utilisez ngOnInit au lieu du constructeur
+  ngOnInit(): void { 
+    this.userId = Number(this.tokenService.getUserId());
     this.loadProduct();
   }
 
@@ -55,14 +63,13 @@ export class QuickViewProductFComponent {
       this.quantity = newQuantity;
     }
   }
-
-  addToCart() {
-    if (this.product) {
-      // Ajouter la logique d'ajout au panier ici
-      console.log(`Added ${this.quantity} of ${this.product.name} to cart`);
-      this.showAddedToCartNotification();
-    }
+  addToCart(product: Products) {
+    this.cartService.addItemToCart(this.userId, product.idProduct, 1).subscribe({
+      next: () => alert(`${product.name} added to cart!`),
+      error: err => console.error('Add to cart failed', err)
+    });
   }
+  
 
   private showAddedToCartNotification() {
     // Vous pouvez utiliser un snackbar Material ici

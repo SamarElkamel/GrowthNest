@@ -6,3 +6,6 @@ export { GestionDesBusinessService } from './services/gestion-des-business.servi
 export { GestionDesProduitsService } from './services/gestion-des-produits.service';
 export { AuthenticationService } from './services/authentication.service';
 export { UserManagementService } from './services/user-management.service';
+export { RegistrationManagementService } from './services/registration-management.service';
+export { NotificationManagementService } from './services/notification-management.service';
+export { EventManagementService } from './services/event-management.service';

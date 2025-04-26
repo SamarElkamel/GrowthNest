@@ -11,6 +11,174 @@
     }
   ],
   "paths": {
+    "/Registration/updateStatus/{idR}": {
+      "put": {
+        "tags": ["Registration Management"],
+        "description": "Admin confirm or cancel registration",
+        "operationId": "updateRegistrationStatus",
+        "parameters": [
+          {
+            "name": "idR",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["PENDING", "CONFIRMED", "CANCELED"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Registration"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Registration/updateRegistration": {
+      "put": {
+        "tags": ["Registration Management"],
+        "description": "UpdateRegistration",
+        "operationId": "updateRegistration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Registration"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Registration"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Registration/bulkUpdateStatus": {
+      "put": {
+        "tags": ["Registration Management"],
+        "description": "Bulk update registration statuses",
+        "operationId": "bulkUpdateRegistrationStatus",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "enum": ["PENDING", "CONFIRMED", "CANCELED"]
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Registration"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Notification/markAsRead/{id}": {
+      "put": {
+        "tags": ["Notification Management"],
+        "description": "Mark notification as read",
+        "operationId": "markAsRead",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Notification/markAllAsRead": {
+      "put": {
+        "tags": ["Notification Management"],
+        "description": "Mark all notifications as read",
+        "operationId": "markAllAsRead",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Event/updateEvent": {
+      "put": {
+        "tags": ["Event Management"],
+        "description": "UpdateEvent",
+        "operationId": "updateEvent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Event"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/register": {
       "post": {
         "tags": ["Authentication"],
@@ -67,6 +235,64 @@
         }
       }
     },
+    "/Registration/addRegistration": {
+      "post": {
+        "tags": ["Registration Management"],
+        "description": "AddRegistration",
+        "operationId": "addRegistration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Registration"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Registration"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Event/addEvent": {
+      "post": {
+        "tags": ["Event Management"],
+        "description": "AddEvent",
+        "operationId": "addEvent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Event"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/activate-account": {
       "get": {
         "tags": ["Authentication"],
@@ -78,6 +304,341 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Registration/user/{userId}": {
+      "get": {
+        "tags": ["Registration Management"],
+        "description": "Get user's reservation history",
+        "operationId": "getUserReservations",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Registration"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Registration/statistics": {
+      "get": {
+        "tags": ["Registration Management"],
+        "description": "Get registration statistics",
+        "operationId": "getStatistics",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Registration/downloadInvitation/{idR}": {
+      "get": {
+        "tags": ["Registration Management"],
+        "description": "Download event invitation PDF",
+        "operationId": "downloadInvitation",
+        "parameters": [
+          {
+            "name": "idR",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "byte"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Registration/DisplayRegistration/{idR}": {
+      "get": {
+        "tags": ["Registration Management"],
+        "description": "Display Registration By ID",
+        "operationId": "DisplayRegistration",
+        "parameters": [
+          {
+            "name": "idR",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Registration"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Registration/DisplayByEvent/{eventId}": {
+      "get": {
+        "tags": ["Registration Management"],
+        "description": "Display Registrations By Event ID",
+        "operationId": "DisplayByEvent",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Registration"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Registration/DisplayAllRegistration": {
+      "get": {
+        "tags": ["Registration Management"],
+        "description": "Display All Registration",
+        "operationId": "Display",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Registration"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Notification/unread": {
+      "get": {
+        "tags": ["Notification Management"],
+        "description": "Get all unread notifications",
+        "operationId": "getUnreadNotifications",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Notification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Notification/count": {
+      "get": {
+        "tags": ["Notification Management"],
+        "description": "Get unread notification count",
+        "operationId": "getUnreadNotificationCount",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Event/available": {
+      "get": {
+        "tags": ["Event Management"],
+        "description": "Get available events with reservation counts",
+        "operationId": "getAvailableEventsWithReservationCount",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventWithReservationCount"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Event/DisplayEventHistory": {
+      "get": {
+        "tags": ["Event Management"],
+        "description": "Display Event History (Canceled/Completed)",
+        "operationId": "DisplayEventHistory",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Event/DisplayEvent/{idE}": {
+      "get": {
+        "tags": ["Event Management"],
+        "description": "Display Event By ID ",
+        "operationId": "DisplayEvent",
+        "parameters": [
+          {
+            "name": "idE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Event/DisplayAllEvents": {
+      "get": {
+        "tags": ["Event Management"],
+        "description": "Display All Events",
+        "operationId": "Display_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Registration/deleteRegistration/{idR}": {
+      "delete": {
+        "tags": ["Registration Management"],
+        "description": "DeleteRegistration",
+        "operationId": "deleteRegistration",
+        "parameters": [
+          {
+            "name": "idR",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -431,120 +992,48 @@
   },
   "components": {
     "schemas": {
-      "Business": {
-        "required": ["categorieBusiness", "description", "name"],
+      "Event": {
         "type": "object",
         "properties": {
-          "idBusiness": {
+          "idEvent": {
             "type": "integer",
             "format": "int64"
           },
-          "name": {
-            "maxLength": 50,
-            "minLength": 3,
+          "title": {
             "type": "string"
           },
           "description": {
-            "maxLength": 255,
-            "minLength": 10,
             "type": "string"
           },
-          "categorieBusiness": {
+          "date": {
             "type": "string",
-            "enum": ["CUISINE", "BIJOUX", "MODE", "ARTISANAT", "BEAUTÉ", "DÉCORATION", "SERVICES", "AUTRE"]
+            "format": "date-time"
           },
-          "products": {
-            "uniqueItems": true,
+          "startTime": {
+            "$ref": "#/components/schemas/LocalTime"
+          },
+          "endTime": {
+            "$ref": "#/components/schemas/LocalTime"
+          },
+          "location": {
+            "type": "string"
+          },
+          "numberOfPlaces": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "history": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PLANNED", "ONGOING", "COMPLETED", "CANCELED"]
+          },
+          "registrations": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Products"
+              "$ref": "#/components/schemas/Registration"
             }
-          }
-        }
-      },
-      "Products": {
-        "required": ["description", "name", "stock"],
-        "type": "object",
-        "properties": {
-          "idProduct": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "maxLength": 30,
-            "minLength": 2,
-            "type": "string"
-          },
-          "description": {
-            "maxLength": 500,
-            "minLength": 10,
-            "type": "string"
-          },
-          "price": {
-            "type": "number",
-            "format": "float"
-          },
-          "stock": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "image": {
-            "type": "string"
-          },
-          "barcodePath": {
-            "type": "string"
-          },
-          "business": {
-            "$ref": "#/components/schemas/Business"
-          }
-        }
-      },
-      "RegistrationRequest": {
-        "required": ["email", "firstName", "password"],
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string"
-          },
-          "lastname": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "maxLength": 2147483647,
-            "minLength": 8,
-            "type": "string"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date"
-          },
-          "image": {
-            "type": "string"
-          }
-        }
-      },
-      "AuthenticationRequest": {
-        "required": ["email", "password"],
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "maxLength": 2147483647,
-            "minLength": 8,
-            "type": "string"
-          }
-        }
-      },
-      "AuthenticationResponse": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string"
           }
         }
       },
@@ -553,6 +1042,50 @@
         "properties": {
           "authority": {
             "type": "string"
+          }
+        }
+      },
+      "LocalTime": {
+        "type": "object",
+        "properties": {
+          "hour": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minute": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "second": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nano": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Registration": {
+        "type": "object",
+        "properties": {
+          "idRegist": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "event": {
+            "$ref": "#/components/schemas/Event"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "reservationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "CONFIRMED", "CANCELED"]
           }
         }
       },
@@ -628,6 +1161,161 @@
           },
           "credentialsNonExpired": {
             "type": "boolean"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "RegistrationRequest": {
+        "required": ["email", "firstName", "lastname", "password"],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 2147483647,
+            "minLength": 8,
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "image": {
+            "type": "string"
+          }
+        }
+      },
+      "AuthenticationRequest": {
+        "required": ["email", "password"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 2147483647,
+            "minLength": 8,
+            "type": "string"
+          }
+        }
+      },
+      "AuthenticationResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "Notification": {
+        "type": "object",
+        "properties": {
+          "idNotification": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "registration": {
+            "$ref": "#/components/schemas/Registration"
+          },
+          "message": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "read": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EventWithReservationCount": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "$ref": "#/components/schemas/Event"
+          },
+          "reservationCount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Business": {
+        "required": ["categorieBusiness", "description", "name"],
+        "type": "object",
+        "properties": {
+          "idBusiness": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "maxLength": 50,
+            "minLength": 3,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 255,
+            "minLength": 10,
+            "type": "string"
+          },
+          "categorieBusiness": {
+            "type": "string",
+            "enum": ["CUISINE", "BIJOUX", "MODE", "ARTISANAT", "BEAUTÉ", "DÉCORATION", "SERVICES", "AUTRE"]
+          },
+          "products": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Products"
+            }
+          }
+        }
+      },
+      "Products": {
+        "required": ["description", "name", "stock"],
+        "type": "object",
+        "properties": {
+          "idProduct": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "maxLength": 30,
+            "minLength": 2,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 500,
+            "minLength": 10,
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "float"
+          },
+          "stock": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "image": {
+            "type": "string"
+          },
+          "barcodePath": {
+            "type": "string"
+          },
+          "business": {
+            "$ref": "#/components/schemas/Business"
           }
         }
       }

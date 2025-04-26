@@ -22,6 +22,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class BeansConfig {
 
+
     private final UserDetailsService userDetailsService ;
     @Bean
     public AuthenticationProvider authenticationProvider()

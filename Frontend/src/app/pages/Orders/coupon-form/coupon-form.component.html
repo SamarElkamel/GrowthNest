@@ -1,0 +1,67 @@
+<div class="card bg-white shadow-sm border-0">
+    <div class="card-body">
+      <h4 class="card-title mb-4">Create New Coupon</h4>
+  
+      <form [formGroup]="couponForm" (ngSubmit)="submit()">
+  
+        <!-- Code -->
+        <div class="mb-3">
+          <label class="form-label">Coupon Code</label>
+          <input type="text" class="form-control" formControlName="code" placeholder="e.g. SAVE20" />
+        </div>
+  
+        <!-- Discount -->
+        <div class="mb-3">
+          <label class="form-label">Discount Percentage (%)</label>
+          <input type="number" class="form-control" formControlName="discountPercentage" min="0.1" max="100" step="0.1" />
+        </div>
+  
+        <!-- Expiry -->
+        <div class="mb-3">
+          <label class="form-label">Expiry Date</label>
+          <input type="datetime-local" class="form-control" formControlName="expiryDate" />
+        </div>
+  
+        <!-- Global -->
+        <div class="form-check form-switch mb-3">
+          <input type="checkbox" class="form-check-input" formControlName="global" id="globalCheck" />
+          <label class="form-check-label" for="globalCheck">Applies Globally</label>
+        </div>
+  
+        <!-- Product IDs -->
+        <div class="mb-3">
+          <label class="form-label">Product IDs <small class="text-muted">(comma-separated)</small></label>
+          <input type="text"
+                 class="form-control"
+                 [value]="couponForm.value.productIds?.join(', ')"
+                 (change)="onProductIdsInput($event)"
+                 placeholder="e.g. 1, 2, 5" />
+        </div>
+  
+        <!-- Owner ID -->
+        <div class="mb-3">
+          <label class="form-label">Owner ID</label>
+          <input type="number" class="form-control" formControlName="ownerId" placeholder="e.g. 12" />
+        </div>
+  
+        <!-- Max Uses -->
+        <div class="mb-3">
+          <label class="form-label">Max Uses</label>
+          <input type="number" class="form-control" formControlName="maxUses" min="1" />
+        </div>
+  
+        <!-- Usage Count -->
+        <div class="mb-4">
+          <label class="form-label">Initial Usage Count</label>
+          <input type="number" class="form-control" formControlName="usageCount" min="0" />
+        </div>
+  
+        <!-- Submit -->
+        <button type="submit" [disabled]="loading" class="btn btn-success w-100">
+          <i class="bi bi-plus-circle me-2"></i>
+          {{ loading ? 'Creating...' : 'Create Coupon' }}
+        </button>
+      </form>
+    </div>
+  </div>
+  

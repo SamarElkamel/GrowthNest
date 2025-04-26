@@ -1,0 +1,126 @@
+<div class="soft-holo-container">
+  <!-- Floating Back Button -->
+  <button class="soft-back-btn" routerLink="/admin/events">
+    <span class="material-symbols-outlined"></span>
+    <span>Back to Events</span>
+    <div class="soft-underline"></div>
+  </button>
+
+  <!-- Main Content -->
+  <div class="soft-holo-card" *ngIf="event && !isLoading && !error">
+    <!-- Event Header -->
+    <div class="soft-header">
+      <h2 class="soft-glow-title">{{ event.title }}</h2>
+      <div class="soft-status-bubble" [ngClass]="'status-' + event.status">
+        <div class="bubble-glow"></div>
+        {{ event.status }}
+      </div>
+    </div>
+
+    <!-- Event Details Grid -->
+    <div class="soft-detail-grid">
+      <!-- Date -->
+      <div class="soft-detail-orb">
+        <div class="orb-icon">📅</div>
+        <div class="orb-label">Date</div>
+        <div class="orb-value">{{ event.date | date:'fullDate' }}</div>
+        <div class="orb-aura"></div>
+      </div>
+
+      <!-- Time -->
+      <div class="soft-detail-orb">
+        <div class="orb-icon">⏱️</div>
+        <div class="orb-label">Time</div>
+        <div class="orb-value">
+          {{ event.startTime?.hour }}:{{ event.startTime?.minute | number:'2.0' }} - 
+          {{ event.endTime?.hour }}:{{ event.endTime?.minute | number:'2.0' }}
+        </div>
+        <div class="orb-aura"></div>
+      </div>
+
+      <!-- Location -->
+      <div class="soft-detail-orb">
+        <div class="orb-icon">📍</div>
+        <div class="orb-label">Location</div>
+        <div class="orb-value">{{ event.location || 'Virtual' }}</div>
+        <div class="orb-aura"></div>
+      </div>
+
+      <!-- Number of Places -->
+      <div class="soft-detail-orb">
+        <div class="orb-icon">👥</div>
+        <div class="orb-label">Capacity</div>
+        <div class="orb-value">
+          {{ event.numberOfPlaces || 'Unlimited' }}
+          <ng-container *ngIf="event.numberOfPlaces">
+            ({{ remainingPlaces }} remaining)
+          </ng-container>
+        </div>
+        <div class="orb-aura"></div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="soft-description-panel">
+      <div class="panel-header">
+        <span class="material-symbols-outlined">description</span>
+        <h3>Description</h3>
+      </div>
+      <div class="panel-content">
+        {{ event.description || 'No description provided' }}
+      </div>
+      <div class="panel-grid-lines"></div>
+    </div>
+
+    <!-- Registrations -->
+    <div class="soft-registrations">
+      <div class="registrations-header">
+        <h3>Attendees</h3>
+        <div class="registrations-count">{{ registrations.length }} registered</div>
+      </div>
+      
+      <div class="soft-table">
+        <div class="table-body">
+          <div class="table-row" *ngFor="let reg of registrations">
+            <div class="table-cell user-cell">
+              <div class="user-avatar">{{ reg.user?.username?.charAt(0) || '?' }}</div>
+              {{ reg.user?.username || 'Unknown' }}
+            </div>
+            <div class="table-cell">{{ reg.reservationDate | date:'mediumDate' }}</div>
+            <div class="table-cell">
+              <div class="status-pill" [ngClass]="'status-' + reg.status">
+                {{ reg.status }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="empty-state" *ngIf="registrations.length === 0">
+            <span class="material-symbols-outlined">group_off</span>
+            No attendees yet
+          </div>
+        </div>
+      </div>
+
+      <div class="registrations-actions">
+        <button class="btn-primary" [routerLink]="['/admin/events', event.idEvent, 'manage-registrations']">
+          <i class="bi bi-people me-2"></i>Manage Registrations
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Soft Loading State -->
+  <div *ngIf="isLoading" class="soft-loader">
+    <div class="loader-spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-dot"></div>
+    </div>
+    <div class="loader-text">Loading event details</div>
+  </div>
+
+  <!-- Soft Error State -->
+  <div *ngIf="error" class="soft-error">
+    <span class="material-symbols-outlined">error_outline</span>
+    <div class="error-message">{{ error }}</div>
+  </div>
+</div>

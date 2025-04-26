@@ -9,6 +9,7 @@ import 'isotope-layout';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 import { WishlistService } from 'src/app/services/services/WishlistService';
+import { TokenService } from 'src/app/services/token/token.service';
 
 @Component({
   selector: 'app-businessproducts',
@@ -26,11 +27,12 @@ export class BusinessproductsComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   errorMessage?: string;
   baseUrl: string = 'http://localhost:8080/Growthnest';
-  currentUserId: number = 1; // Utilisateur statique
+  currentUserId!: number; // Utilisateur statique
   wishlist: Set<number> = new Set();
   private wishlistSubscription!: Subscription;
 
   constructor(
+    private tokenService : TokenService,
     private route: ActivatedRoute,
     private produitsService: GestionDesProduitsService,
     private wishlistService: WishlistService,
@@ -39,6 +41,7 @@ export class BusinessproductsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.currentUserId = Number(this.tokenService.getUserId());
     this.route.params.subscribe(params => {
       this.businessId = +params['businessId'];
       this.loadProducts();

@@ -11,32 +11,50 @@ export const ROUTES: RouteInfo[] = [
     submenu: []
   },
   {
-    path: 'admin/users',
-    title: 'Users',
-    icon: 'bi bi-speedometer2',
+    path: '/admin/orders',
+    title: 'Orders',
+    icon: 'bi bi-people',
     class: '',
     extralink: false,
     submenu: []
   },
   {
-    path: 'listBusiness',
-    title: 'small business list',
-    icon: 'bi bi-tools',  // Remplace par l'icône souhaitée
+    path: '/admin/users',
+    title: 'Users',
+    icon: 'bi bi-person',
     class: '',
     extralink: false,
-    submenu: [ ]
+    submenu: []
   },
   {
-    path: 'businesses/add',
-    title: 'add my small business',
-    icon: 'bi bi-tools',  // Remplace par l'icône souhaitée
+    path: '/admin/coupon',
+    title: 'Coupons',
+    icon: 'bi bi-gift',
     class: '',
     extralink: false,
-    submenu: [ ]
+    submenu: []
   },
   {
-    path: '/component/alert',
-    title: 'Alert',
+    path: '/admin/listBusiness',
+    title: 'Small Business List',
+    icon: 'bi bi-tools',
+    class: '',
+    extralink: false,
+    submenu: []
+  },
+  {
+    path: '/businesses/add',
+    title: 'Add My Small Business',
+    icon: 'bi bi-plus-circle',
+    class: '',
+    extralink: false,
+    submenu: []
+  },
+
+
+  {
+    path: '/admin/events',
+    title: 'Events',
     icon: 'bi bi-bell',
     class: '',
     extralink: false,

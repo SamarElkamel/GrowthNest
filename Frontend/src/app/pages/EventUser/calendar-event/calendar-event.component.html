@@ -1,0 +1,6 @@
+<div class="calendar-container">
+    <div *ngIf="isLoading" class="loading-message">Loading confirmed events...</div>
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+
+    <full-calendar *ngIf="!isLoading && !error" [options]="calendarOptions"></full-calendar>
+</div>

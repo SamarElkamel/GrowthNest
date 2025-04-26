@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { OrderListComponent } from './pages/Orders/order-list/order-list.component';
+import { CouponListComponent } from './pages/Orders/coupon-list/coupon-list.component';
 
 import { FullComponent } from './BackOffice/layouts/full/full.component';
 import { LayoutComponent } from './FrontOffice/layout/layout.component';
@@ -16,7 +18,18 @@ import { BusinessDetailBComponent } from './pages/business/business-detail-b/bus
 import { AddProductComponent } from './pages/products/add-product/add-product.component';
 import { AdminDashboardComponent } from './pages/business/admin-dashboard/admin-dashboard.component';
 import { RoleGuard } from './role.guard';
+import { CouponFormComponent } from './pages/Orders/coupon-form/coupon-form.component';
 
+import { EventListComponent } from './pages/EventAdmin/event-list/event-list.component';
+
+import { EventUpdateComponent } from './pages/EventAdmin/update-event/update-event.component';
+import { EventRegistrationsComponent } from './pages/EventAdmin/event-registrations/event-registrations.component';
+import { EventHistoryComponent } from './pages/EventAdmin/event-history/event-history.component';
+import { EventAddComponent } from './pages/EventAdmin/add-event/add-event.component';
+import { EventDetailsComponent } from './pages/EventAdmin/event-details/event-details.component';
+import { ManageEventRegistrationsComponent } from './pages/EventAdmin/manage-event-registrations/manage-event-registrations.component';
+import { StatisticsComponent } from './pages/EventUser/statistics/statistics.component';
+import { NotificationComponent } from './pages/EventAdmin/notification/notification.component';
 export const Approutes: Routes = [
   // Authentication Routes
   { path: 'login', component: LoginComponent },
@@ -26,6 +39,7 @@ export const Approutes: Routes = [
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
 
+  // User List Route (Root Level, Admin Access)
 
 
   // FrontOffice Routes
@@ -54,13 +68,6 @@ export const Approutes: Routes = [
         loadChildren: () =>
           import('./BackOffice/dashboard/dashboard.module').then((m) => m.DashboardModule),
       },
-        // User List Route (Root Level, Admin Access)
-  {
-    path: 'users',
-    component: UserListComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['ROLE_ADMIN'] },
-  },
       {
         path: 'about',
         loadChildren: () =>
@@ -77,7 +84,64 @@ export const Approutes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['ROLE_ADMIN'] },
       },
-     
+
+      {
+        path: 'users',
+        component: UserListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ROLE_ADMIN'] },
+      },
+
+      { path: 'orders', component: OrderListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ROLE_ADMIN'] }, },
+      { path: 'coupon', component: CouponListComponent ,
+        canActivate: [RoleGuard],
+        data: { roles: ['ROLE_ADMIN'] },},
+      { path: 'coupons/create', component: CouponFormComponent ,
+        canActivate: [RoleGuard],
+        data: { roles: ['ROLE_ADMIN'] },},
+        { path: 'events', component: EventListComponent ,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+        },
+
+        { path: 'events/add', component:EventAddComponent ,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+         },
+        { path: 'events/history', component: EventHistoryComponent ,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+         },
+        {path: 'events/statistics', component:StatisticsComponent,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+        },
+        {path: 'events/notif',component:NotificationComponent,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+        },
+        {path: 'events/:id/manage-registrations', component: ManageEventRegistrationsComponent,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+        },
+        { path: 'events/:id', component: EventDetailsComponent,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+        },
+        { path: 'events/update/:id', component: EventUpdateComponent,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+         },
+        { path: 'events/registrations/:id', component: EventRegistrationsComponent,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+         },
+        {path: 'events/statistics', component:StatisticsComponent,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+        },
     ],
   },
 

@@ -34,7 +34,7 @@ export class UserListComponent implements OnInit {
     this.userService.getAllUsers().subscribe({
       next: (data) => {
         if (data && data.length) {
-          const filtered = data.filter(user => user.email.toLowerCase() !== 'admin@gmail.com');
+          const filtered = data.filter(user => user.email?.toLowerCase() !== 'admin@gmail.com');
           this.users = filtered; 
           this.usersInitiaux = filtered; 
           this.paginate(); 
@@ -84,8 +84,8 @@ export class UserListComponent implements OnInit {
       this.users = this.usersInitiaux;
     } else {
       this.users = this.usersInitiaux.filter(user => 
-        user.firstname.toLowerCase().includes(this.query.toLowerCase()) || 
-        user.email.toLowerCase().includes(this.query.toLowerCase())
+        user.firstname?.toLowerCase().includes(this.query.toLowerCase()) || 
+        user.email?.toLowerCase().includes(this.query.toLowerCase())
       );
     }
     this.paginate(); 

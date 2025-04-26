@@ -1,0 +1,21 @@
+.card-wrapper {
+  position: relative;
+  overflow: visible;
+  z-index: 2;
+}
+
+#card-element {
+  min-height: 70px;
+  padding: 12px;
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  z-index: 5;
+  position: relative;
+}
+.stripe-box iframe {
+  pointer-events: auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 10 !important;
+}

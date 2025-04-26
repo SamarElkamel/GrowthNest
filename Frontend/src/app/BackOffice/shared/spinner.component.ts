@@ -41,7 +41,6 @@ export class SpinnerComponent implements OnDestroy {
       }
     });
   }
-
   ngOnDestroy(): void {
     this.isSpinnerVisible = false;
   }

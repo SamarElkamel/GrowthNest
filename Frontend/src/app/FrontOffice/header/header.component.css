@@ -1,69 +1,17 @@
-/* Change color of menu item on hover (desktop) */
-.main-menu > li > a:hover {
-    color: #ff5733; /* Example: Change to orange on hover */
+.wrap-menu-desktop {
+  transition: all 0.3s ease;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 
-  }
-
-  /* Change color of menu item on hover (mobile) */
-  .main-menu-m > li > a:hover {
-    color: #ff5733; /* Example: Change to orange on hover */
-
-  }
-
-  /* Active state (selected link) */
-  .main-menu > li > a:active,
-  .main-menu > li > a:focus {
-    color: #ff5733; /* Change to orange when active or focused */
-
-  }
-
-  /* Change submenu item color on hover (desktop) */
-  .main-menu > li > .sub-menu > li > a:hover {
-    color: #ff5733;
-  }
-
-  /* Change submenu item color on hover (mobile) */
-  .main-menu-m > li > .sub-menu-m > li > a:hover {
-    color: #ff5733;
-  }
-
-  /* Active menu item color (desktop) */
-  .main-menu > li.active-menu > a {
-    color: #ff5733; /* Ensure active menu items are orange */
-  }
-
-  /* Smooth transition for hover, active, and focus effects */
-  .main-menu > li > a {
-    transition: color 0.3s ease, background-color 0.3s ease;
-  }
-
-  .wrap-menu-desktop {
-    transition: all 0.3s ease;
-    position: relative;
+  &.fixed {
+    position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    z-index: 1000;
-
-    &.fixed {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: white;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    }
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   }
-  .wrap-header-cart {
-    position: fixed;
-    z-index: 1100;
-    width: 390px;
-    top: 0;
-    right: -390px;
-    height: 100vh;
-    transition: all 0.5s;
-
-    &.show-cart {
-      right: 0;
-    }
-  }
+}
