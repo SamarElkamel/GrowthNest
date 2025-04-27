@@ -95,7 +95,7 @@ export class AdminStatsComponent implements OnInit {
       this.loading = false;
       return;
     }
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwic3ViIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDU3NjY3NDgsImV4cCI6MTc0NTc3NTM4OCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdfQ.knaBY_4LH_RPMW2LRYZxaFV1q_l9OCuvvrX5Y3AeTd1r4gDY0USzdVNd3P5oMSWA`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwic3ViIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDU3NzMyMDAsImV4cCI6MTc0NTc4MTg0MCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdfQ.0GKyBDf4F6V7wvqJ9C4s3H7nU6pFk7rS3ChT2DvWsxbcZ73IgCJ4acm8FjnDfFQ8`);
 
     this.http.get<TagStats[]>('http://localhost:8080/Growthnest/post/stats/details', { headers })
       .subscribe({

@@ -1,5 +1,6 @@
-<div class="container p-t-60 p-b-60">
 
+
+<div class="container p-t-60 p-b-60">
   <!-- Welcome Banner -->
   <div class="welcome-banner p-4 mb-5">
     <h2 class="banner-title">Welcome to Growthnest Forum!</h2>
@@ -11,28 +12,13 @@
   <!-- Filtres -->
   <div class="filter-header d-flex justify-content-between align-items-center mb-5 flex-wrap">
     <div class="filters">
-      <button (click)="fetchPosts()" class="filter-button" [class.active]="activeFilter === 'All'">
-        📋 All
-      </button>
-
-      <button (click)="filterSaved()" class="filter-button" [class.active]="activeFilter === 'Saved'">
-        💾 Saved
-      </button>
-
-      <button (click)="filterTrending()" class="filter-button" [class.active]="activeFilter === 'Trending'">
-        📈 Trending
-      </button>
-
-      <button (click)="filterRecent()" class="filter-button" [class.active]="activeFilter === 'Newest'">
-        🆕 Newest
-      </button>
-
-      <button (click)="fetchMyPosts()" class="filter-button" [class.active]="activeFilter === 'MyPosts'">
-        🧠 My Posts
-      </button>
+      <button (click)="fetchPosts()" class="filter-button" [class.active]="activeFilter === 'All'">📋 All</button>
+      <button (click)="filterSaved()" class="filter-button" [class.active]="activeFilter === 'Saved'">📂 Saved</button>
+      <button (click)="filterTrending()" class="filter-button" [class.active]="activeFilter === 'Trending'">📈 Trending</button>
+      <button (click)="filterRecent()" class="filter-button" [class.active]="activeFilter === 'Newest'">🎕️ Newest</button>
+      <button (click)="fetchMyPosts()" class="filter-button" [class.active]="activeFilter === 'MyPosts'">🧐 My Posts</button>
     </div>
 
-    <!-- Nouveau bouton Filter personnalisé -->
     <div class="filter-dropdown">
       <button (click)="toggleDropdown()" class="filter-dropdown-button">
         <i class="bi bi-funnel"></i> {{ selectedTagDisplay }}
@@ -44,7 +30,7 @@
     </div>
   </div>
 
-  <!-- Liste des Posts -->
+  <!-- Post List -->
   <div class="post-list">
     <div *ngFor="let post of visiblePosts" class="post-card">
       <div class="post-header">
@@ -65,36 +51,40 @@
         <div class="author">
           👤 {{ post.user?.firstname || 'Unknown' }} {{ post.user?.lastname || '' }}
         </div>
-
         <div class="reactions">
-          <button (click)="addReact(post.idp, 'LIKE')" class="reaction-btn">
-            👍 {{ likesMap[post.idp] || 0 }}
-          </button>
-          <button (click)="addReact(post.idp, 'DISLIKE')" class="reaction-btn">
-            👎 {{ dislikesMap[post.idp] || 0 }}
-          </button>
-          <button (click)="toggleSave(post.idp)" class="save-btn">
-            {{ savedMap[post.idp] ? '★' : '☆' }}
-          </button>
+          <button (click)="addReact(post.idp, 'LIKE')" class="reaction-btn">👍 {{ likesMap[post.idp] || 0 }}</button>
+          <button (click)="addReact(post.idp, 'DISLIKE')" class="reaction-btn">👎 {{ dislikesMap[post.idp] || 0 }}</button>
+          <button (click)="toggleSave(post.idp)" class="save-btn">{{ savedMap[post.idp] ? '★' : '☆' }}</button>
         </div>
       </div>
 
       <!-- Show/Hide Responses -->
       <div class="mt-3">
-        <button (click)="toggleResponses(post.idp)"
-                class="btn btn-light btn-sm response-toggle-button"
-                [class.active-response]="showResponsesMap[post.idp]">
+        <button (click)="toggleResponses(post.idp)" class="btn btn-light btn-sm response-toggle-button"
+          [class.active-response]="showResponsesMap[post.idp]">
           {{ showResponsesMap[post.idp] ? 'Hide Responses' : 'Show Responses' }} ({{ (responsesMap[post.idp] || []).length }})
         </button>
       </div>
 
       <div *ngIf="showResponsesMap[post.idp]" class="response-section">
-        <div *ngFor="let response of responsesMap[post.idp] || []" class="response-item">
-          <div class="d-flex justify-content-between">
+        <div *ngFor="let response of responsesMap[post.idp] || []" class="response-item mb-3">
+          <div class="d-flex justify-content-between align-items-center">
             <strong>{{ response.user?.name || 'Anonymous' }}</strong>
             <small>{{ response.createdAt | date:'short' }}</small>
           </div>
           <p>{{ response.respons }}</p>
+
+          <!-- Reactions on Responses -->
+          <div class="d-flex flex-wrap gap-2 mt-2">
+            <ng-container *ngFor="let reactionType of reactionTypes">
+              <button class="btn btn-outline-secondary btn-sm rounded-circle"
+                      (click)="addReactToResponse(response.id, reactionType)">
+                {{ reactionEmojis[reactionType] }} {{ reactionCountsMap[response.id]?.[reactionType] || 0 }}
+              </button>
+            </ng-container>
+            
+          </div>
+
         </div>
 
         <textarea [(ngModel)]="newResponse[post.idp]" class="form-control mb-2" rows="2" placeholder="Write a response..."></textarea>
@@ -118,24 +108,20 @@
     </ul>
   </nav>
 
-  <!-- Bouton flottant -->
+  <!-- Floating Add Button -->
   <button class="floating-add-btn" (click)="showAddPostModal = true">➕</button>
-
 </div>
 
-<!-- Modal Ajout -->
+<!-- Modal for Adding New Post -->
 <div class="custom-modal-backdrop" *ngIf="showAddPostModal">
   <div class="custom-modal">
     <h4>Add New Post</h4>
-
     <input class="form-control mb-2" placeholder="Title" [(ngModel)]="newPost.title" />
     <textarea class="form-control mb-2" placeholder="Content" [(ngModel)]="newPost.content" rows="3"></textarea>
-
     <select class="form-control mb-2" [(ngModel)]="newPost.tags">
       <option value="">Select Tag</option>
       <option *ngFor="let tag of tags" [value]="tag">{{ tag }}</option>
     </select>
-
     <input type="file" (change)="onFileSelected($event, 'image')" class="form-control mb-2" />
     <input type="file" (change)="onFileSelected($event, 'video')" class="form-control mb-3" />
 
