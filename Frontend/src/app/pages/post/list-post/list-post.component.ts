@@ -55,7 +55,7 @@ export class ListPostComponent implements OnInit {
   fetchPosts(): void {
     this.activeFilter = 'All';
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzA3MjIwLCJleHAiOjE3NDU3MTU4NjAsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Pak9BhUqdC_zLuKMFeSRpE9kIE6FynqC0gi5eBGqyF49-fZVItISJ_mQx2ugSLQm`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzY2NzA4LCJleHAiOjE3NDU3NzUzNDgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4j3TztEYbiHWiSE7csevjdz6o-Y1HgxpM_8AG9iFsr2paW0civZ22ZZCsfrgiZbu`);
     const url = this.selectedTag ? `${this.API_BASE_URL}/post/byTag/${this.selectedTag}` : `${this.API_BASE_URL}/post/retrieveAllPost`;
 
     this.http.get<any[]>(url, { headers }).subscribe({
@@ -121,7 +121,7 @@ export class ListPostComponent implements OnInit {
 
   toggleSave(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzA3MjIwLCJleHAiOjE3NDU3MTU4NjAsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Pak9BhUqdC_zLuKMFeSRpE9kIE6FynqC0gi5eBGqyF49-fZVItISJ_mQx2ugSLQm`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzY2NzA4LCJleHAiOjE3NDU3NzUzNDgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4j3TztEYbiHWiSE7csevjdz6o-Y1HgxpM_8AG9iFsr2paW0civZ22ZZCsfrgiZbu`);
     this.http.post(`${this.API_BASE_URL}/post/save/${postId}`, {}, { headers })
       .subscribe({
         next: () => { this.savedMap[postId] = !this.savedMap[postId]; },
@@ -131,7 +131,7 @@ export class ListPostComponent implements OnInit {
 
   addReact(postId: number, type: 'LIKE' | 'DISLIKE') {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzA3MjIwLCJleHAiOjE3NDU3MTU4NjAsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Pak9BhUqdC_zLuKMFeSRpE9kIE6FynqC0gi5eBGqyF49-fZVItISJ_mQx2ugSLQm`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzY2NzA4LCJleHAiOjE3NDU3NzUzNDgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4j3TztEYbiHWiSE7csevjdz6o-Y1HgxpM_8AG9iFsr2paW0civZ22ZZCsfrgiZbu`);
     const request: ReactRequest = { idp: postId, type };
 
     this.http.post<React | null>(`${this.API_BASE_URL}/api/reacts/add`, request, { headers })
@@ -149,7 +149,7 @@ export class ListPostComponent implements OnInit {
     if (!respons) return;
 
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzA3MjIwLCJleHAiOjE3NDU3MTU4NjAsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Pak9BhUqdC_zLuKMFeSRpE9kIE6FynqC0gi5eBGqyF49-fZVItISJ_mQx2ugSLQm`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzY2NzA4LCJleHAiOjE3NDU3NzUzNDgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4j3TztEYbiHWiSE7csevjdz6o-Y1HgxpM_8AG9iFsr2paW0civZ22ZZCsfrgiZbu`);
 
     this.http.post(`${this.API_BASE_URL}/respons/addRespons`, { respons, postId }, { headers })
       .subscribe({
@@ -182,7 +182,7 @@ export class ListPostComponent implements OnInit {
     if (this.selectedVideo) formData.append('video', this.selectedVideo);
 
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzA3MjIwLCJleHAiOjE3NDU3MTU4NjAsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Pak9BhUqdC_zLuKMFeSRpE9kIE6FynqC0gi5eBGqyF49-fZVItISJ_mQx2ugSLQm` });
+    const headers = new HttpHeaders({ Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzY2NzA4LCJleHAiOjE3NDU3NzUzNDgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4j3TztEYbiHWiSE7csevjdz6o-Y1HgxpM_8AG9iFsr2paW0civZ22ZZCsfrgiZbu` });
 
     this.http.post(`${this.API_BASE_URL}/post/addPost`, formData, { headers })
       .subscribe({
@@ -227,7 +227,7 @@ export class ListPostComponent implements OnInit {
 
   loadSavedPosts() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzA3MjIwLCJleHAiOjE3NDU3MTU4NjAsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Pak9BhUqdC_zLuKMFeSRpE9kIE6FynqC0gi5eBGqyF49-fZVItISJ_mQx2ugSLQm`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzY2NzA4LCJleHAiOjE3NDU3NzUzNDgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4j3TztEYbiHWiSE7csevjdz6o-Y1HgxpM_8AG9iFsr2paW0civZ22ZZCsfrgiZbu`);
     this.http.get<number[]>(`${this.API_BASE_URL}/post/saved`, { headers })
       .subscribe({
         next: (savedIds: number[]) => {
@@ -240,7 +240,7 @@ export class ListPostComponent implements OnInit {
 
   loadResponses(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzA3MjIwLCJleHAiOjE3NDU3MTU4NjAsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Pak9BhUqdC_zLuKMFeSRpE9kIE6FynqC0gi5eBGqyF49-fZVItISJ_mQx2ugSLQm`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzY2NzA4LCJleHAiOjE3NDU3NzUzNDgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4j3TztEYbiHWiSE7csevjdz6o-Y1HgxpM_8AG9iFsr2paW0civZ22ZZCsfrgiZbu`);
     this.http.get<any[]>(`${this.API_BASE_URL}/respons/byPost/${postId}`, { headers })
       .subscribe({
         next: data => { this.responsesMap[postId] = data; },
@@ -250,7 +250,7 @@ export class ListPostComponent implements OnInit {
 
   fetchLikes(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzA3MjIwLCJleHAiOjE3NDU3MTU4NjAsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Pak9BhUqdC_zLuKMFeSRpE9kIE6FynqC0gi5eBGqyF49-fZVItISJ_mQx2ugSLQm`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzY2NzA4LCJleHAiOjE3NDU3NzUzNDgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4j3TztEYbiHWiSE7csevjdz6o-Y1HgxpM_8AG9iFsr2paW0civZ22ZZCsfrgiZbu`);
     this.http.get<number>(`${this.API_BASE_URL}/post/likes/${postId}`, { headers })
       .subscribe({
         next: count => { this.likesMap[postId] = count || 0; },
@@ -260,7 +260,7 @@ export class ListPostComponent implements OnInit {
 
   fetchDislikes(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzA3MjIwLCJleHAiOjE3NDU3MTU4NjAsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Pak9BhUqdC_zLuKMFeSRpE9kIE6FynqC0gi5eBGqyF49-fZVItISJ_mQx2ugSLQm`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzY2NzA4LCJleHAiOjE3NDU3NzUzNDgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4j3TztEYbiHWiSE7csevjdz6o-Y1HgxpM_8AG9iFsr2paW0civZ22ZZCsfrgiZbu`);
     this.http.get<number>(`${this.API_BASE_URL}/post/dislikes/${postId}`, { headers })
       .subscribe({
         next: count => { this.dislikesMap[postId] = count || 0; },
@@ -270,7 +270,7 @@ export class ListPostComponent implements OnInit {
 
   fetchMyPosts() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzA3MjIwLCJleHAiOjE3NDU3MTU4NjAsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Pak9BhUqdC_zLuKMFeSRpE9kIE6FynqC0gi5eBGqyF49-fZVItISJ_mQx2ugSLQm`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzY2NzA4LCJleHAiOjE3NDU3NzUzNDgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.4j3TztEYbiHWiSE7csevjdz6o-Y1HgxpM_8AG9iFsr2paW0civZ22ZZCsfrgiZbu`);
     this.http.get<any[]>(`${this.API_BASE_URL}/post/myPosts`, { headers })
       .subscribe({
         next: data => {
