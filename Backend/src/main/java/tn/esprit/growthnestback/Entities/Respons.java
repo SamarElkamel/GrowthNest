@@ -2,11 +2,13 @@ package tn.esprit.growthnestback.Entities;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -38,6 +40,9 @@ public class Respons {
     private Post post;
 
 
+    @OneToMany(mappedBy = "respons", cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "reactresponse-respons")
+    private List<ReactResponse> reactResponses;
 
 
 }

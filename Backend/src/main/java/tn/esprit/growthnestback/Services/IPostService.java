@@ -2,6 +2,7 @@ package tn.esprit.growthnestback.Services;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
+import tn.esprit.growthnestback.DTO.TagStats;
 import tn.esprit.growthnestback.Entities.Post;
 import tn.esprit.growthnestback.Entities.Tags;
 
@@ -42,4 +43,6 @@ public interface IPostService {
     List<Long> getSavedPostIds(Authentication authentication);
 
     List<Post> getPostsByCurrentUser(Authentication authentication);
+
+    List<TagStats> getTagStats();
 }

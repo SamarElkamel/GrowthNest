@@ -19,8 +19,8 @@ export const ROUTES: RouteInfo[] = [
     submenu: []
   },
   {
-    path: '/component/badges',
-    title: 'Badges',
+    path: '/admin/post/validate',
+    title: 'forum management',
     icon: 'bi bi-patch-check',
     class: '',
     extralink: false,

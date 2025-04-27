@@ -6,19 +6,19 @@ import { HomeComponent } from './frontoffice/home/home.component';
 import { AddPostComponent } from './pages/post/add-post/add-post.component';
 import { FullComponent } from './layouts/full/full.component';
 import { ValidatePostComponent } from './pages/post/validate-post/validate-post.component';
-
+import { AdminStatsComponent } from './pages/admin-stats/admin-stats.component';
 
 export const Approutes: Routes = [
-   // Front Office Routes (Public)
-   {
+  // Front Office Routes (Public)
+  {
     path: '',
     component: ListPostComponent,
     children: [
-      { path: 'posts', component: ListPostComponent },
+      { path: 'posts', component: ListPostComponent }
     ]
   },
 
-  // Admin Routes (Protected)
+  // Back Office Routes (Protected)
   {
     path: 'admin',
     component: FullComponent,
@@ -39,15 +39,11 @@ export const Approutes: Routes = [
       { path: 'posts', component: ListPostComponent },
       { path: 'post/add', component: AddPostComponent },
       { path: 'post/validate', component: ValidatePostComponent },
-      //{ path: 'events/:id', component: EventDetailComponent },
-      //{ path: 'events/edit/:id', component: UpdateEventComponent },
-      //{ path: 'registrations', component: RegistrationListComponent },
-      //{ path: 'registrations/add', component: AddRegistrationComponent },
-      //{ path: 'registrations/:id', component: RegistrationDetailComponent },
-      //{ path: 'registrations/edit/:id', component: UpdateRegistrationComponent }
- 
+      { path: 'stats', component: AdminStatsComponent } // ✅
     ]
   },
+
+  // Redirect any unknown paths
   {
     path: '**',
     redirectTo: '/starter'

@@ -18,17 +18,19 @@ public class ReactController {
     private final IReactService reactService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addOrUpdateReact(@RequestBody ReactRequest request, Authentication authentication) {
+    public ResponseEntity<React> addOrUpdateReact(@RequestBody ReactRequest request, Authentication authentication) {
         ReactionType type;
-
         try {
             type = ReactionType.valueOf(request.getType().toUpperCase());
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid reaction type: " + request.getType());
+            return ResponseEntity.badRequest().body(null); // Or return a custom error object
         }
 
-        reactService.toggleReaction(request.getIdp(), type, authentication);
-        return ResponseEntity.ok("Reaction updated");
+        React react = reactService.toggleReaction(request.getIdp(), type, authentication);
+        if (react == null) {
+            return ResponseEntity.ok(null); // Indicate reaction was removed
+        }
+        return ResponseEntity.ok(react); // Return the new or updated reaction
     }
     @DeleteMapping("/delete/{id}")
     public void deleteReact(@PathVariable("id") long idreact) {

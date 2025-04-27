@@ -94,7 +94,7 @@ public class ReactService implements IReactService {
 
     }
     @Override
-    public void toggleReaction(Long postId, ReactionType newType, Authentication authentication) {
+    public React toggleReaction(Long postId, ReactionType newType, Authentication authentication) {
         String email = authentication.getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -106,17 +106,18 @@ public class ReactService implements IReactService {
         if (existingReactOpt.isPresent()) {
             React existing = existingReactOpt.get();
             if (existing.getType() == newType) {
-                reactRepository.delete(existing); // same click => toggle off
+                reactRepository.delete(existing); // Same click => toggle off
+                return null; // Indicate reaction was removed
             } else {
-                existing.setType(newType); // different type => update
-                reactRepository.save(existing);
+                existing.setType(newType); // Different type => update
+                return reactRepository.save(existing); // Return updated reaction
             }
         } else {
             React newReact = new React();
             newReact.setUser(user);
             newReact.setPost(post);
             newReact.setType(newType);
-            reactRepository.save(newReact);
+            return reactRepository.save(newReact); // Return new reaction
         }
     }
 

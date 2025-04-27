@@ -1,0 +1,52 @@
+
+
+<div class="chart-container">
+  <h2>📊 Statistiques des Posts</h2>
+
+  <div *ngIf="loading" class="loading">Chargement des statistiques...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div *ngIf="!loading && !errorMessage">
+    <ng-container *ngIf="stats.length > 0; else noStats">
+      <div class="chart-wrapper">
+        <canvas baseChart
+                [data]="barChartData"
+                [options]="barChartOptions"
+                [type]="barChartType">
+        </canvas>
+      </div>
+
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Tag</th>
+            <th>Posts</th>
+            <th>Likes</th>
+            <th>Dislikes</th>
+            <th>Réponses</th>
+            <th>% des Posts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stat of stats">
+            <td>{{ stat.tag }}</td>
+            <td>{{ stat.postCount }}</td>
+            <td>{{ stat.likeCount }}</td>
+            <td>{{ stat.dislikeCount }}</td>
+            <td>{{ stat.responseCount }}</td>
+            <td>{{ getPercentage(stat.postCount) | number:'1.0-2' }}%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button (click)="exportToCsv()" class="btn btn-primary mt-3">
+        Exporter en CSV
+      </button>
+      
+    </ng-container>
+
+    <ng-template #noStats>
+      <div class="no-stats">Aucune statistique disponible.</div>
+    </ng-template>
+  </div>
+</div>

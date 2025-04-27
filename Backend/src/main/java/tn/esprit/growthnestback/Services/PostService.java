@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import tn.esprit.growthnestback.DTO.TagStats;
 import tn.esprit.growthnestback.Entities.Post;
 import tn.esprit.growthnestback.Entities.ReactionType;
 import tn.esprit.growthnestback.Entities.Tags;
 import tn.esprit.growthnestback.Entities.User;
 import tn.esprit.growthnestback.Repository.PostRepository;
 import tn.esprit.growthnestback.Repository.ReactRepository;
+import tn.esprit.growthnestback.Repository.ResponsRepository;
 import tn.esprit.growthnestback.Repository.UserRepository;
 
 import java.io.IOException;
@@ -22,8 +24,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,7 +41,8 @@ public class PostService implements IPostService {
     private UserRepository userRepository;
     @Autowired
     private ReactRepository reactRepository;
-
+    @Autowired
+    private ResponsRepository responsRepository;
     @Override
     public Post addPost(String title, String content, String tags, MultipartFile image, MultipartFile video, Authentication authentication) {
         String email = authentication.getName();
@@ -90,7 +95,7 @@ public class PostService implements IPostService {
 
             System.out.println("✅ File saved to: " + fullPath.toAbsolutePath());
 
-            return "/uploads/" + folder + "/" + filename;
+            return filename;
         } catch (IOException e) {
             System.err.println("❌ Failed to save file: " + e.getMessage());
             throw new RuntimeException("Failed to save file", e);
@@ -197,7 +202,34 @@ public class PostService implements IPostService {
         return repo.findByUser(user);
     }
 
+    public List<TagStats> getTagStats() {
+        log.info("Début de getTagStats");
+        log.info("Tags disponibles : {}", Arrays.toString(Tags.values()));
 
+        List<TagStats> stats = Arrays.asList(Tags.values()).stream()
+                .map(tag -> {
+                    log.info("Traitement du tag : {}", tag);
+                    long postCount = repo.countByTags(tag);
+                    long likeCount = reactRepository.countByPost_TagsAndType(tag, ReactionType.LIKE);
+                    long dislikeCount = reactRepository.countByPost_TagsAndType(tag, ReactionType.DISLIKE);
+                    long responseCount = responsRepository.countByPost_Tags(tag);
+                    log.info("Stats pour {}: posts={}, likes={}, dislikes={}, responses={}",
+                            tag, postCount, likeCount, dislikeCount, responseCount);
+
+                    TagStats tagStats = new TagStats();
+                    tagStats.setTag(tag.name());
+                    tagStats.setPostCount(postCount);
+                    tagStats.setLikeCount(likeCount);
+                    tagStats.setDislikeCount(dislikeCount);
+                    tagStats.setResponseCount(responseCount);
+
+                    return tagStats;
+                })
+                .collect(Collectors.toList());
+
+        log.info("Stats finales : {}", stats);
+        return stats;
+    }
 
 }
 

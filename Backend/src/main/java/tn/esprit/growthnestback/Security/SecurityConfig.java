@@ -50,7 +50,8 @@ public class SecurityConfig {
                                         "/swagger-ui.html",
                                         "/Growthnest/post/**",
                                         "/Growthnest/respons/**",
-                                        "/Growthnest/api/reacts/**"
+                                        "/Growthnest/api/reacts/**",
+                                        "/api/react-responses/**"
 
                                 ).permitAll()
                                 .requestMatchers("/Growthnest/post/addPost").hasAnyRole("USER", "ADMIN")
@@ -75,6 +76,8 @@ public class SecurityConfig {
                         .allowedOrigins("*")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
+
+
             }
         };
     }

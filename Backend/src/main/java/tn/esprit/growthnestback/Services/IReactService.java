@@ -18,5 +18,5 @@ public interface IReactService {
     List<React> getReactsByUserId(long userId);
     React getReactById(long idreact);
 
-    void toggleReaction(Long postId, ReactionType newType, Authentication authentication);
+    React toggleReaction(Long postId, ReactionType newType, Authentication authentication);
 }

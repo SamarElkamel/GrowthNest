@@ -1,25 +1,75 @@
 <div class="admin-validate-container">
-    <h2>🛠️ Admin: Validate Posts</h2>
-  
-    <div *ngIf="unvalidatedPosts.length === 0" class="empty-message">
-      ✅ No pending posts to validate.
-    </div>
-  
-    <div *ngFor="let post of unvalidatedPosts" class="post-card">
-      <h3>{{ post.title }}</h3>
-      <p>{{ post.content }}</p>
-      <p><strong>Tag:</strong> {{ post.tags }}</p>
-      <p><strong>Created:</strong> {{ post.createdAt | date:'short' }}</p>
-  
-      <img *ngIf="post.image" [src]="'http://localhost:8080/' + post.image" alt="Post Image" style="max-width: 100%; margin: 10px 0; border-radius: 8px;">
-  
-      <video *ngIf="post.video" controls style="width: 100%; margin: 10px 0; border-radius: 8px;">
-        <source [src]="'http://localhost:8080/' + post.video" type="video/mp4">
-        Your browser does not support the video tag.
+  <!-- 🚀 Header avec boutons -->
+  <div class="admin-header-buttons mb-4 d-flex gap-3">
+    <button routerLink="/admin/post/add" class="btn btn-primary">
+      ➕ Add Forum
+    </button>
+    <button routerLink="/admin/stats" class="btn btn-success">
+      📈 Forum Statistics
+    </button>
+  </div>
+
+  <!-- 🎯 Section Validation des Posts -->
+  <h2 class="my-4">🛠️ Admin: Validate Posts</h2>
+
+  <div *ngIf="unvalidatedPosts.length === 0" class="empty-message">
+    ✅ No pending posts to validate.
+  </div>
+
+  <div *ngIf="unvalidatedPosts.length > 0" class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Title</th>
+          <th>Tag</th>
+          <th>Created</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of unvalidatedPosts">
+          <td>{{ post.title }}</td>
+          <td><span class="badge bg-info">{{ post.tags }}</span></td>
+          <td>{{ post.createdAt | date:'short' }}</td>
+          <td>
+            <span class="badge bg-warning">Pending</span>
+          </td>
+          <td>
+            <div class="d-flex gap-2">
+              <button (click)="openModal(post)" class="btn btn-primary btn-sm">
+                👁️ 
+              </button>
+              <button (click)="validatePost(post.idp)" class="btn btn-success btn-sm">
+                ✅ 
+              </button>
+              <button (click)="deletePost(post.idp)" class="btn btn-danger btn-sm">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 🪟 Modal -->
+  <div class="modal-backdrop" *ngIf="selectedPost">
+    <div class="modal-content">
+      <h4>{{ selectedPost.title }}</h4>
+      <p>{{ selectedPost.content }}</p>
+
+      <img *ngIf="selectedPost.image" [src]="'http://localhost:8080/' + selectedPost.image" alt="Image" class="img-fluid rounded my-3">
+      
+      <video *ngIf="selectedPost.video" controls class="w-100 rounded my-3">
+        <source [src]="'http://localhost:8080/' + selectedPost.video" type="video/mp4">
       </video>
-  
-      <button (click)="validatePost(post.idp)" class="validate-btn">✅ Validate</button>
-      <button (click)="deletePost(post.idp)" class="btn btn-danger btn-sm">🗑️</button>
+
+      <div class="d-flex justify-content-end">
+        <button (click)="closeModal()" class="btn btn-secondary mt-3">
+          Close
+        </button>
+      </div>
     </div>
   </div>
-  
+</div>

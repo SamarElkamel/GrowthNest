@@ -8,13 +8,30 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tn.esprit.growthnestback.DTO.TagStats;
 import tn.esprit.growthnestback.Entities.Post;
 import tn.esprit.growthnestback.Entities.Tags;
 import tn.esprit.growthnestback.Services.IPostService;
 
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-@PreAuthorize("hasAnyRole('USER')")
+@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+
+
 
 @RestController
 @AllArgsConstructor
@@ -108,4 +125,29 @@ public class PostController {
     public ResponseEntity<List<Long>> getSaved(Authentication auth) {
         return ResponseEntity.ok(postService.getSavedPostIds(auth));
     }
+
+    @GetMapping("/images/{filename:.+}")
+    public ResponseEntity<Resource> serveImage(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get("uploads/images/").resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .header("Content-Type", "image/jpeg") // Adjust MIME type as needed
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @CrossOrigin(origins = "http://localhost:4200") // <-- AJOUT ICI
+    @GetMapping("/stats/details")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<TagStats> getTagStats() {
+        return postService.getTagStats();
+    }
+
 }

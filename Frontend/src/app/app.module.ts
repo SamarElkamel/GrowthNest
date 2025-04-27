@@ -10,16 +10,10 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
-
-
-
-
+import { NgChartsModule } from 'ng2-charts';
 
 import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-
 
 import { SpinnerComponent } from './backoffice/shared/spinner.component';
 import { NavigationComponent } from './backoffice/shared/header/navigation.component';
@@ -37,7 +31,7 @@ import { HeaderComponent } from './frontoffice/header/header.component';
 import { FooterComponent } from './frontoffice/footer/footer.component';
 import { HomeComponent } from './frontoffice/home/home.component';
 import { ValidatePostComponent } from './pages/post/validate-post/validate-post.component';
-
+import { AdminStatsComponent } from './pages/admin-stats/admin-stats.component'; // Chemin corrigé
 
 @NgModule({
   declarations: [
@@ -54,7 +48,8 @@ import { ValidatePostComponent } from './pages/post/validate-post/validate-post.
     HeaderComponent,
     FooterComponent,
     HomeComponent,
-    ValidatePostComponent
+    ValidatePostComponent,
+    AdminStatsComponent
   ],
   imports: [
     CommonModule,
@@ -65,10 +60,10 @@ import { ValidatePostComponent } from './pages/post/validate-post/validate-post.
     HttpClientModule,
     NgbModule,
     RouterModule.forRoot(Approutes, { useHash: false }),
+    NgChartsModule,
     FullComponent,
     NavigationComponent,
-    SidebarComponent,
-    
+    SidebarComponent
   ],
   providers: [
     {

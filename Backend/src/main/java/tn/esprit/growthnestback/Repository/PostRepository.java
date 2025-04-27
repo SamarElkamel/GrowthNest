@@ -16,5 +16,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByValidatedTrue();
     List<Post> findByValidatedFalse();
     List<Post> findByUser(User user);
-
+    long countByTags(Tags tag);
 }

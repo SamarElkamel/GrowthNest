@@ -74,6 +74,11 @@ public class User implements UserDetails, Principal {
     )
     private Set<Post> savedPosts = new HashSet<>();
 
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "reactresponse-user")
+    private List<ReactResponse> reactResponses;
+
     // Spring Security methods
 
     @Override
