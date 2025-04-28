@@ -1,19 +1,21 @@
+<div class="card">
+  <div class="card-body">
 <div class="event-management-container">
   <!-- Header Section -->
   <div class="management-header">
-    <h2>Event Management</h2>
+    <h4 class="card-title">Event Management</h4>
   </div>
 
   <!-- Action Buttons -->
   <div class="action-buttons">
-    <button class="btn-primary mr-2" (click)="addEvent()">Add Event</button>
-    <button class="btn-secondary mr-2" (click)="viewHistory()">View History</button>
-    <a routerLink="/admin/events/statistics" class="btn-secondary mr-2">
+    <button class="btn btn-primary btn-sm mb-3" (click)="addEvent()">Add Event</button>
+    <button class="btn btn-secondary btn-sm mb-3" (click)="viewHistory()">View History</button>
+    <a routerLink="/admin/events/statistics" class="btn btn-secondary btn-sm mb-3">
       <i class="fas fa-chart-bar mr-1"></i> View Statistics
     </a>
-    <a routerLink="/admin/events/notif" class="btn-secondary mr-2 position-relative">
+    <a routerLink="/admin/events/notif" class="btn btn-secondary btn-sm mb-3 position-relative">
       <i class="fas fa-bell mr-1"></i> Notifications
-      <span *ngIf="unreadNotificationCount > 0" class="badge badge-danger position-absolute top-0 start-100 translate-middle">
+      <span *ngIf="unreadNotificationCount > 0" class="badge bg-danger position-absolute top-0 start-100 translate-middle">
         {{ unreadNotificationCount }}
       </span>
     </a>
@@ -24,33 +26,33 @@
   <div *ngIf="error" class="status-message error">{{ error }}</div>
 
   <!-- Events Table -->
-  <div class="card" *ngIf="!isLoading && !error">
-    <div class="table-container">
-      <table>
+  <div  *ngIf="!isLoading && !error">
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle text-nowrap">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Date</th>
-            <th>Location</th>
-            <th>Places</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th class="text-dark font-medium fs-4">Event Title</th>
+            <th class="text-dark font-medium fs-4">Event Date</th>
+            <th class="text-dark font-medium fs-4">Location</th>
+            <th class="text-dark font-medium fs-4">Available Places</th>
+            <th class="text-dark font-medium fs-4">Status</th>
+            <th class="text-dark font-medium fs-4">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let event of paginatedEvents">
-            <td class="event-title">{{ event.title }}</td>
+            <td>{{ event.title }}</td>
             <td>{{ event.date | date:'mediumDate' }}</td>
             <td>{{ event.location }}</td>
             <td>{{ event.numberOfPlaces || 'Unlimited' }}</td>
             <td>
-              <span class="status-badge" [ngClass]="'status-' + event.status">
+                  <span class="status-badge" [ngClass]="'status-' + event.status">
                 {{ event.status }}
               </span>
             </td>
-            <td class="actions">
-              <button class="btn-text info" (click)="viewDetails(event.idEvent!)">Details</button>
-              <button class="btn-text warning" (click)="updateEvent(event)">Update</button>
+            <td>
+              <button class="btn btn-sm btn-outline-primary me-1" (click)="viewDetails(event.idEvent!)">Details</button>
+              <button class="btn btn-sm btn-outline-warning" (click)="updateEvent(event)">Update</button>
             </td>
           </tr>
         </tbody>
@@ -59,7 +61,7 @@
   </div>
 
   <!-- Pagination -->
-  <div class="pagination" *ngIf="!isLoading && events.length > pageSize">
+  <div class="pagination mt-3" *ngIf="!isLoading && events.length > pageSize">
     <ngb-pagination
       [(page)]="page"
       [pageSize]="pageSize"
@@ -70,4 +72,6 @@
       aria-label="Event pagination">
     </ngb-pagination>
   </div>
+</div>
+</div>
 </div>

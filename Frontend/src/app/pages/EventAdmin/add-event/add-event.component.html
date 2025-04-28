@@ -83,7 +83,7 @@
     </div>
 
     <div class="form-actions">
-      <button type="submit" class="btn-submit" [disabled]="isLoading || form.invalid || dateError || statusError">
+      <button type="submit" class="btn-submit" [disabled]="isLoading || form.invalid || dateError || statusError" id="butt">
         {{ isLoading ? 'Creating Event...' : 'Create Event' }}
       </button>
     </div>

@@ -1,6 +1,6 @@
 // Color Variables
-$primary: #4361ee;
-$secondary: #6c757d;
+$primary: #212529;
+$secondary: #fb9678;;
 $success: #4cc9f0;
 $danger: #f72585;
 $light: #f8f9fa;
@@ -13,6 +13,17 @@ $border-color: #e0e0e0;
   margin: 2rem auto;
   padding: 0 1rem;
   font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+#butt
+{
+    background-color: #fb9678;
+    border-color: #fb9678; 
+}
+
+#butt:hover
+{
+    background-color: #fca68c;
 }
 
 // Header Styles

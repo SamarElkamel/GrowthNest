@@ -1,77 +1,82 @@
 <div class="card">
-    <div class="card-body">
-      <h4 class="mt-4">Usage Analytics</h4>
-      <h4 class="mt-4">Usage Analytics</h4>
-      <table class="table table-bordered table-hover mt-2">
+  <div class="card-body">
+    <h4 class="card-title">Coupons list</h4>
+    <table class="table table-bordered table-hover mt-2">
+      <thead>
+        <tr>
+          <th>Coupon Code</th>
+          <th>Used</th>
+          <th>Max Uses</th>
+          <th>Remaining</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let coupon of analyticsList">
+          <td>{{ coupon.code }}</td>
+          <td>{{ coupon.countUsers }}</td>
+          <td>{{ coupon.maxUses }}</td>
+          <td>{{ coupon.remainingUses }}</td>
+          <td>
+            <span [ngClass]="coupon.expired ? 'badge bg-danger' : 'badge bg-success'">
+              {{ coupon.expired ? 'Expired' : 'Active' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4 class="card-title">Coupons</h4>
+    <button type="button" class="btn btn-primary btn-sm mb-3" routerLink="/coupons/create" id="butt">
+      <i class="bi bi-plus"></i> Create Coupon
+    </button>
+
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle text-nowrap">
         <thead>
           <tr>
-            <th>Coupon Code</th>
-            <th>Used</th>
-            <th>Max Uses</th>
-            <th>Remaining</th>
-            <th>Status</th>
+            <th class="text-dark font-medium fs-4">#</th>
+            <th class="text-dark font-medium fs-4">Code</th>
+            <th class="text-dark font-medium fs-4">Discount %</th>
+            <th class="text-dark font-medium fs-4">Expiry</th>
+            <th class="text-dark font-medium fs-4">Status</th>
+            <th class="text-dark font-medium fs-4">Owner</th>
+            <th class="text-dark font-medium fs-4">Usage</th>
+            <th class="text-dark font-medium fs-4">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let coupon of analyticsList">
-            <td>{{ coupon.code }}</td>
-            <td>{{ coupon.countUsers }}</td>
-            <td>{{ coupon.maxUses }}</td>
-            <td>{{ coupon.remainingUses }}</td>
+          <tr *ngFor="let c of paginatedCoupons; index as i">
+            <td>{{ i + 1 }}</td>
+            <td>{{ c.code }}</td>
+            <td>{{ c.discountPercentage }}%</td>
+            <td>{{ c.expiryDate | date: 'mediumDate' }}</td>
             <td>
-              <span [ngClass]="coupon.expired ? 'badge bg-danger' : 'badge bg-success'">
-                {{ coupon.expired ? 'Expired' : 'Active' }}
+              <span [ngClass]="c.active ? 'text-success' : 'text-danger'">
+                {{ c.active ? 'Active' : 'Inactive' }}
               </span>
+            </td>
+            <td>{{ c.ownerName }}</td>
+            <td>{{ c.usageCount }} / {{ c.maxUses }}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary me-1" (click)="toggleActive(c.id)">
+                Toggle
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteCoupon(c.id)">
+                Delete
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
-      
-      
-      <h4 class="card-title">Coupons</h4>
-      <button type="button" class="btn btn-primary" routerLink="/coupons/create">
-        <i class="bi bi-plus"></i> Create Coupon
-      </button>
-      
-      <div class="table-responsive">
-        <table class="table table-bordered align-middle text-nowrap">
-          <thead>
-            <tr>
-              <th class="text-dark font-medium fs-4">#</th>
-              <th class="text-dark font-medium fs-4">Code</th>
-              <th class="text-dark font-medium fs-4">Discount %</th>
-              <th class="text-dark font-medium fs-4">Expiry</th>
-              <th class="text-dark font-medium fs-4">Status</th>
-              <th class="text-dark font-medium fs-4">Owner</th>
-              <th class="text-dark font-medium fs-4">Usage</th>
-              <th class="text-dark font-medium fs-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let c of coupons; index as i">
-              <td>{{ i + 1 }}</td>
-              <td>{{ c.code }}</td>
-              <td>{{ c.discountPercentage }}%</td>
-              <td>{{ c.expiryDate | date: 'mediumDate' }}</td>
-              <td>
-                <span [ngClass]="c.active ? 'text-success' : 'text-danger'">
-                  {{ c.active ? 'Active' : 'Inactive' }}
-                </span>
-              </td>
-              <td>{{ c.ownerName }}</td>
-              <td>{{ c.usageCount }} / {{ c.maxUses }}</td>
-              <td>
-                <button class="btn btn-sm btn-outline-primary me-1" (click)="toggleActive(c.id)">
-                  Toggle
-                </button>
-                <button class="btn btn-sm btn-outline-danger" (click)="deleteCoupon(c.id)">
-                  Delete
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination mt-3">
+      <button class="btn btn-light" (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+      <span *ngFor="let page of pages">
+        <button class="btn btn-light" (click)="goToPage(page)" [class.active]="page === currentPage">{{ page }}</button>
+      </span>
+      <button class="btn btn-light" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
     </div>
   </div>
-  

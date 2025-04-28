@@ -13,8 +13,8 @@
       </div>
 
       <div class="right-top-bar flex-w h-full">
-        <a href="#" class="flex-c-m trans-04 p-lr-25">
-          Help & FAQs
+        <a href="/businesses/add" class="flex-c-m trans-04 p-lr-25" *ngIf=" role === 'ROLE_BuisnessOwner'">
+          Add new business
         </a>
 
 
@@ -26,13 +26,7 @@
   Logout
 </a>
 
-        <a href="#" class="flex-c-m trans-04 p-lr-25">
-          EN
-        </a>
-
-        <a href="#" class="flex-c-m trans-04 p-lr-25">
-          USD
-        </a>
+   
       </div>
     </div>
   </div>
@@ -57,12 +51,12 @@
         <li>
           <a routerLink="/businesses" routerLinkActive="active">small business</a>
         </li>
-        <li class="label1" data-label1="hot">
+        <li class="label1" data-label1="hot" *ngIf=" role === 'ROLE_BuisnessOwner' || role === 'ROLE_MarketingAgent'">
           <a routerLink="/cart">Marketing Agencies </a>
         </li>
 
         <li><a routerLink="/events/user">Events</a></li>
-        <li><a routerLink="/about">Delivery Agencies </a></li>
+        <li  *ngIf=" role === 'ROLE_BuisnessOwner' "><a routerLink="/about">Delivery Agencies </a></li>
         <li><a routerLink="/contact">Forum</a></li>
       </ul>
     </div>

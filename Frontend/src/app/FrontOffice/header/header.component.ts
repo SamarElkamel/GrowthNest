@@ -21,6 +21,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isScrolled = false;
   userId = 1; 
   points: number = 0;
+  role: string | null = '';
 
 
   constructor(
@@ -46,6 +47,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       next: (data) => this.points = data.availablePoints,
       error: () => this.points = 0
     });
+
+    this.role = this.tokenService.getUserRole(); 
 
   }
   ngOnDestroy(): void {

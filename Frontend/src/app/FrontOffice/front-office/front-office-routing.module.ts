@@ -59,7 +59,7 @@ const routes: Routes = [
     path: 'profile',
     component: UserProfileComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['ROLE_USER', 'ROLE_BusinessOwner', 'ROLE_MarketingAgent'] }
+    data: { roles: ['ROLE_USER', 'ROLE_BuisnessOwner', 'ROLE_MarketingAgent'] }
   },
   {
     path: 'updateprofile',

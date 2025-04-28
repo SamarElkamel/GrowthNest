@@ -1,5 +1,5 @@
 // Color Variables - Matching the add form
-$primary: #4361ee;
+$primary: #212529;
 $secondary: #6c757d;
 $success: #4cc9f0;
 $danger: #f72585;
@@ -352,4 +352,15 @@ $border-color: #e0e0e0;
   &:hover {
     background-color: darken($primary, 10%);
   }
+}
+
+#butt
+{
+    background-color: #fb9678;
+    border-color: #fb9678; 
+}
+
+#butt:hover
+{
+    background-color: #fca68c;
 }

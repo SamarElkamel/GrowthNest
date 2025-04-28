@@ -1,6 +1,6 @@
 /* Match the exact button style from your form */
 .btn-submit {
-    background: #4361ee;
+    background: black;
     color: white;
     border: none;
     padding: 0.8rem 1.5rem;
@@ -14,7 +14,7 @@
   }
   
   .btn-submit:hover:not(:disabled) {
-    background: #3a56d4;
+    background: black;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }

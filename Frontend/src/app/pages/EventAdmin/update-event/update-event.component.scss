@@ -1,5 +1,5 @@
 /* Soft Futuristic Color Palette */
-$primary-soft: #3e2be8;
+$primary-soft: black;
 $secondary-soft: #0c669a;
 $glass-white: rgba(255, 255, 255, 0.85);
 $glass-border: rgba(255, 255, 255, 0.3);
@@ -18,6 +18,16 @@ $soft-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
   box-shadow: $soft-shadow;
 }
 
+#butt
+{
+    background-color: #fb9678;
+    border-color: #fb9678; 
+}
+
+#butt:hover
+{
+    background-color: #fca68c;
+}
 /* Header Styles */
 .form-header {
   margin-bottom: 2rem;

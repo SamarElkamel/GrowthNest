@@ -1,5 +1,5 @@
 // Color Variables
-$primary: #4361ee;
+$primary: #212529;
 $secondary: #3a0ca3;
 $success: #4cc9f0;
 $warning: #f8961e;
@@ -65,16 +65,11 @@ $dark: #212529;
 table {
   width: 100%;
   border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
   
   th {
-    background-color: rgba($primary, 0.05);
-    color: $primary;
-    padding: 1rem;
-    text-align: left;
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    background-color: #f8f9fa;
   }
   
   td {
@@ -97,6 +92,9 @@ table {
   color: $dark;
 }
 
+.table-container {
+  overflow-x: auto;
+}
 // Status Badges
 .status-badge {
   padding: 0.35rem 0.8rem;

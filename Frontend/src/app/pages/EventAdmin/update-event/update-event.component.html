@@ -103,8 +103,8 @@
     </div>
 
     <!-- Submit Button -->
-    <button type="submit" class="soft-submit-btn" 
-            [disabled]="isLoading || form.invalid || dateError">
+    <button type="submit" class="btn btn-dark btn-lg btn-block" 
+            [disabled]="isLoading || form.invalid || dateError" id="butt">
       <span class="btn-content">
         {{ isLoading ? 'Updating...' : 'Confirm Changes' }}
       </span>

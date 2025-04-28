@@ -1,11 +1,13 @@
 // Color Variables
-$primary: #4361ee;
+$primary: #fb9678;
 $secondary: #6c757d;
 $success: #4cc9f0;
 $warning: #f8961e;
 $danger: #f72585;
 $light: #f8f9fa;
 $dark: #212529;
+
+
 
 // Main Container
 .event-management-container {
@@ -120,31 +122,15 @@ $dark: #212529;
   overflow-x: auto;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  
-  th {
-    background-color: rgba($primary, 0.05);
-    color: $primary;
-    padding: 1rem;
-    text-align: left;
-    font-weight: 600;
-  }
-  
-  td {
-    padding: 1rem;
-    border-bottom: 1px solid rgba($dark, 0.05);
-  }
-  
-  tr:last-child td {
-    border-bottom: none;
-  }
-  
-  tr:hover td {
-    background-color: rgba($primary, 0.02);
-  }
+.table {
+  border-radius: 10px;
+  overflow: hidden;
 }
+
+.table thead {
+  background-color: #f8f9fa;
+}
+
 
 // Status Badges
 .status-badge {

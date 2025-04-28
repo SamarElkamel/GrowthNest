@@ -95,6 +95,7 @@
               <!-- Reservation Buttons -->
               <div class="flex-w flex-t p-t-30">
                 <button *ngIf="!hasReservation && remainingPlaces > 0" 
+                        id="butt"
                         class="flex-c-m stext-101 cl0 size-125 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-10"
                         (click)="showAddReservationForm()">
                   Add Reservation
@@ -104,7 +105,7 @@
                   No Places Remaining
                 </span>
                 <button *ngIf="hasReservation" 
-                        class="flex-c-m stext-101 cl0 size-125 bg1 bor2 hov-btn1 p-lr-15 trans-04"
+                class="flex-c-m stext-101 cl0 size-125 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-10"
                         (click)="goToReservations()">
                   View Your Reservations
                 </button>

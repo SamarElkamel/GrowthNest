@@ -1,11 +1,14 @@
+<div class="card">
+  <div class="card-body">
+
 <div class="notification-container container-fluid py-4">
   <div class="management-header text-center mb-4">
-    <h2 class="display-5 fw-bold text-primary">Pending Registration Notifications</h2>
+    <h2>Pending Registration Notifications</h2>
     <p class="lead text-muted">Manage event registration requests</p>
   </div>
 
   <div class="action-buttons d-flex mb-4">
-    <button class="btn btn-primary me-2" (click)="markAllAsRead()" [disabled]="isLoading">
+    <button class="btn btn-primary me-2" (click)="markAllAsRead()" [disabled]="isLoading" id="butt">
       <i class="fas fa-check-circle me-2"></i>Mark All as Read
     </button>
     <button class="btn btn-outline-secondary" (click)="goBack()" [disabled]="isLoading">
@@ -124,4 +127,6 @@
       class="d-flex justify-content-center">
     </ngb-pagination>
   </div>
+</div>
+</div>
 </div>

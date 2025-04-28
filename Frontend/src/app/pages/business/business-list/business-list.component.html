@@ -1,76 +1,80 @@
 <div class="container dynamic-business-table">
-    <h2 class="table-title">📋 Small business list </h2>
-    
-    <div class="table-wrapper">
-      <div class="table-header">
-        <h3>Gestion des entreprises</h3>
-        <p>{{ businesses.length }} entreprises enregistrées</p>
-      </div>
+  <h4 class="card-title"> Small business list</h4>
   
-      <div class="table-responsive">
-        <table class="business-table">
-          <thead>
-            <tr>
-              <th *ngFor="let column of columns" [class]="column.class">
-                {{ column.label }}
-              </th>
-            </tr>
-          </thead>
+  <div class="table-wrapper" >
+    <div class="table-header" id="register-company">
+      <h3>Business management</h3>
+      <p>{{ businesses.length }}
+        registered companies</p>
+    </div>
+
+    <div class="table-responsive">
+      <table class="business-table table align-middle">
+        <thead>
+          <tr>
+            <th class="text-dark font-medium fs-4">Business Name</th>
+            <th class="text-dark font-medium fs-4">Category</th>
+            <th class="text-dark font-medium fs-4">Description</th>
+            <th class="text-dark font-medium fs-4">Actions</th>
+          </tr>
+        </thead>
+        
+        <tbody>
+          <tr *ngFor="let business of businesses; let i = index" [class.highlighted]="selectedRow === i" 
+              (mouseenter)="selectedRow = i" (mouseleave)="selectedRow = null">
+            <td class="business-name">{{ business.name }}</td>
+            <td>
+              <span class="category-badge" [ngClass]="getCategoryStyle(business.categorieBusiness)">
+                {{ business.categorieBusiness }}
+              </span>
+            </td>
+            <td class="business-description">
+              {{ business.description || 'Aucune description' }}
+            </td>
+            <td class="actions">
+              <div class="action-buttons">
+                <button class="btn-icon details" (click)="openDetailsDialog(business)">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-icon delete" (click)="deleteBusiness(business.idBusiness!)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+                <button class="btn-icon edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
           
-          <tbody>
-            <tr *ngFor="let business of businesses; let i = index" 
-                [class.highlighted]="selectedRow === i"
-                (mouseenter)="selectedRow = i"
-                (mouseleave)="selectedRow = null">
-              
-              <td class="business-name">
-                {{ business.name }}
-              </td>
-              
-              <td>
-                <span class="category-badge" [ngClass]="getCategoryStyle(business.categorieBusiness)">
-                  {{ business.categorieBusiness }}
-                </span>
-              </td>
-              
-              <td class="business-description">
-                {{ business.description || 'Aucune description' }}
-              </td>
-              
-              <td class="actions">
-                <div class="action-buttons">
-                  <button class="btn-icon details" (click)="openDetailsDialog(business)" >
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn-icon delete"  (click)="deleteBusiness(business.idBusiness!)">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                  <button class="btn-icon edit" >
-                    <i class="fas fa-edit"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            
-            <tr *ngIf="businesses.length === 0" class="no-results">
-              <td colspan="4">
-                <div class="empty-state">
-                  <i class="fas fa-building fa-3x"></i>
-                  <p>Aucune entreprise trouvée</p>
-                  <button class="btn-add" >
-                    <i class="fas fa-plus"></i> Ajouter une entreprise
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          <tr *ngIf="businesses.length === 0" class="no-results">
+            <td colspan="4">
+              <div class="empty-state">
+                <i class="fas fa-building fa-3x"></i>
+                <p>Aucune entreprise trouvée</p>
+                <button class="btn-add">
+                  <i class="fas fa-plus"></i> Ajouter une entreprise
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="table-footer" *ngIf="businesses.length > 0">
+      <div class="pagination-info">
+        Displaying {{ businesses.length }} results
+
       </div>
       
-      <div class="table-footer" *ngIf="businesses.length > 0">
-        <div class="pagination-info">
-          Affichage de {{ businesses.length }} résultats
-        </div>
+      <!-- Pagination Controls -->
+      <div class="pagination">
+        <button class="btn btn-light" (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+        <span *ngFor="let page of pages">
+          <button class="btn btn-light" (click)="goToPage(page)" [class.active]="page === currentPage">{{ page }}</button>
+        </span>
+        <button class="btn btn-light" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
       </div>
     </div>
   </div>
+</div>

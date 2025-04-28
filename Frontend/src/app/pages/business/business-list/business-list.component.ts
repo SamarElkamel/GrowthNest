@@ -12,7 +12,16 @@ import { BusinessDetailCardComponent } from '../../business-detail-card/business
 })
 export class BusinessListComponent implements OnInit {
   businesses: Business[] = [];
+  displayedBusinesses: Business[] = [];
+  businessesInitiaux: Business[] = [];
   @Input() business: any;
+  
+  itemsPerPage: number = 5;  // Items per page
+  totalPages: number = 1;    // Total pages
+  currentPage: number = 1;   // Current page
+  pages: number[] = [];      // Pages to display
+  selectedRow: number | null = null;
+  
   columns = [
     { label: 'Nom', class: 'name-col' },
     { label: 'Catégorie', class: 'category-col' },
@@ -20,57 +29,88 @@ export class BusinessListComponent implements OnInit {
     { label: 'Actions', class: 'actions-col' }
   ];
 
-  constructor(private businessService: GestionDesBusinessService,public dialog: MatDialog) { }
+  constructor(private businessService: GestionDesBusinessService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadBusinesses();
   }
-  selectedRow: number | null = null;
+
+  loadBusinesses() {
+    this.businessService.getAllBusiness().subscribe({
+      next: (businesses) => {
+        this.businesses = businesses;
+        this.businessesInitiaux = businesses;
+        this.paginate();
+      },
+      error: (err) => console.error('Error:', err)
+    });
+  }
+
+  paginate(): void {
+    this.totalPages = Math.ceil(this.businesses.length / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.displayedBusinesses = this.getBusinessesForPage(this.currentPage);
+  }
+
+  getBusinessesForPage(page: number): Business[] {
+    const startIndex = (page - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.businesses.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number): void {
+    this.currentPage = page;
+    this.displayedBusinesses = this.getBusinessesForPage(page);
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.displayedBusinesses = this.getBusinessesForPage(this.currentPage);
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.displayedBusinesses = this.getBusinessesForPage(this.currentPage);
+    }
+  }
+
+  deleteBusiness(idB: number) {
+    if (confirm(
+      'Are you sure you want to delete this business?')) {
+      this.businessService.deleteBusiness({ idB }).subscribe({
+        next: () => {
+          this.businesses = this.businesses.filter(b => b.idBusiness !== idB);
+          this.paginate();
+        },
+        error: (err) => console.error('Erreur de suppression', err)
+      });
+    }
+  }
+
+  getCategoryClass(category: string) {
+    switch(category?.toUpperCase()) {
+      case 'CUISINE': return 'bg-culinary text-culinary-dark';
+      case 'BIJOUX': return 'bg-jewelry text-jewelry-dark';
+      case 'MODE': return 'bg-fashion text-fashion-dark';
+      case 'ARTISANAT': return 'bg-craft text-craft-dark';
+      case 'BEAUTE': return 'bg-beauty text-beauty-dark';
+      case 'DECORATION': return 'bg-decoration text-decoration-dark';
+      case 'SERVICES': return 'bg-services text-services-dark';
+      default: return 'bg-secondary text-dark';
+    }
+  }
 
   getCategoryStyle(category: string): string {
     return category ? category.toUpperCase() : 'non-classe';
   }
 
- /* async loadBusinesses() {
-    try {
-      const response$ = this.businessService.getAllBusiness();
-      this.businesses = await lastValueFrom(response$);
-    } catch (error) {
-      console.error('Error loading businesses', error);
-    }
-  }*/
-    loadBusinesses() {
-      this.businessService.getAllBusiness().subscribe({
-        next: (businesses) => this.businesses = businesses,
-        error: (err) => console.error('Error:', err)
-      });
-    }
-    deleteBusiness(idB: number) {
-      if (confirm('Êtes-vous sûr de vouloir supprimer ce business ?')) {
-        // Correction : Passer un objet { id } conforme à DeleteBusiness$Params
-        this.businessService.deleteBusiness({ idB }).subscribe({
-          next: () => {
-            this.businesses = this.businesses.filter(b => b.idBusiness !== idB);
-          },
-          error: (err) => console.error('Erreur de suppression', err)
-        });
-      }
-    }
-    getCategoryClass(category: string) {
-      switch(category?.toUpperCase()) {
-        case 'CUISINE': return 'bg-culinary text-culinary-dark';
-        case 'BIJOUX': return 'bg-jewelry text-jewelry-dark';
-        case 'MODE': return 'bg-fashion text-fashion-dark';
-        case 'ARTISANAT': return 'bg-craft text-craft-dark';
-        case 'BEAUTE': return 'bg-beauty text-beauty-dark';
-        case 'DECORATION': return 'bg-decoration text-decoration-dark';
-        case 'SERVICES': return 'bg-services text-services-dark';
-        default: return 'bg-secondary text-dark';
-      }
-    }
-    openDetailsDialog(business: any) {
-      this.dialog.open(BusinessDetailCardComponent, {
-        width: '600px',
-        data: business
-      });
-}}
+  openDetailsDialog(business: any) {
+    this.dialog.open(BusinessDetailCardComponent, {
+      width: '600px',
+      data: business
+    });
+  }
+}
