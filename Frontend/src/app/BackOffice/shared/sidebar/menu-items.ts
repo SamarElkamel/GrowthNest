@@ -42,14 +42,7 @@ export const ROUTES: RouteInfo[] = [
     extralink: false,
     submenu: []
   },
-  {
-    path: '/businesses/add',
-    title: 'Add My Small Business',
-    icon: 'bi bi-plus-circle',
-    class: '',
-    extralink: false,
-    submenu: []
-  },
+
 
 
   {
