@@ -35,4 +35,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> , JpaSpecifi
     );
 
     int countByUserId(Long userId);
+    @Query("SELECT o FROM Order o JOIN o.orderDetails od JOIN od.product p WHERE p.business.idBusiness = :businessId AND o.status = :status AND o.orderDate BETWEEN :startDate AND :endDate")
+    List<Order> findByBusinessIdAndStatusAndDateRange(
+            @Param("businessId") Long businessId,
+            @Param("status") OrderStatus status,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
 }

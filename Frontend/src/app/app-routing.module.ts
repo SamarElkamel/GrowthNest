@@ -30,6 +30,7 @@ import { EventDetailsComponent } from './pages/EventAdmin/event-details/event-de
 import { ManageEventRegistrationsComponent } from './pages/EventAdmin/manage-event-registrations/manage-event-registrations.component';
 import { StatisticsComponent } from './pages/EventUser/statistics/statistics.component';
 import { NotificationComponent } from './pages/EventAdmin/notification/notification.component';
+import { AdminStatisticsComponent } from './pages/business/admin-statistics/admin-statistics.component';
 export const Approutes: Routes = [
   // Authentication Routes
   { path: 'login', component: LoginComponent },
@@ -81,6 +82,12 @@ export const Approutes: Routes = [
       {
         path: 'listBusiness',
         component: BusinessListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ROLE_ADMIN'] },
+      },
+      {
+        path: 'adminStat',
+        component: AdminStatisticsComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ROLE_ADMIN'] },
       },

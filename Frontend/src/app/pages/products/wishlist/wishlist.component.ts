@@ -19,6 +19,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
   constructor(private wishlistService: WishlistService) {}
 
   ngOnInit(): void {
+    this.loadWishlist(); // Load wishlist explicitly on component init
     this.wishlistSubscription = this.wishlistService.wishlistItems$.subscribe({
       next: (items) => {
         this.wishlistItems = items;

@@ -1,0 +1,86 @@
+<div class="revenue-dashboard-container">
+    <h2>Tableau de Bord des Revenus</h2>
+  
+    <!-- Date Range Selector -->
+    <div class="date-range-selector">
+      <mat-form-field appearance="outline">
+        <mat-label>Date de Début</mat-label>
+        <input matInput type="date" [(ngModel)]="startDate" (change)="updateDateRange()">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Date de Fin</mat-label>
+        <input matInput type="date" [(ngModel)]="endDate" (change)="updateDateRange()">
+      </mat-form-field>
+    </div>
+  
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-overlay">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Chargement des données...</p>
+    </div>
+  
+    <!-- Error State -->
+    <div *ngIf="errorMessage && !isLoading" class="error-state">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="loadRevenueData()">Réessayer</button>
+    </div>
+  
+    <!-- Revenue Overview -->
+    <div class="revenue-overview" *ngIf="!isLoading && !errorMessage">
+      <div class="overview-card">
+        <mat-icon>attach_money</mat-icon>
+        <h3>{{ totalRevenue | currency:'EUR' }}</h3>
+        <p>Chiffre d'Affaires Total</p>
+      </div>
+      <div class="overview-card">
+        <mat-icon>money</mat-icon>
+        <h3>{{ grossProfit | currency:'EUR' }}</h3>
+        <p>Bénéfice Brut</p>
+      </div>
+    </div>
+  
+    <!-- Top Products -->
+    <div class="top-products" *ngIf="!isLoading && !errorMessage">
+      <h3>Top 5 Produits par Revenu</h3>
+      <mat-table [dataSource]="topProducts" *ngIf="topProducts.length > 0">
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef>Produit</mat-header-cell>
+          <mat-cell *matCellDef="let product">{{ product.name }}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="quantity">
+          <mat-header-cell *matHeaderCellDef>Quantité Vendue</mat-header-cell>
+          <mat-cell *matCellDef="let product">{{ product.quantity }}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="revenue">
+          <mat-header-cell *matHeaderCellDef>Revenu</mat-header-cell>
+          <mat-cell *matCellDef="let product">{{ product.revenue | currency:'EUR' }}</mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['name', 'quantity', 'revenue']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['name', 'quantity', 'revenue']"></mat-row>
+      </mat-table>
+      <div *ngIf="topProducts.length === 0" class="empty-state">
+        <p>Aucune vente enregistrée pour cette période.</p>
+      </div>
+    </div>
+  
+    <!-- Revenue Trends Chart -->
+    <div class="revenue-trends" *ngIf="!isLoading && !errorMessage">
+      <h3>Tendances des Revenus</h3>
+      <div class="granularity-selector">
+        <button mat-raised-button [color]="granularity === 'daily' ? 'primary' : ''" (click)="changeGranularity('daily')">Jour</button>
+        <button mat-raised-button [color]="granularity === 'weekly' ? 'primary' : ''" (click)="changeGranularity('weekly')">Semaine</button>
+        <button mat-raised-button [color]="granularity === 'monthly' ? 'primary' : ''" (click)="changeGranularity('monthly')">Mois</button>
+      </div>
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [yaxis]="chartOptions.yaxis"
+        [title]="chartOptions.title"
+        [stroke]="chartOptions.stroke"
+        [dataLabels]="chartOptions.dataLabels"
+        [fill]="chartOptions.fill">
+      </apx-chart>
+    </div>
+  </div>

@@ -9,6 +9,8 @@ import lombok.experimental.FieldDefaults;
 import java.io.Serializable;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -31,6 +33,8 @@ public class Products {
     @Positive(message = "Le prix doit être strictement supérieur à 0")
 
     BigDecimal price;
+    @PositiveOrZero(message = "Le prix de coût doit être supérieur ou égal à 0")
+    BigDecimal costPrice;
 
     @NotNull(message = "Le stock est obligatoire")
     @Min(value = 0, message = "Le stock doit être supérieur ou égal à 0")    Long stock;
@@ -41,6 +45,8 @@ public class Products {
     @ManyToOne
     @JsonBackReference
     Business business;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<Wishlist> wishlists = new HashSet<>();
 
     public String getBarcodePath() {
         return barcodePath;

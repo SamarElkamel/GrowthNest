@@ -15,6 +15,7 @@ export interface Business {
   ratingCount: number;
   instagramPageName: string;
   businessPdf?: string;
+  lowStockThreshold: number;
   status?: 'PENDING' | 'APPROVED' | 'REJECTED';
   products?: Array<Products>;
   user?: { id: string; username: string }; // Optional: Add if backend returns user details

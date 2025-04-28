@@ -18,6 +18,10 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(indexes = {
+        @Index(name = "idx_status", columnList = "status"),
+        @Index(name = "idx_rating", columnList = "average_rating")
+})
 public class Business {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +56,8 @@ public class Business {
     public enum BusinessStatus {
         PENDING, APPROVED, REJECTED
     }
+    @Column(name = "low_stock_threshold", nullable = false)
+    Integer lowStockThreshold = 5;
 
 
     @OneToMany(mappedBy = "business",cascade = CascadeType.ALL)
@@ -66,6 +72,7 @@ public class Business {
         this.averageRating = 0.0;
         this.ratingCount = 0;
         this.status = BusinessStatus.PENDING;
+        this.lowStockThreshold = 5;
     }
 
     public String getOwnerId() {
@@ -170,5 +177,21 @@ public class Business {
 
     public void setInstagramPageName(String instagramPageName) {
         this.instagramPageName = instagramPageName;
+    }
+
+    public Integer getLowStockThreshold() {
+        return lowStockThreshold;
+    }
+
+    public void setLowStockThreshold(Integer lowStockThreshold) {
+        this.lowStockThreshold = lowStockThreshold;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

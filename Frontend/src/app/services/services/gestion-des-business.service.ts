@@ -790,5 +790,22 @@ reorderTasks(params: { businessId: number; body: Task[] }, context?: HttpContext
     map((r: StrictHttpResponse<void>): void => r.body)
   );
 }
+static readonly GetMyBusinessesPath = '/business/my-businesses';
+
+/**
+ * Récupérer les businesses de l'utilisateur connecté
+ */
+getMyBusinesses(context?: HttpContext): Observable<Business[]> {
+  console.log('Fetching businesses for the current user');
+  return this.http.get<Business[]>(
+    `${this.rootUrl}${GestionDesBusinessService.GetMyBusinessesPath}`,
+    { context }
+  ).pipe(
+    tap({
+      next: (businesses) => console.log(`Fetched ${businesses.length} businesses for current user`, businesses),
+      error: (err) => console.error(`Error fetching businesses: ${err.message}`)
+    })
+  );
+}
 
 }

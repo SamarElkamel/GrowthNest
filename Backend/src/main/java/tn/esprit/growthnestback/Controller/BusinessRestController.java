@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import tn.esprit.growthnestback.Entities.Business;
+import tn.esprit.growthnestback.Entities.BusinessStatisticsDTO;
 import tn.esprit.growthnestback.Services.IBusinessService;
 import tn.esprit.growthnestback.Services.TaskService;
 import tn.esprit.growthnestback.Services.UserService;
@@ -553,5 +554,21 @@ public class BusinessRestController {
             logger.error("Error reordering tasks for business ID {}: {}", businessId, e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+    @GetMapping("/statistics")
+    public ResponseEntity<BusinessStatisticsDTO> getBusinessStatistics() {
+        BusinessStatisticsDTO stats =iBusinessService.getBusinessStatistics();
+        return ResponseEntity.ok(stats);
+    }
+    @Operation(description = "Récupérer les businesses de l'utilisateur connecté")
+    @GetMapping("/my-businesses")
+    public ResponseEntity<List<Business>> getMyBusinesses() {
+        Long currentUserId = UserService.currentUserId();
+        logger.info("Fetching businesses for user ID: {}", currentUserId);
+        List<Business> businesses = iBusinessService.getBusinessesByUser(currentUserId);
+        if (businesses.isEmpty()) {
+            logger.info("No businesses found for user ID: {}", currentUserId);
+        }
+        return ResponseEntity.ok(businesses);
     }
 }

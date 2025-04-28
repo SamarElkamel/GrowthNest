@@ -26,6 +26,9 @@ import { EventUserDetailsComponent } from '../../pages/EventUser/event-user-deta
 import { UpdateReservationComponent } from '../../pages/EventUser/update-reservation/update-reservation.component';
 import { UserReservationsComponent } from '../../pages/EventUser/user-reservations/user-reservations.component';
 import { CalendarEventComponent } from 'src/app/pages/EventUser/calendar-event/calendar-event.component';
+import { MyBusinessListComponent } from 'src/app/pages/business/my-business-list/my-business-list.component';
+import { StockManagementComponent } from 'src/app/pages/products/stock-management/stock-management.component';
+import { RevenueDashboardComponent } from 'src/app/pages/business/revenue-dashboard/revenue-dashboard.component';
 
 
 const routes: Routes = [
@@ -46,6 +49,17 @@ const routes: Routes = [
     component: BusinessListFrontComponent,
     title: 'Liste des small business'
   },
+  { path: 'my-businesses',
+     component: MyBusinessListComponent,
+     title: 'my small business list' 
+  },
+  { path: 'stock-management/:businessId',
+     component: StockManagementComponent ,
+     title: 'my stock' 
+    
+  },
+  { path: 'revenue-dashboard/:businessId', component: RevenueDashboardComponent },
+
   {
     path: 'business-details/:idB',
     component: BusinessDetailsComponent,
@@ -53,7 +67,9 @@ const routes: Routes = [
   },
   {
     path: 'wishlist',
-    component: WishlistComponent
+    component: WishlistComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_USER'] }
   },
   {
     path: 'profile',

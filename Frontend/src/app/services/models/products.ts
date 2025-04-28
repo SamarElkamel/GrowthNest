@@ -18,3 +18,10 @@ export interface Wishlist {
   user: { id: number };
   product: Products;
 }
+export interface StockMovement {
+  id: number;
+  product: Products;
+  quantity: number;
+  movementType: 'ADD' | 'REDUCE';
+  timestamp: string;
+}
