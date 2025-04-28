@@ -23,6 +23,8 @@ public interface IPostService {
 
     Post addPost(String title, String content, String tags, MultipartFile image, MultipartFile video, Authentication authentication);
 
+    Post addPostadmine(String title, String content, String tags, MultipartFile image, MultipartFile video, Authentication authentication);
+
     List<Post> getPostsByTag(Tags tag);
 
     long countLikesForPost(Long postId);

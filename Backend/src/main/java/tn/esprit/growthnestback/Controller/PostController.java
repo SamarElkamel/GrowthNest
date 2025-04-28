@@ -56,6 +56,19 @@ public class PostController {
         Post createdPost = postService.addPost(title, content, tags, image, video, authentication);
         return ResponseEntity.ok(createdPost);
     }
+    @PostMapping("/addPostAdmin")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<Post> addPostadmin(
+            @RequestParam String title,
+            @RequestParam String content,
+            @RequestParam(required = false) String tags,
+            @RequestParam(required = false) MultipartFile image,
+            @RequestParam(required = false) MultipartFile video,
+            Authentication authentication) {
+
+        Post createdPost = postService.addPostadmine(title, content, tags, image, video, authentication);
+        return ResponseEntity.ok(createdPost);
+    }
     @GetMapping("/byTag/{tag}")
     public List<Post> getPostsByTag(@PathVariable Tags tag) {
         return postService.getPostsByTag(tag);

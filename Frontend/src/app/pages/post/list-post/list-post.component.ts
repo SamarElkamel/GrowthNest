@@ -48,13 +48,19 @@ export class ListPostComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
 
+  badWords = ['shit', 'fuck', 'bitch', 'damn', 'ass', 'kill'];
+
+  containsBadWords(text: string): boolean {
+    return this.badWords.some(word => text.toLowerCase().includes(word));
+  }
+
   ngOnInit(): void {
     this.fetchPosts();
   }
 
   fetchPosts() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzgyMzc5LCJleHAiOjE3NDU3OTEwMTksImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.cWmH4vWWySkWodOsZ1oUdxpDVs4ooelQlli6D6CdrmV-00Kb8aIdp-KZ-KqlQ5T1`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
     const url = this.selectedTag ? `${this.API_BASE_URL}/post/byTag/${this.selectedTag}` : `${this.API_BASE_URL}/post/retrieveAllPost`;
 
     this.http.get<any[]>(url, { headers }).subscribe({
@@ -75,100 +81,69 @@ export class ListPostComponent implements OnInit {
     const nextItems = this.posts.slice(start, end);
     this.visiblePosts = [...this.visiblePosts, ...nextItems];
     this.currentPage++;
+
     nextItems.forEach(post => {
       this.loadResponses(post.idp);
+      this.fetchLikes(post.idp);
+      this.fetchDislikes(post.idp);
     });
   }
 
-  filterSaved() {
-    this.activeFilter = 'Saved';
-    this.visiblePosts = this.posts.filter(p => this.savedMap[p.idp]);
-  }
-
-  filterTrending() {
-    this.activeFilter = 'Trending';
-    this.visiblePosts = this.posts.filter(p => (this.likesMap[p.idp] || 0) >= 2);
-  }
-
-  filterRecent() {
-    this.activeFilter = 'Newest';
-    this.visiblePosts = [...this.posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }
-
-  fetchMyPosts() {
+  fetchLikes(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzgyMzc5LCJleHAiOjE3NDU3OTEwMTksImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.cWmH4vWWySkWodOsZ1oUdxpDVs4ooelQlli6D6CdrmV-00Kb8aIdp-KZ-KqlQ5T1`);
-    this.http.get<any[]>(`${this.API_BASE_URL}/post/myPosts`, { headers }).subscribe({
-      next: data => {
-        this.posts = data;
-        this.visiblePosts = [];
-        this.currentPage = 1;
-        this.loadMore();
-      },
-      error: err => console.error('Error fetching my posts', err)
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
+    this.http.get<number>(`${this.API_BASE_URL}/post/likes/${postId}`, { headers }).subscribe({
+      next: count => { this.likesMap[postId] = count || 0; },
+      error: err => console.error('Error fetching likes', err)
     });
   }
 
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
-  }
-
-  selectTag(tag: string) {
-    this.selectedTag = tag;
-    this.selectedTagDisplay = tag || 'Filter';
-    this.isDropdownOpen = false;
-    this.fetchPosts();
-  }
-
-  toggleSave(postId: number) {
+  fetchDislikes(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzgyMzc5LCJleHAiOjE3NDU3OTEwMTksImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.cWmH4vWWySkWodOsZ1oUdxpDVs4ooelQlli6D6CdrmV-00Kb8aIdp-KZ-KqlQ5T1`);
-    this.http.post(`${this.API_BASE_URL}/post/save/${postId}`, {}, { headers }).subscribe({
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
+    this.http.get<number>(`${this.API_BASE_URL}/post/dislikes/${postId}`, { headers }).subscribe({
+      next: count => { this.dislikesMap[postId] = count || 0; },
+      error: err => console.error('Error fetching dislikes', err)
+    });
+  }
+
+  addReact(postId: number, type: 'LIKE' | 'DISLIKE') {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
+    const request = { idp: postId, type };
+
+    this.http.post(`${this.API_BASE_URL}/api/reacts/add`, request, { headers }).subscribe({
       next: () => {
-        this.savedMap[postId] = !this.savedMap[postId];
+        this.fetchLikes(postId);
+        this.fetchDislikes(postId);
       },
-      error: err => console.error('Error saving post:', err)
+      error: err => console.error('Error reacting to post:', err)
     });
   }
 
-  loadSavedPosts() {
+  addReactToResponse(responseId: number, type: ReactionType) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzgyMzc5LCJleHAiOjE3NDU3OTEwMTksImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.cWmH4vWWySkWodOsZ1oUdxpDVs4ooelQlli6D6CdrmV-00Kb8aIdp-KZ-KqlQ5T1`);
-    this.http.get<number[]>(`${this.API_BASE_URL}/post/saved`, { headers }).subscribe({
-      next: (savedIds: number[]) => {
-        this.savedMap = {};
-        savedIds.forEach(id => this.savedMap[id] = true);
-      },
-      error: err => console.error('Error loading saved posts:', err)
-    });
-  }
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
+    const request = { responsId: responseId, type };
 
-  toggleResponses(postId: number) {
-    this.showResponsesMap[postId] = !this.showResponsesMap[postId];
-  }
-
-  submitResponse(postId: number) {
-    const respons = this.newResponse[postId];
-    if (!respons) return;
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzgyMzc5LCJleHAiOjE3NDU3OTEwMTksImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.cWmH4vWWySkWodOsZ1oUdxpDVs4ooelQlli6D6CdrmV-00Kb8aIdp-KZ-KqlQ5T1`);
-    this.http.post(`${this.API_BASE_URL}/respons/addRespons`, { respons, postId }, { headers }).subscribe({
-      next: (newResp: any) => {
-        if (!this.responsesMap[postId]) this.responsesMap[postId] = [];
-        this.responsesMap[postId].push(newResp);
-        this.newResponse[postId] = '';
+    this.http.post(`${this.API_BASE_URL}/api/react-responses/add`, request, { headers }).subscribe({
+      next: () => {
+        this.loadReactionCounts(responseId);
       },
-      error: err => console.error('Error adding response:', err)
+      error: err => console.error('Error reacting to response:', err)
     });
   }
 
   loadResponses(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzgyMzc5LCJleHAiOjE3NDU3OTEwMTksImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.cWmH4vWWySkWodOsZ1oUdxpDVs4ooelQlli6D6CdrmV-00Kb8aIdp-KZ-KqlQ5T1`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
     this.http.get<any[]>(`${this.API_BASE_URL}/respons/byPost/${postId}`, { headers }).subscribe({
       next: data => {
         this.responsesMap[postId] = data;
         data.forEach(response => {
+          if (!response.user && response.userId) {
+            this.loadUserForResponse(response);
+          }
           this.loadReactionCounts(response.id);
         });
       },
@@ -176,9 +151,20 @@ export class ListPostComponent implements OnInit {
     });
   }
 
+  loadUserForResponse(response: any) {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
+    this.http.get<any>(`${this.API_BASE_URL}/user/${response.userId}`, { headers }).subscribe({
+      next: user => {
+        response.user = user;
+      },
+      error: err => console.error('Error loading user info:', err)
+    });
+  }
+
   loadReactionCounts(responseId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzgyMzc5LCJleHAiOjE3NDU3OTEwMTksImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.cWmH4vWWySkWodOsZ1oUdxpDVs4ooelQlli6D6CdrmV-00Kb8aIdp-KZ-KqlQ5T1`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
     this.http.get<any[]>(`${this.API_BASE_URL}/api/react-responses/respons/${responseId}`, { headers }).subscribe({
       next: reactions => {
         this.reactionCountsMap[responseId] = {};
@@ -194,29 +180,33 @@ export class ListPostComponent implements OnInit {
     });
   }
 
-  addReact(postId: number, type: 'LIKE' | 'DISLIKE') {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzgyMzc5LCJleHAiOjE3NDU3OTEwMTksImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.cWmH4vWWySkWodOsZ1oUdxpDVs4ooelQlli6D6CdrmV-00Kb8aIdp-KZ-KqlQ5T1`);
-    const request = { idp: postId, type };
+  toggleResponses(postId: number) {
+    this.showResponsesMap[postId] = !this.showResponsesMap[postId];
+  }
 
-    this.http.post(`${this.API_BASE_URL}/api/reacts/add`, request, { headers }).subscribe({
-      next: () => {
-        this.fetchPosts();
+  submitResponse(postId: number) {
+    const respons = this.newResponse[postId];
+    if (!respons) return;
+
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
+
+    this.http.post(`${this.API_BASE_URL}/respons/addRespons`, { respons, postId }, { headers }).subscribe({
+      next: (newResp: any) => {
+        if (!this.responsesMap[postId]) this.responsesMap[postId] = [];
+        this.responsesMap[postId].push(newResp);
+        this.newResponse[postId] = '';
       },
-      error: err => console.error('Error reacting to post:', err)
+      error: err => console.error('Error adding response:', err)
     });
   }
 
-  addReactToResponse(responseId: number, type: ReactionType) {
+  toggleSave(postId: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzgyMzc5LCJleHAiOjE3NDU3OTEwMTksImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.cWmH4vWWySkWodOsZ1oUdxpDVs4ooelQlli6D6CdrmV-00Kb8aIdp-KZ-KqlQ5T1`);
-    const request = { responsId: responseId, type };
-
-    this.http.post(`${this.API_BASE_URL}/api/react-responses/add`, request, { headers }).subscribe({
-      next: () => {
-        this.loadReactionCounts(responseId);
-      },
-      error: err => console.error('Error reacting to response:', err)
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
+    this.http.post(`${this.API_BASE_URL}/post/save/${postId}`, {}, { headers }).subscribe({
+      next: () => { this.savedMap[postId] = !this.savedMap[postId]; },
+      error: err => console.error('Error saving post:', err)
     });
   }
 
@@ -247,6 +237,50 @@ export class ListPostComponent implements OnInit {
     this.visiblePosts = this.posts.slice(start, end);
   }
 
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  selectTag(tag: string) {
+    this.selectedTag = tag;
+    this.selectedTagDisplay = tag || 'Filter';
+    this.isDropdownOpen = false;
+    this.fetchPosts();
+  }
+
+  loadSavedPosts() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt`);
+    this.http.get<number[]>(`${this.API_BASE_URL}/post/saved`, { headers }).subscribe({
+      next: (savedIds: number[]) => {
+        this.savedMap = {};
+        savedIds.forEach(id => this.savedMap[id] = true);
+      },
+      error: err => console.error('Error loading saved posts:', err)
+    });
+  }
+
+  filterSaved() {
+    this.activeFilter = 'Saved';
+    this.visiblePosts = this.posts.filter(p => this.savedMap[p.idp]);
+  }
+
+  filterTrending() {
+    this.activeFilter = 'Trending';
+    this.visiblePosts = this.posts.filter(p => (this.likesMap[p.idp] || 0) >= 2);
+  }
+
+  filterRecent() {
+    this.activeFilter = 'Newest';
+    this.visiblePosts = [...this.posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  fetchMyPosts() {
+    this.activeFilter = 'MyPosts';
+    const currentUserId = localStorage.getItem('userId');
+    this.visiblePosts = this.posts.filter(p => p.user?.id === Number(currentUserId));
+  }
+
   onFileSelected(event: any, type: 'image' | 'video') {
     const file = event.target.files[0];
     if (type === 'image') this.selectedImage = file;
@@ -254,7 +288,11 @@ export class ListPostComponent implements OnInit {
   }
 
   submitNewPost() {
-    if (!this.newPost.title || !this.newPost.content || !this.newPost.tags) return;
+    if (this.containsBadWords(this.newPost.title) || this.containsBadWords(this.newPost.content)) {
+      alert('🚫 Your post contains inappropriate language.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('title', this.newPost.title);
     formData.append('content', this.newPost.content);
@@ -263,7 +301,7 @@ export class ListPostComponent implements OnInit {
     if (this.selectedVideo) formData.append('video', this.selectedVideo);
 
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1NzgyMzc5LCJleHAiOjE3NDU3OTEwMTksImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.cWmH4vWWySkWodOsZ1oUdxpDVs4ooelQlli6D6CdrmV-00Kb8aIdp-KZ-KqlQ5T1` });
+    const headers = new HttpHeaders({ Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6InJpdGVqIGFpc3NhIiwic3ViIjoiYWlzc2FhbndhcjFAZ21haWwuY29tIiwiaWF0IjoxNzQ1ODQ2MjQzLCJleHAiOjE3NDU4NTQ4ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.PikIF9jiPVPEIL6LKY8qhM2RvmMxC33qv1URMKmqzOpFwzYfcZJsnvMeSoaq6kpt` });
 
     this.http.post(`${this.API_BASE_URL}/post/addPost`, formData, { headers }).subscribe({
       next: () => {

@@ -2,11 +2,12 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { ListPostComponent } from './pages/post/list-post/list-post.component';
-import { HomeComponent } from './frontoffice/home/home.component';
+
 import { AddPostComponent } from './pages/post/add-post/add-post.component';
-import { FullComponent } from './layouts/full/full.component';
+
 import { ValidatePostComponent } from './pages/post/validate-post/validate-post.component';
 import { AdminStatsComponent } from './pages/admin-stats/admin-stats.component';
+import { FullComponent } from './BackOffice/layouts/full/full.component';
 
 export const Approutes: Routes = [
   // Front Office Routes (Public)
@@ -26,15 +27,15 @@ export const Approutes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        loadChildren: () => import('src/app/backoffice/dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import('src/app/BackOffice/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
         path: 'about',
-        loadChildren: () => import('src/app/backoffice/about/about.module').then(m => m.AboutModule)
+        loadChildren: () => import('src/app/BackOffice/about/about.module').then(m => m.AboutModule)
       },
       {
         path: 'component',
-        loadChildren: () => import('src/app/backoffice/component/component.module').then(m => m.ComponentsModule)
+        loadChildren: () => import('src/app/BackOffice/component/component.module').then(m => m.ComponentsModule)
       },
       { path: 'posts', component: ListPostComponent },
       { path: 'post/add', component: AddPostComponent },

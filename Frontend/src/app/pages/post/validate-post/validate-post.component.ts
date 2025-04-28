@@ -19,7 +19,7 @@ export class ValidatePostComponent implements OnInit {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set(
       'Authorization',
-      `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwic3ViIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDU3NzMyMDAsImV4cCI6MTc0NTc4MTg0MCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdfQ.0GKyBDf4F6V7wvqJ9C4s3H7nU6pFk7rS3ChT2DvWsxbcZ73IgCJ4acm8FjnDfFQ8`
+      `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwic3ViIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDU4NDU5ODcsImV4cCI6MTc0NTg1NDYyNywiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdfQ.psFCiaUsrvK3fgyTPtlQTVXk9TrXgbrbHvTUlZBCb9S_ghsx2ZfGlaOjgiS2BXiK`
     );
 
     this.http.get<any[]>('http://localhost:8080/Growthnest/post/unvalidated', { headers })
@@ -33,7 +33,7 @@ export class ValidatePostComponent implements OnInit {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set(
       'Authorization',
-      `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwic3ViIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDU3NzMyMDAsImV4cCI6MTc0NTc4MTg0MCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdfQ.0GKyBDf4F6V7wvqJ9C4s3H7nU6pFk7rS3ChT2DvWsxbcZ73IgCJ4acm8FjnDfFQ8`
+      `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwic3ViIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDU4NDU5ODcsImV4cCI6MTc0NTg1NDYyNywiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdfQ.psFCiaUsrvK3fgyTPtlQTVXk9TrXgbrbHvTUlZBCb9S_ghsx2ZfGlaOjgiS2BXiK`
     );
 
     this.http.post(`http://localhost:8080/Growthnest/post/validate/${postId}`, {}, { headers })
@@ -48,7 +48,7 @@ export class ValidatePostComponent implements OnInit {
   deletePost(postId: number) {
     if (confirm('Are you sure you want to delete this post?')) {
       const token = localStorage.getItem('token');
-      const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwic3ViIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDU3NzMyMDAsImV4cCI6MTc0NTc4MTg0MCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdfQ.0GKyBDf4F6V7wvqJ9C4s3H7nU6pFk7rS3ChT2DvWsxbcZ73IgCJ4acm8FjnDfFQ8`);
+      const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwic3ViIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDU4NDU5ODcsImV4cCI6MTc0NTg1NDYyNywiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdfQ.psFCiaUsrvK3fgyTPtlQTVXk9TrXgbrbHvTUlZBCb9S_ghsx2ZfGlaOjgiS2BXiK`);
 
       this.http.delete(`http://localhost:8080/Growthnest/post/deletepost/${postId}`, { headers })
         .subscribe({

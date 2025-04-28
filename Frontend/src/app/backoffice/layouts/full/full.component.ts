@@ -2,8 +2,8 @@ import { CommonModule } from "@angular/common";
 import { Component, OnInit, HostListener } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
 import { NgbCollapseModule } from "@ng-bootstrap/ng-bootstrap";
-import { NavigationComponent } from "src/app/backoffice/shared/header/navigation.component";
-import { SidebarComponent } from "src/app/backoffice/shared/sidebar/sidebar.component";
+import { NavigationComponent } from "src/app/BackOffice/shared/header/navigation.component";
+import { SidebarComponent } from "src/app/BackOffice/shared/sidebar/sidebar.component";
 
 
 //declare var $: any;

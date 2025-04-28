@@ -2,6 +2,7 @@ package tn.esprit.growthnestback.Entities;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,10 +30,17 @@ public class Respons {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonBackReference(value = "respons-user")
+    private User user;*/
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // ← OBLIGATOIRE pour JSON
     private User user;
+
+
 
     @ManyToOne
     @JoinColumn(name = "post_id", referencedColumnName = "idp")

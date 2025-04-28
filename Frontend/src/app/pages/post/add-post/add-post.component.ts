@@ -48,6 +48,7 @@ export class AddPostComponent {
     formData.append('title', this.post.title);
     formData.append('content', this.post.content);
     formData.append('tags', this.post.tags);
+    formData.append('validated', 'true');
   
     if (this.selectedImage) {
       formData.append('image', this.selectedImage);
@@ -59,10 +60,10 @@ export class AddPostComponent {
   
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwic3ViIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDU3NzMyMDAsImV4cCI6MTc0NTc4MTg0MCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdfQ.0GKyBDf4F6V7wvqJ9C4s3H7nU6pFk7rS3ChT2DvWsxbcZ73IgCJ4acm8FjnDfFQ8`
+      Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwic3ViIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE3NDU4NDU5ODcsImV4cCI6MTc0NTg1NDYyNywiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdfQ.psFCiaUsrvK3fgyTPtlQTVXk9TrXgbrbHvTUlZBCb9S_ghsx2ZfGlaOjgiS2BXiK`
     });
   
-    this.http.post('http://localhost:8080/Growthnest/post/addPost', formData, { headers })
+    this.http.post('http://localhost:8080/Growthnest/post/addPostAdmin', formData, { headers })
       .subscribe({
         next: () => {
           alert('✅ Post added successfully!');

@@ -73,6 +73,35 @@ public class PostService implements IPostService {
         return repo.save(post);
     }
     @Override
+    public Post addPostadmine(String title, String content, String tags, MultipartFile image, MultipartFile video, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Post post = new Post();
+        post.setTitle(title);
+        post.setContent(content);
+        post.setValidated(true);
+        post.setTags(Tags.valueOf(tags.toUpperCase())); // or adapt if needed
+        post.setUser(user);
+        post.setCreatedAt(LocalDateTime.now());
+
+        // 👇 Save image and video locally or on cloud, for now simulate:
+        if (image != null && !image.isEmpty()) {
+            System.out.println("🖼️ Image received: " + image.getOriginalFilename());
+            String imagePath = saveFile(image, "images");
+            post.setImage(imagePath);
+        }
+
+        if (video != null && !video.isEmpty()) {
+            System.out.println("🎞️ Video received: " + video.getOriginalFilename());
+            String videoPath = saveFile(video, "videos");
+            post.setVideo(videoPath);
+        }
+
+        return repo.save(post);
+    }
+    @Override
     public List<Post> getPostsByTag(Tags tag) {
         return repo.findByTags(tag);
     }
