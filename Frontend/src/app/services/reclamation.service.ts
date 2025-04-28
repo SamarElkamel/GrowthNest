@@ -2,12 +2,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ReclamationType } from '../FrontOffice/models/reclamation-type';
+
 export interface Reclamation {
   reclamationId?: number;
   description: string;
-  type: String;
+  type: String;  
   reclamationDate?: Date;
-  status?: string;
+  status?: string;  
 }
 @Injectable({
   providedIn: 'root'

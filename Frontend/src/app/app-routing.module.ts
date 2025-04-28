@@ -8,6 +8,7 @@ import { DisplayReclamationComponent } from './pages/Reclamation/display-reclama
 import { AddReclamationComponent } from './pages/Reclamation/add-reclamation/add-reclamation.component';
 import { RatingComponent } from './pages/rating/rating.component';
 import { FooterComponent } from './FrontOffice/footer/footer.component';
+import { DeliveryAgencyDashboardComponent } from './pages/Delivery-agency/delivery-agency-dashboard/delivery-agency-dashboard.component';
 
 export const Approutes: Routes = [
   {
@@ -21,8 +22,8 @@ export const Approutes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'delivery-agencies', component: DisplayAllDeliveryAgencyComponent },
-      { path: 'add-reclamation', component: AddReclamationComponent },
-      { path: 'rating', component: RatingComponent }
+      
+
 
 
     ]
@@ -48,6 +49,12 @@ export const Approutes: Routes = [
 
     ]
   },
+  { path: 'afficheDA', component : DeliveryAgencyDashboardComponent} ,    
+    { path: 'rating', component: RatingComponent },
+    { path: 'add-reclamation', component: AddReclamationComponent },
+
+
+
   {
     path: '**',
     redirectTo: '/starter'

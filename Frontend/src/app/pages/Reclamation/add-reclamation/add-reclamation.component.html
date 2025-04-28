@@ -1,27 +1,93 @@
-<div class="container mt-4">
-    <h3>Ajouter une Réclamation</h3>
+<!-- Topbar -->
+<div class="top-bar bg-light py-2 border-bottom">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div class="left-top-bar text-muted">Free shipping for standard order over $100</div>
+    <div class="right-top-bar d-flex gap-3">
+      <a href="#" class="text-dark">Help & FAQs</a>
+      <a href="#" class="text-dark">My Account</a>
+      <a href="#" class="text-dark">EN</a>
+      <a href="#" class="text-dark">USD</a>
+    </div>
+  </div>
+</div>
 
-    <form #reclamationForm="ngForm" (ngSubmit)="save(reclamationForm)">
-        <div class="form-group">
-            <label for="type">Type</label>
-            <select id="type" class="form-control" [(ngModel)]="newReclamation.type" name="type" required
-                #type="ngModel">
-                <option *ngFor="let t of reclamationTypes" [value]="t">{{ t }}</option>
-            </select>
-            <div *ngIf="type.invalid && type.touched" class="alert alert-danger mt-2">
-                Le type est requis.
-            </div>
-        </div>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow-sm">
+  <div class="container">
+    <a routerLink="/" class="navbar-brand">
+      <img src="assets/images/logos/log.jpg" height="50" alt="Logo" />
+    </a>
 
-        <div class="form-group mt-3">
-            <label for="description">Description</label>
-            <textarea id="description" class="form-control" [(ngModel)]="newReclamation.description" name="description"
-                required minlength="10" placeholder="Entrez la description" #description="ngModel"></textarea>
-            <div *ngIf="description.invalid && description.touched" class="alert alert-danger mt-2">
-                La description est requise et doit contenir entre 10 et 255 caractères.
-            </div>
-        </div>
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" routerLink="/">Home</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" routerLink="/">Homepage 1</a>
+            <a class="dropdown-item" routerLink="/home-2">Homepage 2</a>
+            <a class="dropdown-item" routerLink="/home-3">Homepage 3</a>
+          </div>
+        </li>
+        <li class="nav-item"><a class="nav-link" routerLink="/shop">Shop</a></li>
+        <li class="nav-item"><a class="nav-link text-danger" routerLink="/cart">Features</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/blog">Blog</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/about">About</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/contact">Contact</a></li>
+      </ul>
+    </div>
 
-        <button class="btn btn-primary mt-3" type="submit" [disabled]="reclamationForm.invalid">Enregistrer</button>
-    </form>
+    <div class="d-flex align-items-center gap-3">
+      <i class="zmdi zmdi-search fs-4 cursor-pointer"></i>
+      <i class="zmdi zmdi-shopping-cart fs-4 cursor-pointer position-relative">
+        <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">2</span>
+      </i>
+    </div>
+  </div>
+</nav>
+
+<!-- Checkout Section -->
+<div class="checkout">
+  <div class="credit-card-box">
+    <div class="flip">
+      <div class="front">
+        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/document-de-reclamation-d-assurance-12768711-10371806.png"
+             style="width: 343px; height: 271px; margin-left: 52px;">
+      </div>
+      <div class="back">
+        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/document-de-reclamation-d-assurance-12768711-10371806.png"
+             style="width: 343px; height: 271px; margin-left: 52px;">
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Area -->
+  <div *ngIf="message" class="mt-3">
+    <div class="alert" [ngClass]="{'alert-success': level === 'success', 'alert-danger': level === 'error'}">
+      {{ message }}
+    </div>
+  </div>
+
+  <!-- Reclamation Form -->
+  <form #reclamationForm="ngForm" (ngSubmit)="save(reclamationForm)">
+    <div class="form-group">
+      <label for="type">Type</label>
+      <select id="type" class="form-control" [(ngModel)]="newReclamation.type" name="type" required #type="ngModel">
+        <option *ngFor="let t of reclamationTypes" [value]="t">{{ t }}</option>
+      </select>
+      <div *ngIf="type.invalid && type.touched" class="alert alert-danger mt-2">
+        Type is required.
+      </div>
+    </div>
+
+    <div class="form-group mt-3">
+      <label for="description">Description</label>
+      <textarea id="description" class="form-control" [(ngModel)]="newReclamation.description" name="description"
+                required minlength="10" placeholder="Enter description" #description="ngModel"></textarea>
+      <div *ngIf="description.invalid && description.touched" class="alert alert-danger mt-2">
+        Description is required and must be between 10 and 255 characters.
+      </div>
+    </div>
+
+    <button class="btn mt-4" type="submit" [disabled]="reclamationForm.invalid">Save</button>
+  </form>
 </div>

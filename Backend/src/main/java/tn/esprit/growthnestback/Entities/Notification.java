@@ -1,4 +1,4 @@
-package tn.esprit.growthnestback.Services;
+package tn.esprit.growthnestback.Entities;
 import lombok.*;
 
 @AllArgsConstructor

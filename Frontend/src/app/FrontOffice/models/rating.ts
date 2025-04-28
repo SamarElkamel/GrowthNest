@@ -3,4 +3,5 @@ export interface Rating {
     stars: number;
     comment: string;
     createdAt?: string;
+    username?: string
   }

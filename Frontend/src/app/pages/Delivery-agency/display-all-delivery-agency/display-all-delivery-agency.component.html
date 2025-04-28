@@ -1,13 +1,13 @@
-<h2>Liste des agences de livraison</h2>
+<h2>Delivery Agencies List</h2>
 
-<input type="text" [(ngModel)]="searchTerm" (input)="onSearchChange()" class="form-control mb-3" placeholder="Rechercher une agence...">
+<input type="text" [(ngModel)]="searchTerm" (input)="onSearchChange()" class="form-control mb-3" placeholder="Search for an agency...">
 
 <table class="table table-bordered">
   <thead>
     <tr>
-      <th>Agency name</th>
+      <th>Agency Name</th>
       <th>Address</th>
-      <th>Phone number</th>
+      <th>Phone Number</th>
     </tr>
   </thead>
   <tbody>
@@ -20,7 +20,7 @@
 </table>
 
 <app-pagination
-[totalItems]="filteredTotalItems"
+  [totalItems]="filteredTotalItems"
   [itemsPerPage]="itemsPerPage"
   [currentPage]="currentPage"
   (pageChanged)="onPageChanged($event)">

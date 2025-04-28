@@ -1,33 +1,55 @@
-<!-- Filtres -->
-<div class="mb-3">
-  <label for="typeFilter">Filtrer par type :</label>
-  <select [(ngModel)]="selectedType" (change)="applyFilter()" class="form-control w-25">
-    <option value="ALL">Tous</option>
-    <option *ngFor="let type of reclamationTypes" [value]="type">{{ type }}</option>
-  </select>
+<!-- Filters -->
+<div class="mb-3 row">
+  <div class="col-md-4">
+    <label for="typeFilter">Filter by type:</label>
+    <select [(ngModel)]="selectedType" (change)="applyFilter()" class="form-control">
+      <option value="ALL">All types</option>
+      <option *ngFor="let type of reclamationTypes" [value]="type">{{ type }}</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label for="statusFilter">Filter by status:</label>
+    <select [(ngModel)]="selectedStatus" (change)="applyFilter()" class="form-control">
+      <option value="ALL">All statuses</option>
+      <option *ngFor="let status of reclamationStatuses" [value]="status">{{ status }}</option>
+    </select>
+  </div>
+  <div class="col-md-4 d-flex align-items-end">
+    <button class="btn btn-primary" (click)="generatePdfReport()">
+      <i class="bi bi-file-earmark-pdf"></i> Generate PDF
+    </button>
+  </div>
 </div>
-<button class="btn btn-primary" (click)="generatePdfReport()">
-  <i class="bi bi-file-earmark-pdf"></i> Générer PDF
-</button>
 
-<!-- Tableau filtré -->
+<!-- Table -->
 <table class="table table-bordered table-striped">
   <thead class="thead-light">
     <tr>
-      <th>Type </th>
       <th>Description</th>
+      <th>Type</th>
+      <th>Status</th>
       <th>Date</th>
       <th style="width: 120px;">Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let r of filteredReclamations">
-      <td>{{ r.type }}</td>
       <td>{{ r.description }}</td>
+      <td>{{ r.type }}</td>
+      <td>
+        <span class="badge" [ngClass]="{
+          'bg-warning': r.status === 'PENDING',
+          'bg-info': r.status === 'IN_PROGRESS',
+          'bg-success': r.status === 'RESOLVED',
+          'bg-danger': r.status === 'REJECTED'
+        }">
+          {{ r.status }}
+        </span>
+      </td>
       <td>{{ r.reclamationDate | date:'short' }}</td>
       <td>
         <button class="btn btn-sm btn-danger" (click)="delete(r.reclamationId!)">
-          <i class="bi bi-trash-fill"></i>
+          <i class="bi bi-trash"></i>
         </button>
       </td>
     </tr>

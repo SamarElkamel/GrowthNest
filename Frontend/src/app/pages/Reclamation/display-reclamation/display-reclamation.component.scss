@@ -7,3 +7,19 @@
       font-size: 1rem;
     }
   }
+  /* display-reclamation.component.scss */
+.badge {
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 500;
+    border-radius: 0.25rem;
+  }
+  
+  .table {
+    th {
+      vertical-align: middle;
+    }
+    td {
+      vertical-align: middle;
+    }
+  }

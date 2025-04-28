@@ -4,6 +4,7 @@ import { ReportService } from 'src/app/services/report.service'; // Import ajout
 import { ReclamationType } from 'src/app/FrontOffice/models/reclamation-type';
 import * as saveAs from 'file-saver';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ReclamationStatus } from 'src/app/FrontOffice/models/reclamationstatus';
 
 @Component({
   selector: 'app-display-reclamation',
@@ -11,16 +12,20 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./display-reclamation.component.scss']
 })
 export class DisplayReclamationComponent {
+
   reclamations: Reclamation[] = [];
   filteredReclamations: Reclamation[] = [];
   reclamationTypes = Object.values(ReclamationType);
+  reclamationStatuses = Object.values(ReclamationStatus); // Ajouté pour le filtrage
   selectedType: string = 'ALL';
+  selectedStatus: string = 'ALL'; // Nouveau filtre pour le statut
 
   displayEditModal = false;
   editingReclamation: Reclamation = {
     type: ReclamationType.DELIVERY,
-    description: '', 
-    reclamationDate: new Date() 
+    description: '',
+    reclamationDate: new Date(),
+    status:ReclamationStatus.PENDING
   };
 
   constructor(
@@ -42,14 +47,13 @@ export class DisplayReclamationComponent {
     });
   }
 
+
   applyFilter() {
-    if (this.selectedType === 'ALL') {
-      this.filteredReclamations = this.reclamations;
-    } else {
-      this.filteredReclamations = this.reclamations.filter(
-        r => r.type === this.selectedType as ReclamationType
-      );
-    }
+    this.filteredReclamations = this.reclamations.filter(rec => {
+      const typeMatch = this.selectedType === 'ALL' || rec.type === this.selectedType;
+      const statusMatch = this.selectedStatus === 'ALL' || rec.status === this.selectedStatus;
+      return typeMatch && statusMatch;
+    });
   }
 
   delete(id: number) {
@@ -89,4 +93,6 @@ export class DisplayReclamationComponent {
       }
     });
   }
+
+
 }

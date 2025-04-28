@@ -6,7 +6,7 @@ import {
 } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -28,6 +28,9 @@ import { DisplayReclamationComponent } from './pages/Reclamation/display-reclama
 import { HeaderComponent } from './FrontOffice/header/header.component';
 import { PaginationComponent } from './pages/pagination/pagination.component';
 import { RatingComponent } from './pages/rating/rating.component';
+import { AuthInterceptor } from './services/auth.interceptor';
+import { NavbarComponent } from './FrontOffice/navbar/navbar.component';
+import {ToastrModule} from "ngx-toastr";
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,10 +40,9 @@ import { RatingComponent } from './pages/rating/rating.component';
     DeleteReclamationComponent,
     UpdateReclamationComponent,
     DisplayReclamationComponent,
-    HeaderComponent,
     PaginationComponent,
     RatingComponent,
-    
+    NavbarComponent
   ],
   imports: [
     CommonModule,
@@ -54,12 +56,24 @@ import { RatingComponent } from './pages/rating/rating.component';
     FullComponent,
     NavigationComponent,
     SidebarComponent,
+    ToastrModule.forRoot({
+      progressBar:true,
+      closeButton:true,
+      newestOnTop:true,
+      tapToDismiss:true,
+      positionClass: 'toast-bottom-right',
+      timeOut:8000
+    }),
   ],
   providers: [
     {
       provide: LocationStrategy,
       useClass: PathLocationStrategy
-    },
+    },{
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
