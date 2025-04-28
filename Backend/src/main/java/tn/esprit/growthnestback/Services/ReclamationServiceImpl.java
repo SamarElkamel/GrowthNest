@@ -3,19 +3,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import tn.esprit.growthnestback.Entities.Notification;
-import tn.esprit.growthnestback.Entities.NotificationStatus;
 import tn.esprit.growthnestback.Entities.Reclamation;
 import tn.esprit.growthnestback.Entities.ReclamationStatus;
 import tn.esprit.growthnestback.Repository.ReclamationRepository;
 import java.util.List;
 
-import static tn.esprit.growthnestback.Entities.NotificationStatus.ReclamationAdded;
 
 @Service
 @AllArgsConstructor
 public class ReclamationServiceImpl implements IReclamationServices {
-    private final NotificationService notificationService;
 
     @Autowired
     ReclamationRepository reclamationRepository;
@@ -30,14 +26,6 @@ public class ReclamationServiceImpl implements IReclamationServices {
     @Override
     public Reclamation addReclamation(Reclamation reclamation) {
         Reclamation savedReclamation = reclamationRepository.save(reclamation);
-
-        notificationService.sendNotification(
-                String.valueOf(savedReclamation.getReclamationId()),
-                Notification.builder()
-                        .status(ReclamationAdded)
-                        .message("Your Reclamation is added")
-                        .build()
-        );
         return savedReclamation;
     }
 

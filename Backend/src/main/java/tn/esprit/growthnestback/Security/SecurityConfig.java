@@ -48,8 +48,7 @@ public class SecurityConfig {
                                         "/configuration/security",
                                         "/swagger-ui/**",
                                         "/webjars/**",
-                                        "/swagger-ui.html",
-                                        "/growthnest/**"
+                                        "/swagger-ui.html"
                                 )
                                 .permitAll()
                                 .anyRequest()
