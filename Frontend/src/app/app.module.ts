@@ -12,6 +12,8 @@ import { RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha';
 import { provideCharts } from 'ng2-charts';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { NgModule } from '@angular/core';
+
+
 //Angular Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,6 +32,14 @@ import { SidebarComponent } from './BackOffice/shared/sidebar/sidebar.component'
 import { AppComponent } from './app.component';
 import { SpinnerComponent } from './BackOffice/shared/spinner.component';
 import { BackLayoutComponent } from './BackOffice/layouts/back-layout/back-layout.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+
+
 
 // Pages Auth/User
 import { LoginComponent } from './pages/login/login.component';
@@ -90,6 +100,14 @@ import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import {Approutes} from "./app-routing.module";
 import { AddProductComponent } from './pages/products/add-product/add-product.component';
 import { UpdateProductDialogComponent } from './pages/products/update-product-dialog/update-product-dialog.component';
+import { BusinessTodoListComponent } from './pages/business/business-todo-list/business-todo-list.component';
+import { TaskDialogComponent } from './pages/business/task-dialog/task-dialog.component';
+import { AdminStatisticsComponent } from './pages/business/admin-statistics/admin-statistics.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { StockManagementComponent } from './pages/products/stock-management/stock-management.component';
+import { MyBusinessListComponent } from './pages/business/my-business-list/my-business-list.component';
+import { RevenueDashboardComponent } from './pages/business/revenue-dashboard/revenue-dashboard.component';
+
 
 @NgModule({
   declarations: [
@@ -148,7 +166,15 @@ import { UpdateProductDialogComponent } from './pages/products/update-product-di
     ManageEventRegistrationsComponent,
     StatisticsComponent,
     NotificationComponent,
-    CalendarEventComponent
+    CalendarEventComponent,
+    BusinessTodoListComponent,
+    TaskDialogComponent,
+    AdminStatisticsComponent,
+    StockManagementComponent,
+    MyBusinessListComponent,
+    RevenueDashboardComponent,
+    
+    
 
   ],
   imports: [
@@ -179,6 +205,13 @@ import { UpdateProductDialogComponent } from './pages/products/update-product-di
     MatPaginatorModule,
     FullCalendarModule,
     NgbPaginationModule,
+    MatCheckboxModule,
+    DragDropModule,
+    NgApexchartsModule,
+    MatChipsModule,
+    MatProgressBarModule,
+    MatTooltipModule
+    
   ],
   providers: [
     provideCharts(),

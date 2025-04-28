@@ -1,0 +1,165 @@
+<div class="stock-management-container">
+    <div class="header-section">
+      <h2 class="stock-management-title">
+        <mat-icon>inventory_2</mat-icon>
+        Stock Management
+      </h2>
+      <div class="stats-summary">
+        <div class="stat-card" *ngFor="let stat of stockRotationStats | keyvalue">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.key }}</div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading inventory data...</p>
+    </div>
+  
+    <!-- Error State -->
+    <div class="error-state" *ngIf="errorMessage">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <p class="error-message">{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="loadProducts()">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+    </div>
+  
+    <!-- Products Table -->
+    <div class="table-container" *ngIf="products.length > 0 && !isLoading && !errorMessage">
+      <div class="search-controls">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search Products</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (input)="filterProducts()" placeholder="Product name">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <button mat-stroked-button (click)="exportAllStockMovements()">
+          <mat-icon>download</mat-icon>
+          Export All Data
+        </button>
+      </div>
+  
+      <div class="responsive-table">
+        <table mat-table [dataSource]="filteredProducts" class="stock-table">
+          <!-- Product Column -->
+          <ng-container matColumnDef="product">
+            <th mat-header-cell *matHeaderCellDef>Product</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="product-info">
+                <div class="product-name">{{ product.name || 'N/A' }}</div>
+                <div class="product-id">ID: {{ product.idProduct }}</div>
+              </div>
+            </td>
+          </ng-container>
+  
+          <!-- Stock Column -->
+          <ng-container matColumnDef="stock">
+            <th mat-header-cell *matHeaderCellDef>Current Stock</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="stock-value">{{ product.stock }}</div>
+              <div class="stock-progress">
+                <mat-progress-bar 
+                  mode="determinate" 
+                  [value]="getStockPercentage(product)"
+                  [color]="getStockStatus(product).color">
+                </mat-progress-bar>
+              </div>
+            </td>
+          </ng-container>
+  
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let product">
+              <mat-chip [color]="getStockStatus(product).color" selected>
+                {{ getStockStatus(product).label }}
+              </mat-chip>
+            </td>
+          </ng-container>
+  
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Adjust Stock</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="stock-actions">
+                <mat-form-field appearance="outline" class="quantity-field">
+                  <mat-label>Quantity</mat-label>
+                  <input matInput type="number" min="1" [(ngModel)]="quantityInputs[product.idProduct]">
+                </mat-form-field>
+                <div class="action-buttons">
+                  <button mat-mini-fab color="primary" (click)="updateStock(product, 'add')" matTooltip="Add stock">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                  <button mat-mini-fab color="warn" (click)="updateStock(product, 'reduce')" matTooltip="Reduce stock">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+  
+          <!-- History Column -->
+          <ng-container matColumnDef="history">
+            <th mat-header-cell *matHeaderCellDef>History</th>
+            <td mat-cell *matCellDef="let product">
+              <button mat-button color="accent" (click)="exportStockMovements(product.idProduct)">
+                <mat-icon>history</mat-icon>
+                Export
+              </button>
+              <button mat-button (click)="showStockHistory(product)">
+                <mat-icon>visibility</mat-icon>
+                View
+              </button>
+            </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+  
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="products.length === 0 && !isLoading && !errorMessage">
+      <mat-icon>inventory</mat-icon>
+      <h3>No Products Found</h3>
+      <p>This business doesn't have any products in inventory yet.</p>
+    </div>
+  
+    <!-- Stock History Dialog -->
+    <ng-template #stockHistoryDialog>
+      <h2 mat-dialog-title>Stock History for {{ selectedProduct?.name }}</h2>
+      <mat-dialog-content>
+        <table mat-table [dataSource]="selectedProductMovements" class="history-table">
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let movement">{{ movement.timestamp | date:'medium' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let movement">
+              <mat-chip [color]="movement.movementType === 'ADD' ? 'primary' : 'warn'" selected>
+                {{ movement.movementType }}
+              </mat-chip>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>Quantity</th>
+            <td mat-cell *matCellDef="let movement">{{ movement.quantity }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="historyColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: historyColumns;"></tr>
+        </table>
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Close</button>
+        <button mat-button color="primary" (click)="selectedProduct ? exportStockMovements(selectedProduct.idProduct) : null">          Export to CSV
+        </button>
+      </mat-dialog-actions>
+    </ng-template>
+  </div>

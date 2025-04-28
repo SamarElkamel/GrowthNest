@@ -3,6 +3,7 @@ package tn.esprit.growthnestback.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.growthnestback.Entities.Business;
+import tn.esprit.growthnestback.Entities.BusinessStatisticsDTO;
 import tn.esprit.growthnestback.Entities.User;
 import tn.esprit.growthnestback.Entities.UserRating;
 import tn.esprit.growthnestback.Repository.BusinessRepository;
@@ -48,6 +49,27 @@ public class BusinessServiceImpl implements IBusinessService {
         byte[] qrCode = qrCodeService.generateQRCode(instagramUrl, width, height);
         System.out.println("QR code generated for business ID: " + businessId);
         return qrCode;
+    }
+
+    @Override
+    public BusinessStatisticsDTO getBusinessStatistics() {
+            BusinessStatisticsDTO stats = new BusinessStatisticsDTO();
+            stats.setTotalBusinesses(businessRepository.countTotalBusinesses());
+            stats.setPendingCount(businessRepository.countPendingBusinesses());
+            stats.setApprovedCount(businessRepository.countApprovedBusinesses());
+            stats.setRejectedCount(businessRepository.countRejectedBusinesses());
+            stats.setAverageRating(businessRepository.getAverageRating() != null ? businessRepository.getAverageRating() : 0.0);
+            stats.setHighRatingCount(businessRepository.countHighRatingBusinesses());
+            return stats;
+
+    }
+
+    @Override
+    public List<Business> getBusinessesByUser(Long userId) {
+        System.out.println("Fetching businesses for user ID: " + userId);
+        List<Business> businesses = businessRepository.findByUserId(userId);
+        System.out.println("Found " + businesses.size() + " businesses for user ID: " + userId);
+        return businesses;
     }
 
     @Override
@@ -200,4 +222,5 @@ public class BusinessServiceImpl implements IBusinessService {
             return false;
         }
     }
+
 }

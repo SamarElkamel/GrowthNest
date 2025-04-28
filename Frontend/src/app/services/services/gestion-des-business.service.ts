@@ -14,6 +14,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { addBusiness } from '../fn/gestion-des-business/add-business';
 import { AddBusiness$Params } from '../fn/gestion-des-business/add-business';
 import { Business } from '../models/business';
+import { Task } from '../models/business';
+
 import { deleteBusiness } from '../fn/gestion-des-business/delete-business';
 import { DeleteBusiness$Params } from '../fn/gestion-des-business/delete-business';
 import { getAllBusiness } from '../fn/gestion-des-business/get-all-business';
@@ -596,4 +598,214 @@ static readonly getTopThreeBusinessesPath = '/business/getTopThreeBusinesses';
 getTopThreeBusinesses(): Observable<Business[]> {
   return this.http.get<Business[]>(`${this.rootUrl}${GestionDesBusinessService.getTopThreeBusinessesPath}`);
 }
+/** Path part for operation `addTask()` */
+static readonly AddTaskPath = '/business/{businessId}/tasks';
+
+/**
+ * Ajouter une tâche à un business
+ */
+addTask$Response(params: { businessId: number; body: Task }, context?: HttpContext): Observable<StrictHttpResponse<Task>> {
+  console.log(`Adding task for businessId=${params.businessId}`);
+  const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.AddTaskPath, 'post');
+  if (params) {
+    rb.path('businessId', params.businessId, {});
+    rb.body(params.body, 'application/json');
+  }
+
+  return this.http.request(
+    rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context,
+    })
+  ).pipe(
+    filter((r: any) => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => r as StrictHttpResponse<Task>),
+    tap({
+      next: (r) => console.log(`Task added successfully: businessId=${params.businessId}, taskId=${r.body.id}`),
+      error: (err) => console.error(`Error adding task for businessId=${params.businessId}: ${err.message}`)
+    })
+  );
+}
+
+/**
+ * Ajouter une tâche à un business
+ */
+addTask(params: { businessId: number; body: Task }, context?: HttpContext): Observable<Task> {
+  return this.addTask$Response(params, context).pipe(
+    map((r: StrictHttpResponse<Task>): Task => r.body)
+  );
+}
+
+/** Path part for operation `getTasksByBusiness()` */
+static readonly GetTasksByBusinessPath = '/business/{businessId}/tasks';
+
+/**
+ * Récupérer les tâches d'un business
+ */
+getTasksByBusiness$Response(params: { businessId: number }, context?: HttpContext): Observable<StrictHttpResponse<Array<Task>>> {
+  console.log(`Fetching tasks for businessId=${params.businessId}`);
+  const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.GetTasksByBusinessPath, 'get');
+  if (params) {
+    rb.path('businessId', params.businessId, {});
+  }
+
+  return this.http.request(
+    rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context,
+    })
+  ).pipe(
+    filter((r: any) => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => r as StrictHttpResponse<Array<Task>>),
+    tap({
+      next: () => console.log(`Tasks fetched for businessId=${params.businessId}`),
+      error: (err) => console.error(`Error fetching tasks for businessId=${params.businessId}: ${err.message}`)
+    })
+  );
+}
+
+/**
+ * Récupérer les tâches d'un business
+ */
+getTasksByBusiness(params: { businessId: number }, context?: HttpContext): Observable<Array<Task>> {
+  return this.getTasksByBusiness$Response(params, context).pipe(
+    map((r: StrictHttpResponse<Array<Task>>): Array<Task> => r.body)
+  );
+}
+
+/** Path part for operation `updateTask()` */
+static readonly UpdateTaskPath = '/business/tasks/{taskId}';
+
+/**
+ * Mettre à jour une tâche
+ */
+updateTask$Response(params: { taskId: number; body: Task }, context?: HttpContext): Observable<StrictHttpResponse<Task>> {
+  console.log(`Updating taskId=${params.taskId}`);
+  const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.UpdateTaskPath, 'put');
+  if (params) {
+    rb.path('taskId', params.taskId, {});
+    rb.body(params.body, 'application/json');
+  }
+
+  return this.http.request(
+    rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context,
+    })
+  ).pipe(
+    filter((r: any) => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => r as StrictHttpResponse<Task>),
+    tap({
+      next: (r) => console.log(`Task updated successfully: taskId=${params.taskId}`),
+      error: (err) => console.error(`Error updating taskId=${params.taskId}: ${err.message}`)
+    })
+  );
+}
+
+/**
+ * Mettre à jour une tâche
+ */
+updateTask(params: { taskId: number; body: Task }, context?: HttpContext): Observable<Task> {
+  return this.updateTask$Response(params, context).pipe(
+    map((r: StrictHttpResponse<Task>): Task => r.body)
+  );
+}
+
+/** Path part for operation `deleteTask()` */
+static readonly DeleteTaskPath = '/business/tasks/{taskId}';
+
+/**
+ * Supprimer une tâche
+ */
+deleteTask$Response(params: { taskId: number }, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  console.log(`Deleting taskId=${params.taskId}`);
+  const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.DeleteTaskPath, 'delete');
+  if (params) {
+    rb.path('taskId', params.taskId, {});
+  }
+
+  return this.http.request(
+    rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context,
+    })
+  ).pipe(
+    filter((r: any) => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => r as StrictHttpResponse<void>),
+    tap({
+      next: () => console.log(`Task deleted successfully: taskId=${params.taskId}`),
+      error: (err) => console.error(`Error deleting taskId=${params.taskId}: ${err.message}`)
+    })
+  );
+}
+
+/**
+ * Supprimer une tâche
+ */
+deleteTask(params: { taskId: number }, context?: HttpContext): Observable<void> {
+  return this.deleteTask$Response(params, context).pipe(
+    map((r: StrictHttpResponse<void>): void => r.body)
+  );
+}
+
+/** Path part for operation `reorderTasks()` */
+static readonly ReorderTasksPath = '/business/{businessId}/tasks/reorder';
+
+/**
+ * Réorganiser les tâches
+ */
+reorderTasks$Response(params: { businessId: number; body: Task[] }, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  console.log(`Reordering tasks for businessId=${params.businessId}`);
+  const rb = new RequestBuilder(this.rootUrl, GestionDesBusinessService.ReorderTasksPath, 'post');
+  if (params) {
+    rb.path('businessId', params.businessId, {});
+    rb.body(params.body, 'application/json');
+  }
+
+  return this.http.request(
+    rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context,
+    })
+  ).pipe(
+    filter((r: any) => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => r as StrictHttpResponse<void>),
+    tap({
+      next: () => console.log(`Tasks reordered successfully for businessId=${params.businessId}`),
+      error: (err) => console.error(`Error reordering tasks for businessId=${params.businessId}: ${err.message}`)
+    })
+  );
+}
+
+/**
+ * Réorganiser les tâches
+ */
+reorderTasks(params: { businessId: number; body: Task[] }, context?: HttpContext): Observable<void> {
+  return this.reorderTasks$Response(params, context).pipe(
+    map((r: StrictHttpResponse<void>): void => r.body)
+  );
+}
+static readonly GetMyBusinessesPath = '/business/my-businesses';
+
+/**
+ * Récupérer les businesses de l'utilisateur connecté
+ */
+getMyBusinesses(context?: HttpContext): Observable<Business[]> {
+  console.log('Fetching businesses for the current user');
+  return this.http.get<Business[]>(
+    `${this.rootUrl}${GestionDesBusinessService.GetMyBusinessesPath}`,
+    { context }
+  ).pipe(
+    tap({
+      next: (businesses) => console.log(`Fetched ${businesses.length} businesses for current user`, businesses),
+      error: (err) => console.error(`Error fetching businesses: ${err.message}`)
+    })
+  );
+}
+
 }

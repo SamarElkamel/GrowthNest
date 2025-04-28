@@ -19,16 +19,17 @@ import { getAllProducts } from '../fn/gestion-des-produits/get-all-products';
 import { GetAllProducts$Params } from '../fn/gestion-des-produits/get-all-products';
 import { getProductById } from '../fn/gestion-des-produits/get-product-by-id';
 import { GetProductById$Params } from '../fn/gestion-des-produits/get-product-by-id';
-import { Products, Wishlist } from '../models/products';
+import { Products, StockMovement, Wishlist } from '../models/products';
 import { updateProducts } from '../fn/gestion-des-produits/update-products';
 import { UpdateProducts$Params } from '../fn/gestion-des-produits/update-products';
 import { addBusinessProduct, AddBusinessProduct$Params } from '../fn/gestion-des-produits/add-business-product';
 import { getProductsByBusiness, GetProductsByBusiness$Params } from '../fn/gestion-des-produits/get-products-by-business';
 import { RequestBuilder } from '../request-builder';
+import { TokenService } from '../token/token.service';
 
 @Injectable({ providedIn: 'root' })
 export class GestionDesProduitsService extends BaseService {
-  constructor(config: ApiConfiguration, http: HttpClient) {
+  constructor(config: ApiConfiguration, http: HttpClient,private tokenService: TokenService) {
     super(config, http);
   }
 
@@ -236,6 +237,7 @@ static readonly AddToWishlistPath = '/wishlist/add/{userId}/{productId}';
   static readonly RemoveFromWishlistPath = '/wishlist/remove/{userId}/{productId}';
   static readonly GetWishlistPath = '/wishlist/user/{userId}';
   static readonly CheckWishlistPath = '/wishlist/check/{userId}/{productId}';
+  
 
   // Ajouter un produit à la wishlist
   addToWishlist(userId: number, productId: number, context?: HttpContext): Observable<Wishlist> {
@@ -261,10 +263,61 @@ static readonly AddToWishlistPath = '/wishlist/add/{userId}/{productId}';
     );
   }
 
+
   // Vérifier si un produit est dans la wishlist
   isProductInWishlist(userId: number, productId: number, context?: HttpContext): Observable<boolean> {
     return this.http.get<boolean>(
       `${this.rootUrl}/wishlist/check/${userId}/${productId}`,
+      { context }
+    );
+  }static readonly AddStockPath = '/Products/stock/add/{productId}/{quantity}';
+  static readonly ReduceStockPath = '/Products/stock/reduce/{productId}/{quantity}';
+  static readonly GetStockMovementsPath = '/Products/stock/movements/{productId}';
+  static readonly GetStockRotationStatsPath = '/Products/stock/rotation/{businessId}';
+  /**
+   * Ajouter une quantité au stock d'un produit
+   */
+  addStock(productId: number, quantity: number, context?: HttpContext): Observable<Products> {
+    return this.http.put<Products>(
+      `${this.rootUrl}${GestionDesProduitsService.AddStockPath}`
+        .replace('{productId}', String(productId))
+        .replace('{quantity}', String(quantity)),
+      {},
+      { context }
+    );
+  }
+
+  /**
+   * Réduire une quantité du stock d'un produit
+   */
+  reduceStock(productId: number, quantity: number, context?: HttpContext): Observable<Products> {
+    return this.http.put<Products>(
+      `${this.rootUrl}${GestionDesProduitsService.ReduceStockPath}`
+        .replace('{productId}', String(productId))
+        .replace('{quantity}', String(quantity)),
+      {},
+      { context }
+    );
+  }
+
+  /**
+   * Récupérer l'historique des mouvements de stock pour un produit
+   */
+  getStockMovements(productId: number, context?: HttpContext): Observable<StockMovement[]> {
+    return this.http.get<StockMovement[]>(
+      `${this.rootUrl}${GestionDesProduitsService.GetStockMovementsPath}`
+        .replace('{productId}', String(productId)),
+      { context }
+    );
+  }
+
+  /**
+   * Récupérer les statistiques de rotation des stocks pour un business
+   */
+  getStockRotationStats(businessId: number, context?: HttpContext): Observable<{ [key: string]: number }> {
+    return this.http.get<{ [key: string]: number }>(
+      `${this.rootUrl}${GestionDesProduitsService.GetStockRotationStatsPath}`
+        .replace('{businessId}', String(businessId)),
       { context }
     );
   }

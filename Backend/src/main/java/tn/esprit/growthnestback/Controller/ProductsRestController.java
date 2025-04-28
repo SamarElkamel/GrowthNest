@@ -22,9 +22,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.growthnestback.Entities.Products;
+import tn.esprit.growthnestback.Entities.StockMovement;
 import tn.esprit.growthnestback.Services.IProductsService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Validated
@@ -155,6 +157,38 @@ public class ProductsRestController {
         }
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(file);
     }
+    @Operation(description = "Ajouter du stock")
+    @PutMapping("/stock/add/{productId}/{quantity}")
+    public ResponseEntity<Products> addStock(@PathVariable Long productId, @PathVariable Long quantity) {
+        try {
+            Products updatedProduct = iProductsService.updateStock(productId, quantity, StockMovement.MovementType.ADD);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 
+    @Operation(description = "Réduire le stock")
+    @PutMapping("/stock/reduce/{productId}/{quantity}")
+    public ResponseEntity<Products> reduceStock(@PathVariable Long productId, @PathVariable Long quantity) {
+        try {
+            Products updatedProduct = iProductsService.updateStock(productId, quantity, StockMovement.MovementType.REDUCE);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @Operation(description = "Obtenir l'historique des mouvements de stock")
+    @GetMapping("/stock/movements/{productId}")
+    public List<StockMovement> getStockMovements(@PathVariable Long productId) {
+        return iProductsService.getStockMovements(productId);
+    }
+
+    @Operation(description = "Obtenir les statistiques de rotation de stock")
+    @GetMapping("/stock/rotation/{businessId}")
+    public Map<String, Long> getStockRotationStats(@PathVariable Long businessId) {
+        return iProductsService.getStockRotationStats(businessId);
+    }
 
 }

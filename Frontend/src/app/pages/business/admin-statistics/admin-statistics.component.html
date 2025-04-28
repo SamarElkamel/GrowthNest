@@ -1,0 +1,27 @@
+<div class="statistics-container">
+  <h2>Business Statistics</h2>
+  <div class="stats-grid" *ngIf="statistics">
+    <mat-card class="stat-card">
+      <mat-card-title>Total Businesses</mat-card-title>
+      <mat-card-content>{{ statistics.totalBusinesses }}</mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-title>Average Rating</mat-card-title>
+      <mat-card-content>{{ statistics.averageRating | number:'1.2-2' }}</mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-title>High-Rated (≥ 4.0)</mat-card-title>
+      <mat-card-content>{{ statistics.highRatingCount }}</mat-card-content>
+    </mat-card>
+  </div>
+  <div class="chart-container" *ngIf="chartOptions.series?.length">
+    <h3>Business Status Distribution</h3>
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [labels]="chartOptions.labels"
+      [colors]="chartOptions.colors"
+      [legend]="chartOptions.legend">
+    </apx-chart>
+  </div>
+</div>

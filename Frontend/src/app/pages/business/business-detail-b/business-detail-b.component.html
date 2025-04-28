@@ -23,6 +23,12 @@
         <button class="action-btn accent" [routerLink]="['/add-product', business.idBusiness]">
           <i class="material-icons">add</i> New Product
         </button>
+        <button class="action-btn" [routerLink]="['/stock-management', business.idBusiness]">
+          <i class="material-icons">inventory</i> Voir Stock
+        </button>
+        <button class="action-btn" [routerLink]="['/revenue-dashboard', business.idBusiness]">
+          <i class="material-icons">bar_chart</i> Tableau des Revenus
+        </button>
       </div>
     </div>
   </div>
@@ -111,6 +117,12 @@
           </div>
         </div>
       </div>
+     
+<div>
+  <h1>Gérer votre business</h1>
+  <app-business-todo-list [businessId]="business.idBusiness"></app-business-todo-list>
+</div>
+
 
       <!-- Empty State -->
       <div *ngIf="filteredProducts && filteredProducts.length === 0 && !isLoadingProducts" class="empty-state">
