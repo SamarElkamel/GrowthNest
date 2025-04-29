@@ -1,0 +1,20 @@
+
+.page-content {
+    margin-top: 80px;          /* Add top space under header */
+    margin-left: 20px;         /* Add left space */
+    margin-right: 20px;        /* Add right space */
+  }
+  
+  @media (min-width: 768px) {
+    .page-content {
+      margin-left: 80px;       /* On tablets/desktops, add bigger side margins */
+      margin-right: 80px;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .page-content {
+      margin-left: 120px;      /* On large desktops, even more space */
+      margin-right: 120px;
+    }
+  }

@@ -108,12 +108,22 @@ import { StockManagementComponent } from './pages/products/stock-management/stoc
 import { MyBusinessListComponent } from './pages/business/my-business-list/my-business-list.component';
 import { RevenueDashboardComponent } from './pages/business/revenue-dashboard/revenue-dashboard.component';
 
+//
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatNativeDateModule } from '@angular/material/core';
+import { OrderDetailsModalComponent } from './BackOffice/component/order-details-modals/order-details-modals.component';
+
+
 
 @NgModule({
   declarations: [
     AppComponent,
     SpinnerComponent,
     //order
+    OrderDetailsModalComponent ,
     OrderListComponent,
     OrderDetailsComponent,
     CouponListComponent,
@@ -203,6 +213,12 @@ import { RevenueDashboardComponent } from './pages/business/revenue-dashboard/re
     MatTableModule,
     MatSelectModule,
     MatPaginatorModule,
+    MatDividerModule,
+    MatChipsModule,
+    MatListModule,
+    MatDatepickerModule,
+    MatMenuModule,
+    MatNativeDateModule,
     FullCalendarModule,
     NgbPaginationModule,
     MatCheckboxModule,
@@ -211,7 +227,6 @@ import { RevenueDashboardComponent } from './pages/business/revenue-dashboard/re
     MatChipsModule,
     MatProgressBarModule,
     MatTooltipModule
-    
   ],
   providers: [
     provideCharts(),

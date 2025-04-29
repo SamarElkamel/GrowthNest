@@ -1,100 +1,105 @@
-<form class="bg0 p-t-75 p-b-85">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 m-b-50">
-        <div class="bor10 p-lr-40 p-t-30 p-b-40 p-lr-15-sm">
-          <h4 class="mtext-109 cl2 p-b-30">Your Cart & Checkout</h4>
+<form>
+  <div class="page-content">
+    <mat-card class="p-4 mat-elevation-z3">
 
-          <!-- CART TABLE -->
-          <div class="wrap-table-shopping-cart m-b-40">
-            <table class="table-shopping-cart">
-              <tr class="table_head">
-                <th class="column-1">Product</th>
-                <th class="column-2">Price</th>
-                <th class="column-3">Quantity</th>
-                <th class="column-4">Total</th>
-                <th class="column-5">Remove</th>
-              </tr>
-              <tr class="table_row" *ngFor="let item of cartItems">
-                <td class="column-1">{{ item.productName }}</td>
-                <td class="column-2">{{ item.priceAtTime | currency }}</td>
-                <td class="column-3">
-                  <div class="wrap-num-product flex-w m-l-auto m-r-0">
-                    <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" (click)="decrementQty(item)">
-                      <i class="fs-16 zmdi zmdi-minus"></i>
-                    </div>
-                    <input class="mtext-104 cl3 txt-center num-product" type="number" [(ngModel)]="item.quantity" name="quantity" readonly />
-                    <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" (click)="incrementQty(item)">
-                      <i class="fs-16 zmdi zmdi-plus"></i>
-                    </div>
-                  </div>
-                </td>
-                <td class="column-4">{{ item.quantity * item.priceAtTime | currency }}</td>
-                <td class="column-5">
-                  <button class="btn btn-sm btn-danger" (click)="removeItem(item)">X</button>
-                </td>
-              </tr>
-            </table>
-          </div>
+      <mat-card-title>Your Cart & Checkout</mat-card-title>
+      <mat-divider class="mb-4"></mat-divider>
 
-          <!-- APPLY COUPON -->
-          <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm m-b-30">
-            <div class="flex-w flex-m m-r-20 m-tb-5">
-              <input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" [(ngModel)]="couponCode" name="coupon" placeholder="Coupon Code" />
-              <div class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" (click)="applyCoupon()">
-                Apply coupon
+      <!-- CART TABLE -->
+      <div class="mb-4">
+        <table mat-table [dataSource]="cartItems" class="mat-elevation-z1 w-100" style="min-width: 750px;">
+
+          <!-- Product -->
+          <ng-container matColumnDef="product">
+            <th mat-header-cell *matHeaderCellDef> Product </th>
+            <td mat-cell *matCellDef="let item"> {{ item.productName }} </td>
+          </ng-container>
+
+          <!-- Price -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Price </th>
+            <td mat-cell *matCellDef="let item"> {{ item.priceAtTime | currency }} </td>
+          </ng-container>
+
+          <!-- Quantity -->
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+            <td mat-cell *matCellDef="let item">
+              <div class="d-flex align-items-center">
+                <button mat-icon-button (click)="decrementQty(item)">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <input matInput type="number" [(ngModel)]="item.quantity" name="quantity" 
+                  class="text-center" style="width: 60px;" readonly>
+                <button mat-icon-button (click)="incrementQty(item)">
+                  <mat-icon>add</mat-icon>
+                </button>
               </div>
-            </div>
-            <div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10" (click)="updateCart()">
-              Update Cart
-            </div>
-          </div>
+            </td>
+          </ng-container>
 
-          <!-- DELIVERY ADDRESS -->
-          <h5 class="mtext-109 cl2 m-b-20">Delivery Address:</h5>
-          <app-address-picker (addressSelected)="deliveryAddress = $event"></app-address-picker>
-          <input [(ngModel)]="deliveryAddress" name="deliveryAddress" class="form-control mt-3 mb-4" placeholder="Delivery address" />
+          <!-- Total -->
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef> Total </th>
+            <td mat-cell *matCellDef="let item"> {{ item.quantity * item.priceAtTime | currency }} </td>
+          </ng-container>
 
-          <!-- PAYMENT METHOD -->
-          <h5 class="mtext-109 cl2 m-b-10">Payment Method:</h5>
-          <select [(ngModel)]="paymentMethod" name="paymentMethod" class="form-control custom-select mb-4">
-            <option value="Cash">💵 Cash on Delivery</option>
-            <option value="Stripe">💳 Credit/Debit Card (Stripe)</option>
-          </select>
+          <!-- Remove -->
+          <ng-container matColumnDef="remove">
+            <th mat-header-cell *matHeaderCellDef> Remove </th>
+            <td mat-cell *matCellDef="let item">
+              <button mat-icon-button color="warn" (click)="removeItem(item)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
 
-   
-          
-
-          <!-- TOTAL + SUBMIT -->
-          <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
-            <h5 class="m-0">Total:</h5>
-            <h4 class="text-success m-0">{{ total | currency }}</h4>
-          </div>
-          <div class="redeem-box">
-            <p>You have <strong>{{ availablePoints }}</strong> points.</p>
-          
-            <div *ngIf="!redeeming">
-              <button class="btn btn-outline-primary" (click)="redeeming = true">Redeem Points</button>
-            </div>
-          
-            <div *ngIf="redeeming" class="mt-2">
-              <input type="number" [(ngModel)]="pointsToRedeem" [ngModelOptions]="{ standalone: true}"  [max]="availablePoints" class="form-control"  name="pointsToRedeem"  placeholder="Enter points to redeem" />
-              <button class="btn btn-success mt-2" (click)="applyPoints()">Apply</button>
-              <button class="btn btn-link mt-2" (click)="cancelRedemption()">Cancel</button>
-            </div>
-          
-            <p *ngIf="discount > 0" class="text-success mt-2">
-              🎉 You saved {{ discount | currency }}!
-            </p>
-          </div>
-          
-          <p class="text-muted small mb-3">You will be redirected after successful payment.</p>
-
-          <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" (click)="checkoutCart()">
-            ✅ {{ paymentMethod === 'Stripe' ? 'Proceed to Payment' : 'Confirm Order' }}
-          </button>
-        </div>
+          <tr mat-header-row *matHeaderRowDef="['product', 'price', 'quantity', 'total', 'remove']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['product', 'price', 'quantity', 'total', 'remove'];"></tr>
+        </table>
       </div>
-    </div>
+
+      <!-- Coupon Input -->
+      <div class="d-flex align-items-center mb-3">
+        <mat-form-field appearance="fill" class="flex-grow-1 mr-3">
+          <mat-label>Coupon Code</mat-label>
+          <input matInput [(ngModel)]="couponCode" name="coupon">
+        </mat-form-field>
+        <button mat-flat-button color="primary" (click)="applyCoupon()">Apply</button>
+      </div>
+
+      <h5 class="mt-4">Delivery Address</h5>
+      <app-address-picker (addressSelected)="deliveryAddress = $event"></app-address-picker>
+      <mat-form-field appearance="outline" class="w-100 mt-2">
+        <mat-label>Delivery address</mat-label>
+        <input matInput [(ngModel)]="deliveryAddress" name="deliveryAddress">
+      </mat-form-field>
+      <!-- Payment Method -->
+      <mat-form-field appearance="fill" class="w-100 mb-4">
+        <mat-label>Payment Method</mat-label>
+        <mat-select [(ngModel)]="paymentMethod" name="paymentMethod">
+          <mat-option value="Cash">💵 Cash on Delivery</mat-option>
+          <mat-option value="Stripe">💳 Credit/Debit Card (Stripe)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Total Display -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="m-0">Total:</h5>
+        <h4 class="text-success m-0">{{ total | currency }}</h4>
+      </div>
+
+      <!-- Final Note & Checkout -->
+      <p class="text-muted small mb-3">You will be redirected after successful payment.</p>
+      <button 
+        mat-raised-button 
+        color="accent" 
+        class="w-100" 
+        (click)="checkoutCart()" 
+        [disabled]="!isCheckoutValid()">
+        ✅ {{ paymentMethod === 'Stripe' ? 'Proceed to Payment' : 'Confirm Order' }}
+      </button>
+
+    </mat-card>
   </div>
 </form>

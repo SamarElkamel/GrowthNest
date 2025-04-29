@@ -1,21 +1,28 @@
-.card-wrapper {
-  position: relative;
-  overflow: visible;
-  z-index: 2;
+.page-content {
+  margin: 80px auto 40px auto;
+  max-width: 1000px;
 }
 
-#card-element {
-  min-height: 70px;
-  padding: 12px;
-  background-color: white;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  z-index: 5;
-  position: relative;
+.mat-form-field {
+  margin-bottom: 16px;
 }
-.stripe-box iframe {
-  pointer-events: auto !important;
-  width: 100% !important;
-  height: 100% !important;
-  z-index: 10 !important;
+
+.mat-raised-button, .mat-flat-button {
+  min-width: 120px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.text-center {
+  text-align: center;
 }

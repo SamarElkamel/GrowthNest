@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from 'src/app/services/services/cart.service';
 import { loadStripe, Stripe, StripeCardElement } from '@stripe/stripe-js';
+import { NotificationService } from 'src/app/services/services/notif.service';
+import { Router } from '@angular/router';
 import { TokenService } from 'src/app/services/token/token.service';
-
 interface OrderItem {
   productId: number;
   productName: string;
@@ -28,7 +29,7 @@ interface Cart {
   styleUrls: ['./cart-page.component.scss']
 })
 export class CartPageComponent implements OnInit {
-  userId! : number;
+  userId!:number;
   cart: Cart | null = null;
   couponCode: string = '';
   deliveryAddress: string = '';
@@ -38,7 +39,9 @@ export class CartPageComponent implements OnInit {
   redeeming = false;
   discount = 0;
   constructor(private cartService: CartService,
-    private tokenService: TokenService
+    private notification: NotificationService ,
+    private router: Router ,
+     private tokenService:TokenService,
   ) {}
 
   ngOnInit(): void {
@@ -54,9 +57,10 @@ export class CartPageComponent implements OnInit {
           this.cart.discountAmount = this.subtotal - res.newTotal;
         }
         this.redeeming = false;
+        this.notification.success('Points redeemed successfully!');
       },
       error: err => {
-        alert(err.error?.error || 'Could not redeem points');
+        this.notification.error(err.message || 'Could not redeem points');
       }
     });
   }
@@ -66,24 +70,40 @@ cancelRedemption() {
   this.discount = 0;
   this.redeeming = false;
 }
-  checkoutCart(): void {
-    if (this.paymentMethod === 'Cash') {
-      this.cartService.checkoutCart(
-        this.userId,
-        this.deliveryAddress,
-        this.paymentMethod
-      ).subscribe({
-        next: () => {
-          alert('Order placed with Cash on Delivery!');
-          this.loadCart();
-        },
-        error: err => console.error('Checkout failed', err)
-      });
-    } else if (this.paymentMethod === 'Stripe') {
-      // Redirect to payment page with queryParams
-      window.location.href = `/payment?userId=${this.userId}&cartId=${this.cart?.orderId}&amount=${this.total}`;
-    }
+checkoutCart(): void {
+
+  if (this.paymentMethod === 'Cash') {
+    this.cartService.checkoutCart(
+      this.userId,
+      this.deliveryAddress,
+      this.paymentMethod
+    ).subscribe({
+      next: () => {
+        
+        this.notification.success('Order placed successfully! Redirecting to your order history...')
+          .then(() => {
+            this.router.navigate(['/orders/history']);
+          });
+      },
+      error: (err) => {
+        this.notification.error(err);
+      }
+    });
+  } else if (this.paymentMethod === 'Stripe') {
+    this.router.navigate(['/payment']);
   }
+}
+
+
+isCheckoutValid(): boolean {
+  return (
+    this.deliveryAddress.trim().length > 0 &&
+    typeof this.paymentMethod === 'string' && this.paymentMethod.trim().length > 0 &&
+    this.cartItems.length > 0 &&
+    this.total > 0
+  );
+}
+
   
 
   get cartItems(): OrderItem[] {
@@ -97,14 +117,17 @@ cancelRedemption() {
   get total(): number {
     return this.subtotal - (this.cart?.discountAmount || 0);  }
 
-  loadCart(): void {
-    this.cartService.getCart(this.userId).subscribe({
-      next: data => {
-        this.cart = data;
-      },
-      error: err => console.error('Failed to load cart', err)
-    });
-  }
+    loadCart(): void {
+      this.cartService.getCart(this.userId).subscribe({
+        next: data => {
+          this.cart = data;
+        },
+        error: err => {
+          this.notification.error(err.message || 'Failed to load cart.');
+        }
+      });
+    }
+    
 
   incrementQty(item: OrderItem): void {
     item.quantity++;
@@ -121,30 +144,43 @@ cancelRedemption() {
   updateQuantity(item: OrderItem): void {
     this.cartService.updateItemQuantity(this.userId, item.productId, item.quantity).subscribe({
       next: () => this.loadCart(),
-      error: err => console.error('Failed to update quantity', err)
+      error: err => {
+        this.notification.error(err.message || 'Failed to update item quantity.');
+      }
     });
   }
+  
 
   removeItem(item: OrderItem): void {
     this.cartService.removeItemFromCart(this.userId, item.productId).subscribe({
-      next: () => this.loadCart(),
-      error: err => console.error('Failed to remove item', err)
+      next: () => {
+        this.notification.success('Item removed successfully.');
+        this.loadCart();
+      },
+      error: err => {
+        this.notification.error(err.message || 'Failed to remove item.');
+      }
     });
   }
+  
 
   applyCoupon(): void {
     this.cartService.applyCouponToCart(this.userId, this.couponCode).subscribe({
       next: () => {
+        this.notification.success('Coupon applied successfully!');
         this.couponCode = '';
         this.loadCart();
       },
-      error: err => console.error('Failed to apply coupon', err)
+      error: (err) => {
+        this.notification.error(err);  
+      }
     });
   }
-
+  
   updateCart(): void {
     this.loadCart();
   }
 
   
 }
+

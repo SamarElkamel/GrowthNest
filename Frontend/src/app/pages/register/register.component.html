@@ -2,7 +2,7 @@
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col col-xl-10">
-        <div class="card login-card" style="width: 60%; margin: auto;">
+        <div class="card login-card" style="width: 70%; margin: auto;">
           <div class="row g-0">
             <div class="col-md-6 col-lg-5 d-none d-md-block">
               <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
@@ -68,6 +68,13 @@
                 </div>
 
                 <label for="image" class="form-label">{{ isMarketingAgent ? 'Upload Your Logo' : 'Upload Profile Photo' }}</label>
+                  <input 
+                    type="file" 
+                    id="image" 
+                    name="image" 
+                    accept="image/*" 
+                    (change)="onFileSelected($event)" 
+                     class="form-control" />
                 <div class="custom-file">
                   <input (change)="onFileSelected($event)" class="custom-file-input" type="file" id="image" />
                   <img *ngIf="previewUrl" [src]="previewUrl" class="img-fluid mt-2" style="max-height: 150px;" />

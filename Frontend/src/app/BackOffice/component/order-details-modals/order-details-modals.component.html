@@ -1,21 +1,47 @@
-<h2 mat-dialog-title *ngIf="order">Order #{{ order.orderId }}</h2>
+<h2 mat-dialog-title *ngIf="order">
+  Order #{{ order.orderId }}
+</h2>
 
 <div mat-dialog-content *ngIf="order">
-  <p><strong>Status:</strong> {{ order.status }}</p>
-  <p><strong>Payment Method:</strong> {{ order.paymentMethod }}</p>
-  <p><strong>Delivery Address:</strong> {{ order.deliveryAddress }}</p>
 
-  <h3>Products</h3>
-  <ul>
-    <li *ngFor="let item of order.items">
-      Qty: {{ item.quantity }} × {{ item.unitPrice }} = {{ item.total }}
-    </li>
-  </ul>
+  <!-- Order Info Section -->
+  <mat-card class="mb-4">
+    <mat-card-content>
+      <div class="d-flex flex-column gap-2">
+        <p><strong>Status:</strong> 
+          <mat-chip color="primary" selected>{{ order.status }}</mat-chip>
+        </p>
+        <p><strong>Payment Method:</strong> {{ order.paymentMethod }}</p>
+        <p><strong>Delivery Address:</strong> {{ order.deliveryAddress }}</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
-  <h3>Summary</h3>
-  <p>Subtotal: {{ order.totalAmount + (order.discountAmount || 0) }} TND</p>
-  <p *ngIf="order.discountAmount">
-    Discount ({{ order.couponCode || 'N/A' }}): -{{ order.discountAmount }} TND
-  </p>
-  <p><strong>Total: {{ order.totalAmount }} TND</strong></p>
+  <!-- Products Section -->
+  <h3 class="mt-4 mb-2">Products</h3>
+  <mat-list dense>
+    <mat-list-item *ngFor="let item of order.items">
+      <div mat-line>
+        Qty: {{ item.quantity }} × {{ item.unitPrice | currency:'TND' }} 
+      </div>
+      <div mat-line class="text-end text-success fw-bold">
+        = {{ item.total | currency:'TND' }}
+      </div>
+    </mat-list-item>
+  </mat-list>
+
+  <mat-divider class="my-3"></mat-divider>
+
+  <!-- Pricing Summary -->
+  <h3 class="mb-3">Summary</h3>
+  <div class="d-flex flex-column gap-2">
+    <p><strong>Subtotal:</strong> {{ (order.totalAmount + (order.discountAmount || 0)) | currency:'TND' }}</p>
+    <p *ngIf="order.discountAmount">
+      <strong>Discount ({{ order.couponCode || 'N/A' }}):</strong> -{{ order.discountAmount | currency:'TND' }}
+    </p>
+    <p class="text-success fw-bold">
+      <strong>Total:</strong> {{ order.totalAmount | currency:'TND' }}
+    </p>
+  </div>
+
 </div>

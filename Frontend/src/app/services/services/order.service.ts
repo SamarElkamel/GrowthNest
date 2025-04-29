@@ -10,7 +10,7 @@ import { TokenService } from '../token/token.service';
 })
 export class OrderService {
   private baseUrl = 'http://localhost:8080/Growthnest/api/orders'; 
-
+  userId = Number(this.tokenService.getUserId());
   constructor(private http: HttpClient,
   private tokenService : TokenService
   ) {}
@@ -41,9 +41,9 @@ export class OrderService {
     return this.http.get<OrderResponse>(`${this.baseUrl}/${orderId}`);
   }
   reorder(originalOrderId: number): Observable<OrderResponse> {
-    const userId = 1; // or dynamically pull this later
+    // or dynamically pull this later
     return this.http.post<OrderResponse>(
-      `${this.baseUrl}/reorder/${originalOrderId}?userId=${userId}`,
+      `${this.baseUrl}/reorder/${originalOrderId}?userId=${this.userId}`,
       {}
     );
   }
