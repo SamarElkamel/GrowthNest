@@ -25,7 +25,7 @@ export class StockManagementComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   
   // Table configurations
-  displayedColumns: string[] = ['product', 'stock', 'status', 'actions', 'history'];
+  displayedColumns: string[] = ['product','barcode', 'stock', 'status', 'actions', 'history'];
   dataSource = new MatTableDataSource<Products>([]);
   
   // History dialog
@@ -264,4 +264,18 @@ export class StockManagementComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+  getBarcodeUrl(productId: number): string {
+    return `${this.produitsService.rootUrl}/Products/barcode/${productId}`;
+  }
+
+  handleBarcodeError(event: Event, product: Products): void {
+    console.warn(`Failed to load barcode for product ${product.idProduct}`);
+    (event.target as HTMLImageElement).style.display = 'none';
+    const cell = (event.target as HTMLImageElement).parentElement;
+    if (cell) {
+      const noBarcodeSpan = document.createElement('span');
+      noBarcodeSpan.className = 'no-barcode';
+      noBarcodeSpan.textContent = 'Aucun code-barres';
+      cell.appendChild(noBarcodeSpan);
+    }}
 }

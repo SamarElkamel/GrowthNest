@@ -20,7 +20,11 @@
           <span class="helper-text">This will be your public business name</span>
         </label>
         <div class="validation-errors">
-          <!-- Keep existing error messages -->
+          <div *ngIf="businessForm.get('name')?.touched && businessForm.get('name')?.invalid">
+            <div *ngIf="businessForm.get('name')?.errors?.['required']">Business name is required.</div>
+            <div *ngIf="businessForm.get('name')?.errors?.['minlength']">Business name must be at least 3 characters long.</div>
+            <div *ngIf="businessForm.get('name')?.errors?.['maxlength']">Business name must not exceed 50 characters.</div>
+          </div>
         </div>
       </div>
 
@@ -33,6 +37,12 @@
             </option>
           </select>
         </label>
+        <div class="validation-errors">
+          <div *ngIf="businessForm.get('categorieBusiness')?.touched && businessForm.get('categorieBusiness')?.invalid">
+            <div *ngIf="businessForm.get('categorieBusiness')?.errors?.['required']">Category is required.</div>
+          </div>
+          
+        </div>
       </div>
     </div>
 
@@ -46,6 +56,13 @@
             placeholder="Describe your business..."></textarea>
           <span class="helper-text">Tell customers what makes you unique</span>
         </label>
+        <div class="validation-errors">
+          <div *ngIf="businessForm.get('description')?.touched && businessForm.get('description')?.invalid">
+            <div *ngIf="businessForm.get('description')?.errors?.['required']">Description is required.</div>
+            <div *ngIf="businessForm.get('description')?.errors?.['minlength']">Description must be at least 10 characters long.</div>
+            <div *ngIf="businessForm.get('description')?.errors?.['maxlength']">Description must not exceed 255 characters.</div>
+          </div>
+        </div>
       </div>
 
       <div class="form-group">

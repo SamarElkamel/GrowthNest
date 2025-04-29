@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { WebsocketService } from 'src/app/services/services/WebsocketService';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Business } from 'src/app/services/models/business';
 import { Subscription } from 'rxjs';
+
+import { AuthenticationService, GestionDesBusinessService } from 'src/app/services/services';
+import { BusinessNotificationService } from 'src/app/services/services/BusinessNotificationService.service';
+import { TokenService } from 'src/app/services/token/token.service';
 import { NotificationE } from 'src/app/services/models/notificationE';
-import { GestionDesBusinessService } from 'src/app/services/services';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -55,22 +57,23 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private businessService: GestionDesBusinessService,
-    private websocketService: WebsocketService,
+    private notificationService: BusinessNotificationService,
+    private authService: AuthenticationService,
+    private tokenService: TokenService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.loadPendingBusinesses();
-    try {
-      this.websocketService.subscribeToTopic('/topic/admin-notifications');
-      this.websocketService.subscribeToTopic('/topic/owner-notifications-1');
+    if (this.authService.isAuthenticated()) {
+      this.notificationService.initializeWebSocket();
       this.subscription.add(
-        this.websocketService.notifications$.subscribe(
-          (NotificationE: NotificationE[]) => {
-            const latestNotification = NotificationE[NotificationE.length - 1];
-            if (latestNotification) {
+        this.notificationService.notifications$.subscribe(
+          (notifications: NotificationE[]) => {
+            const latestNotification = notifications[0]; // Most recent first
+            if (latestNotification && latestNotification.business) {
               this.snackBar.open(
-                `${latestNotification.message} (ID: ${latestNotification.businessId})`,
+                `${latestNotification.message} (ID: ${latestNotification.business.idBusiness})`,
                 'Fermer',
                 {
                   duration: 5000,
@@ -80,13 +83,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
                 }
               );
             }
-            console.log('Notifications received:', NotificationE);
+            console.log('Notifications received:', notifications);
           },
           error => console.error('Notification subscription error:', error)
         )
       );
-    } catch (e) {
-      console.error('Error initializing WebSocket subscriptions:', e);
     }
   }
 
@@ -142,10 +143,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    try {
-      this.websocketService.disconnect();
-    } catch (e) {
-      console.error('Error disconnecting WebSocket:', e);
-    }
+    this.notificationService.disconnectWebSocket();
   }
 }

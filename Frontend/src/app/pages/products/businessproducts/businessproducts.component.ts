@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Products } from 'src/app/services/models';
+import { Products, Wishlist } from 'src/app/services/models/products';
 import { GestionDesProduitsService } from 'src/app/services/services/gestion-des-produits.service';
 import { QuickViewProductFComponent } from '../quick-view-product-f/quick-view-product-f.component';
 import * as $ from 'jquery';
@@ -27,12 +27,12 @@ export class BusinessproductsComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   errorMessage?: string;
   baseUrl: string = 'http://localhost:8080/Growthnest';
-  currentUserId!: number; // Utilisateur statique
+  currentUserId!: number;
   wishlist: Set<number> = new Set();
   private wishlistSubscription!: Subscription;
 
   constructor(
-    private tokenService : TokenService,
+    private tokenService: TokenService,
     private route: ActivatedRoute,
     private produitsService: GestionDesProduitsService,
     private wishlistService: WishlistService,
@@ -71,34 +71,36 @@ export class BusinessproductsComponent implements OnInit, OnDestroy {
         this.errorMessage = 'Erreur lors du chargement des produits';
         this.isLoading = false;
         console.error('Erreur complète:', err);
+        Swal.fire('Error', 'Failed to load products', 'error');
       }
     });
   }
 
   private loadWishlist(): void {
+    this.wishlistService.loadWishlist();
     this.wishlistSubscription = this.wishlistService.wishlistItems$.subscribe({
-      next: (wishlistItems) => {
-        this.wishlist = new Set(wishlistItems.map(item => item.idProduct));
+      next: (wishlistItems: Wishlist[]) => {
+        this.wishlist = new Set(wishlistItems.map(item => item.productId));
         console.log('BusinessproductsComponent: Wishlist updated:', Array.from(this.wishlist));
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('BusinessproductsComponent: Error loading wishlist:', err);
+        Swal.fire('Error', 'Failed to load wishlist', 'error');
       }
     });
   }
 
   addToWishlist(product: Products): void {
-    if (!product.idProduct) return;
+    if (!product.idProduct) {
+      Swal.fire('Error', 'Invalid product ID', 'error');
+      return;
+    }
 
     if (this.wishlist.has(product.idProduct)) {
-      // Supprimer de la wishlist
       this.wishlistService.removeFromWishlist(product.idProduct);
-      Swal.fire(product.name, 'Retiré de la wishlist !', 'info');
     } else {
-      // Ajouter à la wishlist
       this.wishlistService.addToWishlist(product.idProduct);
-      Swal.fire(product.name, 'Ajouté à la wishlist !', 'success');
     }
   }
 
@@ -166,7 +168,6 @@ export class BusinessproductsComponent implements OnInit, OnDestroy {
 
   private initializeJQuery(): void {
     setTimeout(() => {
-      // Initialiser Isotope pour la grille
       ($('.isotope-grid') as any).isotope({
         itemSelector: '.isotope-item',
         layoutMode: 'fitRows'
@@ -175,7 +176,7 @@ export class BusinessproductsComponent implements OnInit, OnDestroy {
   }
 
   getLogoUrl(logo: string | null | undefined): string {
-    return logo ? `${this.baseUrl}/uploads/products/${logo.split('/').pop()}` : 'assets/images/banner-07.jpg';
+    return logo ? `${this.baseUrl}/Uploads/products/${logo.split('/').pop()}` : 'assets/images/banner-07.jpg';
   }
 
   onImageError(event: Event, business: Products): void {

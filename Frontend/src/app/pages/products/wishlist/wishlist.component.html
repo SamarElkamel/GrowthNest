@@ -23,18 +23,18 @@
 
   <!-- Wishlist Items -->
   <div class="wishlist-grid" *ngIf="wishlistItems.length > 0 && !isLoading && !errorMessage">
-    <div class="wishlist-card" *ngFor="let product of wishlistItems">
+    <div class="wishlist-card" *ngFor="let item of wishlistItems">
       <div class="wishlist-card-image">
-        <img [src]="getLogoUrl(product.image)" [alt]="product.name || 'Product image'" (error)="onImageError($event, product)">
+        <img [src]="getLogoUrl(item.productImage)" [alt]="item.productName || 'Product image'" (error)="onImageError($event, item)">
       </div>
       <div class="wishlist-card-content">
-        <a [routerLink]="['/products', product.idProduct]" class="wishlist-card-title">
-          {{ product.name || 'N/A' }}
+        <a [routerLink]="['/products', item.productId]" class="wishlist-card-title">
+          {{ item.productName || 'N/A' }}
         </a>
         <p class="wishlist-card-price">
-          {{ product.price != null ? (product.price | currency:'USD':'symbol':'1.2-2') : 'N/A' }}
+          {{ item.productPrice != null ? (item.productPrice | currency:'USD':'symbol':'1.2-2') : 'N/A' }}
         </p>
-        <button class="remove-btn" (click)="removeFromWishlist(product)">Remove</button>
+        <button class="remove-btn" (click)="removeFromWishlist(item)">Remove</button>
       </div>
     </div>
   </div>

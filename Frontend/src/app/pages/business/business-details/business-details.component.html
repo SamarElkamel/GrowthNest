@@ -1,11 +1,12 @@
-<!-- Title page -->
-<section
-  class="bg-img1 txt-center p-lr-15 p-tb-92"
-  [style.background-image]="'url(assets/images/small-business.jpg)'"
->
-  <h2 class="ltext-105 txt-center" style="color: black;">
-    Welcome to {{ business?.name || 'our business' }}
-  </h2>
+<!-- Modern Title Section -->
+<section class="hero-section" [style.background-image]="'url(assets/images/modern-business-bg.jpg)'">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Welcome to {{ business?.name || 'Our Business' }}
+    </h1>
+    <p class="hero-subtitle" *ngIf="business?.description">{{ business?.description }}</p>
+  </div>
 </section>
 
 <!-- Content page -->

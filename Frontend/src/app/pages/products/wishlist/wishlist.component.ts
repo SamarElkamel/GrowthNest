@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Products } from 'src/app/services/models';
+import { Wishlist } from 'src/app/services/models/products';
 import { WishlistService } from 'src/app/services/services/WishlistService';
 import Swal from 'sweetalert2';
 
@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./wishlist.component.scss']
 })
 export class WishlistComponent implements OnInit, OnDestroy {
-  wishlistItems: Products[] = [];
+  wishlistItems: Wishlist[] = [];
   isLoading: boolean = true;
   errorMessage?: string;
   baseUrl: string = 'http://localhost:8080/Growthnest';
@@ -19,7 +19,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
   constructor(private wishlistService: WishlistService) {}
 
   ngOnInit(): void {
-    this.loadWishlist(); // Load wishlist explicitly on component init
+    this.loadWishlist();
     this.wishlistSubscription = this.wishlistService.wishlistItems$.subscribe({
       next: (items) => {
         this.wishlistItems = items;
@@ -47,23 +47,22 @@ export class WishlistComponent implements OnInit, OnDestroy {
     this.wishlistService.loadWishlist();
   }
 
-  removeFromWishlist(product: Products): void {
-    if (!product.idProduct) {
+  removeFromWishlist(wishlistItem: Wishlist): void {
+    if (!wishlistItem.productId) {
       Swal.fire('Error', 'Invalid product ID', 'error');
       return;
     }
 
-    this.wishlistService.removeFromWishlist(product.idProduct);
-    Swal.fire(product.name, 'Removed from wishlist!', 'info');
+    this.wishlistService.removeFromWishlist(wishlistItem.productId);
   }
 
   getLogoUrl(image: string | null | undefined): string {
     return image ? `${this.baseUrl}/uploads/products/${image.split('/').pop()}` : 'assets/images/placeholder.jpg';
   }
 
-  onImageError(event: Event, product: Products): void {
+  onImageError(event: Event, item: Wishlist): void {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = 'assets/images/placeholder.jpg';
-    product.image = '';
+    item.productImage = '';
   }
 }

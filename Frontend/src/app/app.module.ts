@@ -107,6 +107,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { StockManagementComponent } from './pages/products/stock-management/stock-management.component';
 import { MyBusinessListComponent } from './pages/business/my-business-list/my-business-list.component';
 import { RevenueDashboardComponent } from './pages/business/revenue-dashboard/revenue-dashboard.component';
+import { BusinessNotificationModule } from './business-notification/business-notification.module';
+import { BusinessNotificationDropdownComponent } from './business-notification/components/business-notification-dropdown/business-notification-dropdown.component';
 
 //
 import { MatDividerModule } from '@angular/material/divider';
@@ -123,7 +125,7 @@ import { OrderDetailsModalComponent } from './BackOffice/component/order-details
     AppComponent,
     SpinnerComponent,
     //order
-    OrderDetailsModalComponent ,
+    OrderDetailsModalComponent,
     OrderListComponent,
     OrderDetailsComponent,
     CouponListComponent,
@@ -183,8 +185,8 @@ import { OrderDetailsModalComponent } from './BackOffice/component/order-details
     StockManagementComponent,
     MyBusinessListComponent,
     RevenueDashboardComponent,
-    
-    
+
+
 
   ],
   imports: [
@@ -213,12 +215,6 @@ import { OrderDetailsModalComponent } from './BackOffice/component/order-details
     MatTableModule,
     MatSelectModule,
     MatPaginatorModule,
-    MatDividerModule,
-    MatChipsModule,
-    MatListModule,
-    MatDatepickerModule,
-    MatMenuModule,
-    MatNativeDateModule,
     FullCalendarModule,
     NgbPaginationModule,
     MatCheckboxModule,
@@ -226,7 +222,14 @@ import { OrderDetailsModalComponent } from './BackOffice/component/order-details
     NgApexchartsModule,
     MatChipsModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDividerModule,
+    MatChipsModule,
+    MatListModule,
+    MatDatepickerModule,
+    MatMenuModule,
+    MatNativeDateModule
+
   ],
   providers: [
     provideCharts(),

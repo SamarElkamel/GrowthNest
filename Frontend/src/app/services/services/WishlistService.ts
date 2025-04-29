@@ -1,42 +1,40 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { GestionDesProduitsService } from 'src/app/services/services/gestion-des-produits.service';
-import { Products } from 'src/app/services/models';
-import { Wishlist } from '../models/products';
 import { TokenService } from '../token/token.service';
+import Swal from 'sweetalert2';
+import { Wishlist } from '../models/products';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WishlistService {
-  private wishlistItemsSubject = new BehaviorSubject<Products[]>([]);
-  wishlistItems$: Observable<Products[]> = this.wishlistItemsSubject.asObservable();
+  private wishlistItemsSubject = new BehaviorSubject<Wishlist[]>([]);
+  wishlistItems$: Observable<Wishlist[]> = this.wishlistItemsSubject.asObservable();
 
   constructor(
     private produitsService: GestionDesProduitsService,
     private tokenService: TokenService
-  ) {
-    // Removed loadWishlist() from constructor; will be called from component
-  }
-
-  
+  ) {}
 
   loadWishlist(): void {
-    const userId =  Number(this.tokenService.getUserId());
+    const userId = Number(this.tokenService.getUserId());
     if (!userId) {
       console.error('User not logged in');
       this.wishlistItemsSubject.next([]);
+      Swal.fire('Error', 'Please log in to view your wishlist', 'error');
       return;
     }
-    this.produitsService.getWishlist(userId).subscribe({
-      next: (wishlist: Wishlist[]) => {
-        const items = wishlist.map(item => item.product);
-        this.wishlistItemsSubject.next(items);
-      },
-      error: (err) => {
+    this.produitsService.getWishlist(userId).pipe(
+      catchError(err => {
         console.error('WishlistService: Error loading wishlist:', err);
-        this.wishlistItemsSubject.next([]);
-      }
+        Swal.fire('Error', err.error?.message || 'Failed to load wishlist', 'error');
+        return of([]);
+      })
+    ).subscribe((wishlist: Wishlist[]) => {
+      this.wishlistItemsSubject.next(wishlist);
+      console.log('WishlistService: Wishlist loaded:', wishlist);
     });
   }
 
@@ -44,15 +42,18 @@ export class WishlistService {
     const userId = Number(this.tokenService.getUserId());
     if (!userId) {
       console.error('User not logged in');
+      Swal.fire('Error', 'Please log in to add to wishlist', 'error');
       return;
     }
-    this.produitsService.addToWishlist(userId, productId).subscribe({
-      next: () => {
-        this.loadWishlist(); // Reload wishlist to refresh the state
-      },
-      error: (err) => {
+    this.produitsService.addToWishlist(userId, productId).pipe(
+      catchError(err => {
         console.error('WishlistService: Error adding to wishlist:', err);
-      }
+        Swal.fire('Error', err.error?.message || 'Failed to add to wishlist', 'error');
+        return of(null);
+      })
+    ).subscribe(() => {
+      this.loadWishlist();
+      Swal.fire('Success', 'Added to wishlist!', 'success');
     });
   }
 
@@ -60,15 +61,18 @@ export class WishlistService {
     const userId = Number(this.tokenService.getUserId());
     if (!userId) {
       console.error('User not logged in');
+      Swal.fire('Error', 'Please log in to remove from wishlist', 'error');
       return;
     }
-    this.produitsService.removeFromWishlist(userId, productId).subscribe({
-      next: () => {
-        this.loadWishlist(); // Reload wishlist to refresh the state
-      },
-      error: (err) => {
+    this.produitsService.removeFromWishlist(userId, productId).pipe(
+      catchError(err => {
         console.error('WishlistService: Error removing from wishlist:', err);
-      }
+        Swal.fire('Error', err.error?.message || 'Failed to remove from wishlist', 'error');
+        return of(null);
+      })
+    ).subscribe(() => {
+      this.loadWishlist();
+      Swal.fire('Success', 'Removed from wishlist!', 'success');
     });
   }
 }

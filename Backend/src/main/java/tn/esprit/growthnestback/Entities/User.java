@@ -70,17 +70,26 @@ public class User implements UserDetails, Principal {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     @JsonIgnore
     Set<Business> Businesses;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Wishlist> wishlists;
 
 
-    public Set<Business> getBusiness() {
+    public Set<Business> getBusinesses() {
         return Businesses;
     }
 
-    public void setBusiness(Set<Business> business) {
-        Businesses = business;
+    public void setBusinesses(Set<Business> businesses) {
+        Businesses = businesses;
     }
 
+    public Set<Wishlist> getWishlists() {
+        return wishlists;
+    }
 
+    public void setWishlists(Set<Wishlist> wishlists) {
+        this.wishlists = wishlists;
+    }
 
     @Override
     public String getName() {
@@ -243,5 +252,15 @@ public class User implements UserDetails, Principal {
 
     public LocalDateTime getResetTokenExpiration() {
         return resetTokenExpiration;
+    }
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + (role != null ? role.getName() : null) +
+                '}';
     }
 }

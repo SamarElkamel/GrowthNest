@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { catchError, of, tap } from 'rxjs';
 import { GestionDesBusinessService } from 'src/app/services/services';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-rating',
@@ -65,7 +66,13 @@ export class RatingComponent implements OnInit {
       tap(() => {
         this.userRating = value;
         this.ratingSubmitted.emit();
-        this.snackBar.open('Note soumise avec succès !', 'Fermer', { duration: 3000, panelClass: ['success-snackbar'] });
+        Swal.fire({
+                    title: 'Succès',
+                    text: 'Note soumise avec succès !',
+                    icon: 'success',
+                    confirmButtonText: 'fermer'
+                  })
+       // this.snackBar.open('Note soumise avec succès !', 'Fermer', { duration: 3000, panelClass: ['success-snackbar'] });
         console.log('Note soumise avec succès:', value);
       }),
       catchError((err) => {

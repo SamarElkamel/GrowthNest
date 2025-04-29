@@ -6,6 +6,7 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { HomeComponent } from '../home/home.component';
 import { FrontOfficeRoutingModule } from './front-office-routing.module';
+import { BusinessNotificationModule } from 'src/app/business-notification/business-notification.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { FrontOfficeRoutingModule } from './front-office-routing.module';
   imports: [
     CommonModule,
     RouterModule,
-    FrontOfficeRoutingModule
+    FrontOfficeRoutingModule,
+    BusinessNotificationModule
   ],
   exports: [
     LayoutComponent

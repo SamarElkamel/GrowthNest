@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import tn.esprit.growthnestback.Entities.ChangePasswordRequest;
-import tn.esprit.growthnestback.Entities.EditProfileRequest;
-import tn.esprit.growthnestback.Entities.EmailTemplateName;
-import tn.esprit.growthnestback.Entities.User;
+import tn.esprit.growthnestback.Entities.*;
 import tn.esprit.growthnestback.Repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -189,5 +186,8 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setImage(base64Image);
         return userRepository.save(user);
+    }
+    public List<User> findAdminUsers() {
+        return userRepository.findAllByRoleName(RoleName.ADMIN);
     }
 }

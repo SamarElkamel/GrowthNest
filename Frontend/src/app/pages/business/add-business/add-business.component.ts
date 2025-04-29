@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { Business, CategorieBusiness } from 'src/app/services/models';
 import { GestionDesBusinessService } from 'src/app/services/services';
 import { TokenService } from 'src/app/services/token/token.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-add-business',
@@ -113,15 +115,17 @@ export class AddBusinessComponent {
       console.log('Current user ID:', currentUserId);
 
       this.businessService.addBusiness(businessData, logoFile, pdfFile).subscribe({
-        next: (newBusiness: Business) => {
-          this.snackBar.open('Business créé avec succès ! En attente de validation.', 'Fermer', {
-            duration: 3000,
-            panelClass: ['success-snackbar'],
+        next: (newBusiness: Business) =>  {
+          Swal.fire({
+            title: 'Succès',
+            text: 'Business créé avec succès ! En attente de validation.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            this.resetForm();
+            this.router.navigate(['/my-businesses']);
           });
-          this.resetForm();
           this.isSubmitting = false;
-          // Optional: Stay on page for testing, or redirect to AdminDashboard
-          // this.router.navigate(['/admin/pending-businesses']);
         },
         error: (err) => {
           console.error('Erreur détaillée:', {
@@ -132,11 +136,12 @@ export class AddBusinessComponent {
             error: err.error,
             message: err.message
           });
-          this.handleError(err);
+          Swal.fire('Erreur', 'Une erreur est survenue lors de la création du business.', 'error');
           this.isSubmitting = false;
           this.businessForm.enable();
         }
       });
+     
     } else {
       this.markFormAsTouched();
     }

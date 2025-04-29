@@ -15,8 +15,12 @@ export interface Products {
 }
 export interface Wishlist {
   id: number;
-  user: { id: number };
-  product: Products;
+  userId: number;
+  productId: number;
+  productName: string;
+  productDescription: string;
+  productPrice: number;
+  productImage?: string;
 }
 export interface StockMovement {
   id: number;

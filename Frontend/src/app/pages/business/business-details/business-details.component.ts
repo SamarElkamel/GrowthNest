@@ -132,7 +132,7 @@ export class BusinessDetailsComponent implements OnInit {
 
   getLogoUrl(logo: string | undefined): string {
     const logoFilename = logo?.split('/').pop() ?? 'default.jpg';
-    return logo ? `${this.baseUrl}/Uploads/logos/${logoFilename}` : 'assets/images/banner-07.jpg';
+    return logo ? `${this.baseUrl}/uploads/logos/${logoFilename}` : 'assets/images/banner-07.jpg';
   }
 
   onImageError(event: Event, business: Business): void {

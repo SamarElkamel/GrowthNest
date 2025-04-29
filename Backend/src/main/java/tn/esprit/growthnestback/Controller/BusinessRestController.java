@@ -14,15 +14,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
-import tn.esprit.growthnestback.Entities.Business;
-import tn.esprit.growthnestback.Entities.BusinessStatisticsDTO;
+import tn.esprit.growthnestback.Entities.*;
+import tn.esprit.growthnestback.Services.BusinessNotificationService;
 import tn.esprit.growthnestback.Services.IBusinessService;
 import tn.esprit.growthnestback.Services.TaskService;
 import tn.esprit.growthnestback.Services.UserService;
-import tn.esprit.growthnestback.Entities.Task;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,6 +43,8 @@ public class BusinessRestController {
 
     @Autowired
     private final UserService userService;
+    @Autowired
+    private final BusinessNotificationService notificationService;
     @Autowired
     private final SimpMessagingTemplate messagingTemplate;
     private static final String UPLOAD_DIR = "uploads/";
@@ -97,9 +100,9 @@ public class BusinessRestController {
 
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
-
     @Operation(description = "Ajouter un business avec logo et PDF optionnels")
     @PostMapping(value = "/addBusiness", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
     public ResponseEntity<?> addBusiness(
             @Parameter(description = "JSON string containing business details (name required, others optional)")
             @RequestPart(value = "business", required = true) String businessJson,
@@ -137,8 +140,10 @@ public class BusinessRestController {
 
             // Set the current user as the business owner
             Long currentUserId = UserService.currentUserId();
-            business.setUser(userService.findById(currentUserId)
-                    .orElseThrow(() -> new IllegalArgumentException("Current user not found with ID: " + currentUserId)));
+            User owner = userService.findById(currentUserId)
+                    .orElseThrow(() -> new IllegalArgumentException("Current user not found with ID: " + currentUserId));
+            business.setUser(owner);
+            business.setStatus(Business.BusinessStatus.PENDING);
 
             // Handle logo upload
             if (logo != null && !logo.isEmpty()) {
@@ -181,14 +186,19 @@ public class BusinessRestController {
             Business savedBusiness = iBusinessService.addBusiness(business);
             logger.info("Business added: ID {}, Status: {}", savedBusiness.getIdBusiness(), savedBusiness.getStatus());
 
-            // Notify admin
-            Map<String, Object> notification = new HashMap<>();
-            notification.put("businessId", savedBusiness.getIdBusiness());
-            notification.put("businessName", savedBusiness.getName());
-            notification.put("message", "New business pending approval: " + savedBusiness.getName());
-            notification.put("userId", savedBusiness.getUser().getId());
-            messagingTemplate.convertAndSend("/topic/admin-notifications", notification);
-            logger.info("Notification sent to admin for business ID: {}", savedBusiness.getIdBusiness());
+            // Notify all admins
+            List<User> admins = userService.findAdminUsers();
+            if (admins.isEmpty()) {
+                logger.warn("No admin users found to notify for business ID: {}", savedBusiness.getIdBusiness());
+            } else {
+                notificationService.sendAndSaveNotificationToMultiple(
+                        admins,
+                        "New business pending approval: " + savedBusiness.getName(),
+                        NotificationE.NotificationType.BUSINESS_SUBMITTED,
+                        savedBusiness
+                );
+                logger.info("Notifications sent to {} admins for business ID: {}", admins.size(), savedBusiness.getIdBusiness());
+            }
 
             return ResponseEntity.ok(savedBusiness);
         } catch (IOException e) {
@@ -202,6 +212,7 @@ public class BusinessRestController {
 
     @Operation(description = "Approuver un business")
     @PostMapping("/approve/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> approveBusiness(
             @Parameter(description = "ID of the business to approve")
             @PathVariable("id") Long id) {
@@ -221,11 +232,12 @@ public class BusinessRestController {
             logger.info("Business approved: ID {}, Status: {}", id, updatedBusiness.getStatus());
 
             // Notify owner
-            Map<String, Object> notification = new HashMap<>();
-            notification.put("businessId", id);
-            notification.put("businessName", business.getName());
-            notification.put("message", "Your business '" + business.getName() + "' has been approved!");
-            messagingTemplate.convertAndSend("/topic/owner-notifications-" + business.getUser().getId(), notification);
+            notificationService.sendAndSaveNotification(
+                    business.getUser(),
+                    "Your business '" + business.getName() + "' has been approved!",
+                    NotificationE.NotificationType.BUSINESS_APPROVED,
+                    business
+            );
             logger.info("Notification sent to user {} for approved business ID: {}", business.getUser().getId(), id);
 
             return ResponseEntity.ok(updatedBusiness);
@@ -237,6 +249,7 @@ public class BusinessRestController {
 
     @Operation(description = "Rejeter un business")
     @PostMapping("/reject/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> rejectBusiness(
             @Parameter(description = "ID of the business to reject")
             @PathVariable("id") Long id) {
@@ -256,11 +269,12 @@ public class BusinessRestController {
             logger.info("Business rejected: ID {}, Status: {}", id, updatedBusiness.getStatus());
 
             // Notify owner
-            Map<String, Object> notification = new HashMap<>();
-            notification.put("businessId", id);
-            notification.put("businessName", business.getName());
-            notification.put("message", "Your business '" + business.getName() + "' has been rejected.");
-            messagingTemplate.convertAndSend("/topic/owner-notifications-" + business.getUser().getId(), notification);
+            notificationService.sendAndSaveNotification(
+                    business.getUser(),
+                    "Your business '" + business.getName() + "' has been rejected.",
+                    NotificationE.NotificationType.BUSINESS_REJECTED,
+                    business
+            );
             logger.info("Notification sent to user {} for rejected business ID: {}", business.getUser().getId(), id);
 
             return ResponseEntity.ok(updatedBusiness);
@@ -268,6 +282,32 @@ public class BusinessRestController {
             logger.error("Error rejecting business ID {}: {}", id, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error rejecting business: " + e.getMessage());
         }
+    }
+
+    @Operation(description = "Récupérer les notifications d'un utilisateur")
+    @GetMapping("/business-notifications")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<NotificationE>> getUserNotifications() {
+        Long currentUserId = UserService.currentUserId();
+        List<NotificationE> notifications = notificationService.getNotificationsForUser(currentUserId);
+        return ResponseEntity.ok(notifications);
+    }
+
+    @Operation(description = "Récupérer les notifications non lues d'un utilisateur")
+    @GetMapping("/business-notifications/unread")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<NotificationE>> getUnreadUserNotifications() {
+        Long currentUserId = UserService.currentUserId();
+        List<NotificationE> notifications = notificationService.getUnreadNotificationsForUser(currentUserId);
+        return ResponseEntity.ok(notifications);
+    }
+
+    @Operation(description = "Marquer une notification comme lue")
+    @PostMapping("/business-notifications/{id}/read")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> markNotificationAsRead(@PathVariable("id") Long id) {
+        notificationService.markNotificationAsRead(id);
+        return ResponseEntity.ok().build();
     }
 
     private String getFileExtension(MultipartFile file) {
@@ -386,7 +426,7 @@ public class BusinessRestController {
             // Gestion logo
             if (logo != null && !logo.isEmpty()) {
                 String fileName = handleFileUpload(logo, LOGO_DIR);
-                existingBusiness.setLogo("/Uploads/logos/" + fileName);
+                existingBusiness.setLogo("/uploads/logos/" + fileName);
                 deleteOldFile(businessUpdates.getLogo(), LOGO_DIR);
             }
 

@@ -68,8 +68,8 @@ const routes: Routes = [
   {
     path: 'wishlist',
     component: WishlistComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['ROLE_USER'] }
+    
+    
   },
   {
     path: 'profile',

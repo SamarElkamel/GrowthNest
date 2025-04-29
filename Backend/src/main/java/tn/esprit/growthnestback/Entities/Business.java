@@ -16,7 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-@ToString
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(indexes = {
         @Index(name = "idx_status", columnList = "status"),
@@ -60,10 +60,10 @@ public class Business {
     Integer lowStockThreshold = 5;
 
 
-    @OneToMany(mappedBy = "business",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "business",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
     Set<Products> Products;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id") // Nom de la colonne FK
     @JsonBackReference // Empêche la sérialisation JSON circulaire
     private User user; // Nom en minuscule
@@ -73,6 +73,19 @@ public class Business {
         this.ratingCount = 0;
         this.status = BusinessStatus.PENDING;
         this.lowStockThreshold = 5;
+    }
+    @Override
+    public String toString() {
+        return "Business{" +
+                "idBusiness=" + idBusiness +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", categorieBusiness=" + categorieBusiness +
+                ", averageRating=" + averageRating +
+                ", ratingCount=" + ratingCount +
+                ", lowStockThreshold=" + lowStockThreshold +
+                '}';
     }
 
     public String getOwnerId() {
