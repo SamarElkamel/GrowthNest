@@ -1,0 +1,25 @@
+<div class="notification-container">
+    <button class="notification-bell" (click)="toggleDropdown()">
+      <i class="fas fa-bell"></i>
+      <span *ngIf="unreadCount > 0" class="unread-badge">{{ unreadCount }}</span>
+    </button>
+    <div class="notification-dropdown" *ngIf="isDropdownOpen">
+      <div class="dropdown-header">
+        <h3>Notifications</h3>
+        <button (click)="toggleDropdown()" class="close-btn">×</button>
+      </div>
+      <div class="notification-list">
+        <app-business-notification-item
+          *ngFor="let notification of notifications"
+          [notification]="notification"
+          [isAdmin]="isAdmin()"
+          (markAsRead)="markAsRead($event)"
+          (approve)="approveBusiness($event)"
+          (reject)="rejectBusiness($event)"
+        ></app-business-notification-item>
+        <div *ngIf="!notifications.length" class="no-notifications">
+          No notifications
+        </div>
+      </div>
+    </div>
+  </div>

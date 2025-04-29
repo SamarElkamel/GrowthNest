@@ -1,11 +1,13 @@
 
 export interface NotificationE {
-    businessId: number;
-    businessName: string;
-    message: string;
-    ownerId?: string;
-    timestamp?: string;
-  }
+  id: number;
+  message: string;
+  type: 'BUSINESS_SUBMITTED' | 'BUSINESS_APPROVED' | 'BUSINESS_REJECTED';
+  recipient: { id: number };
+  business: { idBusiness: number; name: string } | null;
+  isRead: boolean;
+  createdAt: string;
+}
 
 
 

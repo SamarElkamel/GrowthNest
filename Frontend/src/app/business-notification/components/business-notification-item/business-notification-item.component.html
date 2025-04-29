@@ -1,0 +1,10 @@
+<div class="notification-item" [ngClass]="{'unread': !notification.isRead}" (click)="onMarkAsRead()">
+    <div class="notification-content">
+      <p class="message">{{ notification.message }}</p>
+      <span class="timestamp">{{ getTimeAgo(notification.createdAt) }}</span>
+    </div>
+    <div class="actions" *ngIf="isAdmin && notification.type === 'BUSINESS_SUBMITTED' && notification.business">
+      <button class="action-btn approve" (click)="onApprove()">Approve</button>
+      <button class="action-btn reject" (click)="onReject()">Reject</button>
+    </div>
+  </div>

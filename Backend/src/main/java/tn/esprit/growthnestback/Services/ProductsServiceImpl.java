@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.growthnestback.Entities.Business;
+import tn.esprit.growthnestback.dto.ProductDTO;
 import tn.esprit.growthnestback.Entities.Products;
 import tn.esprit.growthnestback.Entities.StockMovement;
 import tn.esprit.growthnestback.Repository.BusinessRepository;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductsServiceImpl implements IProductsService{
+public class ProductsServiceImpl implements IProductsService {
     @Autowired
     ProductsRepository productsRepository;
     @Autowired
@@ -34,7 +35,7 @@ public class ProductsServiceImpl implements IProductsService{
 
     @Override
     public Products GetProductById(Long id) {
-        return productsRepository.findById(id).get();
+        return productsRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
 
     @Override
@@ -53,8 +54,27 @@ public class ProductsServiceImpl implements IProductsService{
     }
 
     @Override
-    public List<Products> getProductsByBusinessId(Long businessId) {
-        return productsRepository.findByBusiness_IdBusiness(businessId);
+    public List<ProductDTO> getProductsByBusinessId(Long businessId) {
+        if (businessId == null) {
+            throw new IllegalArgumentException("Business ID cannot be null");
+        }
+        List<Products> products = productsRepository.findByBusiness_IdBusiness(businessId);
+        return products.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private ProductDTO mapToDTO(Products product) {
+        ProductDTO dto = new ProductDTO();
+        dto.setIdProduct(product.getIdProduct());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setCostPrice(product.getCostPrice());
+        dto.setStock(product.getStock());
+        dto.setImage(product.getImage());
+        dto.setBarcodePath(product.getBarcodePath());
+        return dto;
     }
 
     @Override
@@ -103,7 +123,10 @@ public class ProductsServiceImpl implements IProductsService{
     }
 
     public Map<String, Long> getStockRotationStats(Long businessId) {
-        List<Products> products = getProductsByBusinessId(businessId);
+        List<Products> products = getProductsByBusinessId(businessId).stream()
+                .map(dto -> productsRepository.findById(dto.getIdProduct()).orElse(null))
+                .filter(p -> p != null)
+                .collect(Collectors.toList());
         return products.stream()
                 .collect(Collectors.toMap(
                         Products::getName,
@@ -114,7 +137,4 @@ public class ProductsServiceImpl implements IProductsService{
                                 .sum()
                 ));
     }
-
-
-
 }

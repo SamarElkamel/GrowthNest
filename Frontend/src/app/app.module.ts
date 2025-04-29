@@ -107,6 +107,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { StockManagementComponent } from './pages/products/stock-management/stock-management.component';
 import { MyBusinessListComponent } from './pages/business/my-business-list/my-business-list.component';
 import { RevenueDashboardComponent } from './pages/business/revenue-dashboard/revenue-dashboard.component';
+import { BusinessNotificationModule } from './business-notification/business-notification.module';
+import { BusinessNotificationDropdownComponent } from './business-notification/components/business-notification-dropdown/business-notification-dropdown.component';
 
 
 @NgModule({
@@ -175,6 +177,7 @@ import { RevenueDashboardComponent } from './pages/business/revenue-dashboard/re
     RevenueDashboardComponent,
     
     
+    
 
   ],
   imports: [
@@ -210,7 +213,8 @@ import { RevenueDashboardComponent } from './pages/business/revenue-dashboard/re
     NgApexchartsModule,
     MatChipsModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    BusinessNotificationModule
     
   ],
   providers: [

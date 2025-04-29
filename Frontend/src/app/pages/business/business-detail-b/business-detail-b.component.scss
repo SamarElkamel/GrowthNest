@@ -6,16 +6,15 @@
 }
 
 .business-hero {
-  background: linear-gradient(135deg, #FA8072 0%, #FF9999 100%); /* Salmon gradient */
+  background: linear-gradient(135deg, #FFEDD5 0%, #FEE2B6 100%);
   border-radius: 1rem;
   margin-bottom: 2rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-
-
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.4); /* Warm white border */
 
   .hero-content {
     padding: 3rem 2rem;
-    color: black;
+    color: #431407; /* Deep orange-900 for contrast (adjust if needed) */
   }
 
   .business-brand {
@@ -31,7 +30,9 @@
       overflow: hidden;
       background: white;
       padding: 0.5rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 167, 108, 0.2); /* Subtle orange tint */
+    
 
       img {
         width: 100%;
@@ -54,7 +55,7 @@
     }
 
     .business-category {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.2);
       padding: 0.25rem 0.75rem;
       border-radius: 999px;
       font-size: 0.875rem;
@@ -65,12 +66,14 @@
       border-radius: 999px;
       font-size: 0.875rem;
       font-weight: 500;
+      color: white; /* Added for better readability */
       
       &.approved { background: #10b981; }
       &.pending { background: #f59e0b; }
       &.rejected { background: #ef4444; }
     }
   }
+
 
   .hero-actions {
     display: flex;

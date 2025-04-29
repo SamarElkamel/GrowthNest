@@ -50,8 +50,14 @@
             <td mat-cell *matCellDef="let product">
               <div class="product-info">
                 <div class="product-name">{{ product.name || 'N/A' }}</div>
-                <div class="product-id">ID: {{ product.idProduct }}</div>
               </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="barcode">
+            <th mat-header-cell *matHeaderCellDef>Code-barres</th>
+            <td mat-cell *matCellDef="let product">
+              <img *ngIf="product.barcodePath" [src]="getBarcodeUrl(product.idProduct)" alt="Barcode" class="barcode-image" (error)="handleBarcodeError($event, product)" />
+              <span *ngIf="!product.barcodePath" class="no-barcode">Aucun code-barres</span>
             </td>
           </ng-container>
   

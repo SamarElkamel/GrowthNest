@@ -78,6 +78,36 @@
       <div class="icon-header-item p-l-22 p-r-11">
 
       </div>
+      <!-- ============================================================== -->
+<!-- toggle and nav items -->
+<!-- ============================================================== -->
+
+<!-- ============================================================== -->
+<!-- Right side toggle and nav items -->
+<!-- ============================================================== -->
+<ul class="navbar-nav float-end">
+  <!-- ============================================================== -->
+  <!-- User profile and search -->
+  <!-- ============================================================== -->
+  <li class="nav-item" ngbDropdown placement="bottom-end">
+    <a
+      ngbDropdownToggle
+      class="nav-link waves-effect waves-dark pro-pic"
+      href="javascript:void(0)"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+     
+      
+    </a>
+    <app-business-notification-dropdown></app-business-notification-dropdown>
+    <div class="dropdown-menu-right" ngbDropdownMenu>
+
+    </div>
+  </li>
+</ul>
+
       <div class="user-points-display ml-2">
         ⭐ {{ points }} Points
       </div>

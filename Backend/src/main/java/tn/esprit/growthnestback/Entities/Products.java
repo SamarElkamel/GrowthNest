@@ -1,6 +1,8 @@
 package tn.esprit.growthnestback.Entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -17,37 +19,52 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Products {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idProduct;
+
     @NotBlank(message = "Le nom du produit est obligatoire")
     @Size(min = 2, max = 30, message = "Le nom doit contenir entre 2 et 30 caractères")
     String name;
+
     @NotBlank(message = "La description est obligatoire")
     @Size(min = 10, max = 500, message = "La description doit contenir entre 10 et 500 caractères")
     String description;
-    @Positive(message = "Le prix doit être strictement supérieur à 0")
 
+    @Positive(message = "Le prix doit être strictement supérieur à 0")
     BigDecimal price;
+
     @PositiveOrZero(message = "Le prix de coût doit être supérieur ou égal à 0")
     BigDecimal costPrice;
 
     @NotNull(message = "Le stock est obligatoire")
-    @Min(value = 0, message = "Le stock doit être supérieur ou égal à 0")    Long stock;
+    @Min(value = 0, message = "Le stock doit être supérieur ou égal à 0")
+    Long stock;
 
     String image;
-     String barcodePath; // New field for barcode image
+    String barcodePath;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     Business business;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Wishlist> wishlists = new HashSet<>();
 
+    @Override
+    public String toString() {
+        return "Products{" +
+                "idProduct=" + idProduct +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", costPrice=" + costPrice +
+                ", stock=" + stock +
+                '}';
+    }
     public String getBarcodePath() {
         return barcodePath;
     }
