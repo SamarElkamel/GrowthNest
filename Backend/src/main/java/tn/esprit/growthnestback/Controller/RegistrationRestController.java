@@ -45,8 +45,11 @@ public class RegistrationRestController {
 
     @Operation(description = "AddRegistration")
     @PostMapping("/addRegistration")
-    public Registration addRegistration(@RequestBody Registration registration) {
-        return iRegistrationServices.addRegistration(registration);
+    public ResponseEntity<?> addRegistration(@RequestBody Registration registration) {
+
+        Registration savedRegistration = iRegistrationServices.addRegistration(registration);
+        return ResponseEntity.ok(savedRegistration);
+
     }
 
     @Operation(description = "UpdateRegistration")

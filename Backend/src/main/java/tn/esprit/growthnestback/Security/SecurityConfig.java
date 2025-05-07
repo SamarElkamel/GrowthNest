@@ -65,9 +65,10 @@ public class SecurityConfig {
                                 "/api/coupons/**",
                                 "/api/products/**",
                                 "/api/payment/**",
-                                                    "/Event/**",
-                                        "/Registration/**",
+                                "/Event/**",
+                                "/Registration/**",
                                 "/Notification/**",
+                                "/api/chat/**",
                 
                     
 

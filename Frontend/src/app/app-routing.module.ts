@@ -31,6 +31,7 @@ import { ManageEventRegistrationsComponent } from './pages/EventAdmin/manage-eve
 import { StatisticsComponent } from './pages/EventUser/statistics/statistics.component';
 import { NotificationComponent } from './pages/EventAdmin/notification/notification.component';
 import { AdminStatisticsComponent } from './pages/business/admin-statistics/admin-statistics.component';
+import { ChatComponent } from './chat/chat.component';
 export const Approutes: Routes = [
   // Authentication Routes
   { path: 'login', component: LoginComponent },
@@ -146,6 +147,10 @@ export const Approutes: Routes = [
           data: { roles: ['ROLE_ADMIN'] },
          },
         {path: 'events/statistics', component:StatisticsComponent,
+          canActivate: [RoleGuard],
+          data: { roles: ['ROLE_ADMIN'] },
+        },
+        {path: 'chat', component:ChatComponent,
           canActivate: [RoleGuard],
           data: { roles: ['ROLE_ADMIN'] },
         },

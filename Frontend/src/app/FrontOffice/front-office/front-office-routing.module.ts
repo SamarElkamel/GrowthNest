@@ -29,12 +29,14 @@ import { CalendarEventComponent } from 'src/app/pages/EventUser/calendar-event/c
 import { MyBusinessListComponent } from 'src/app/pages/business/my-business-list/my-business-list.component';
 import { StockManagementComponent } from 'src/app/pages/products/stock-management/stock-management.component';
 import { RevenueDashboardComponent } from 'src/app/pages/business/revenue-dashboard/revenue-dashboard.component';
+import { ChatComponent } from 'src/app/chat/chat.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
+   
   },
   { path: 'cart', component: CartPageComponent },
   { path: 'orders/history', component: OrderHistoryComponent },

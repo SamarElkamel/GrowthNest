@@ -51,30 +51,34 @@ export class AddReservationComponent implements OnInit {
 
   addReservation() {
     if (this.remainingPlaces <= 0) {
-      this.error = 'No places remaining for this event';
-      this.isLoading = false;
-      return;
+        this.error = 'No places remaining for this event';
+        this.isLoading = false;
+        return;
     }
 
     this.isLoading = true;
     this.error = null;
 
-    this.reservation.event = this.event;
-    this.reservation.user = {id : this.userId  }; // Static user ID for testing; replace with auth
+    this.reservation = {
+        event: { idEvent: this.event.idEvent },
+        user: { id: this.userId },
+        status: 'PENDING',
+        reservationDate: new Date().toISOString()
+    };
 
     this.registrationService.addRegistration({ body: this.reservation }).subscribe(
-      () => {
-        this.isLoading = false;
-        this.reservationAdded.emit();
-        this.router.navigate(['/events/user/reservations']);
-      },
-      (error) => {
-        console.error('Error adding reservation:', error);
-        this.error = error.error?.message || 'Failed to add reservation';
-        this.isLoading = false;
-      }
+        () => {
+            this.isLoading = false;
+            this.reservationAdded.emit();
+            this.router.navigate(['/events/user/reservations']);
+        },
+        (error) => {
+            console.error('Error adding reservation:', error);
+            this.error = error.error?.error || 'Failed to add reservation';
+            this.isLoading = false;
+        }
     );
-  }
+}
 
   cancel() {
     this.reservationAdded.emit();

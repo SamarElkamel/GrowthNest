@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationManagementService } from '../../../services/services/notification-management.service';
 import { RegistrationManagementService } from '../../../services/services/registration-management.service';
+import { EventManagementService } from '../../../services/services/event-management.service';
+import {  Event as AppEvent, Registration } from '../../../services/models'; // Rename Event to AppEvent
 import { Notification } from 'src/app/services/models/notificationE';
-
-
 @Component({
   selector: 'app-notification',
   templateUrl: './notification.component.html',
@@ -14,8 +14,10 @@ export class NotificationComponent implements OnInit {
   notifications: Notification[] = [];
   paginatedNotifications: Notification[] = [];
   selectedRegistrations: { [key: number]: boolean } = {};
-  isLoading = false; // Initialize as false to avoid initial loading state
+  events: { [key: number]: AppEvent } = {}; // Use AppEvent
+  isLoading = false;
   error: string | null = null;
+  successMessage: string | null = null;
   page = 1;
   pageSize = 10;
   collectionSize = 0;
@@ -24,6 +26,7 @@ export class NotificationComponent implements OnInit {
   constructor(
     private notificationService: NotificationManagementService,
     private registrationService: RegistrationManagementService,
+    private eventService: EventManagementService,
     private router: Router
   ) {}
 
@@ -34,13 +37,12 @@ export class NotificationComponent implements OnInit {
   loadNotifications(): void {
     this.isLoading = true;
     this.error = null;
+    this.successMessage = null;
     this.notificationService.getUnreadNotifications().subscribe({
       next: (notifications) => {
-        // Filter notifications to show only those for PENDING registrations
-        this.notifications = notifications.filter(n => 
-          n.registration?.status === 'PENDING'
-        );
+        this.notifications = notifications.filter(n => n.registration?.status === 'PENDING');
         this.collectionSize = this.notifications.length;
+        this.loadEventsForNotifications();
         this.refreshNotifications();
         this.isLoading = false;
       },
@@ -49,6 +51,32 @@ export class NotificationComponent implements OnInit {
         this.isLoading = false;
         console.error('Error loading notifications:', err);
       }
+    });
+  }
+
+  loadEventsForNotifications(): void {
+    const eventIds = [...new Set(this.notifications
+      .map(n => n.registration?.event?.idEvent)
+      .filter(id => id !== undefined))] as number[];
+    
+    eventIds.forEach(eventId => {
+      this.eventService.displayEvent({ idE: eventId }).subscribe({
+        next: (event) => {
+          this.events[eventId] = event;
+          // Fetch registrations for this event
+          this.registrationService.displayByEvent({ eventId }).subscribe({
+            next: (registrations) => {
+              this.events[eventId].registrations = registrations || [];
+            },
+            error: (err) => {
+              console.error(`Error loading registrations for event ${eventId}:`, err);
+            }
+          });
+        },
+        error: (err) => {
+          console.error(`Error loading event ${eventId}:`, err);
+        }
+      });
     });
   }
 
@@ -64,16 +92,14 @@ export class NotificationComponent implements OnInit {
 
     this.isLoading = true;
     this.error = null;
+    this.successMessage = null;
 
-    this.registrationService.updateRegistrationStatus({ 
-      idR: registrationId, 
-      status 
-    }).subscribe({
+    this.registrationService.updateRegistrationStatus({ idR: registrationId, status }).subscribe({
       next: () => {
         this.isLoading = false;
-        console.log(`Registration ${status.toLowerCase()} successfully`);
-        // Refresh notifications
+        this.successMessage = `Registration ${status.toLowerCase()} successfully`;
         this.loadNotifications();
+        setTimeout(() => this.successMessage = null, 3000);
       },
       error: (err) => {
         this.isLoading = false;
@@ -91,8 +117,8 @@ export class NotificationComponent implements OnInit {
     });
   }
 
-  toggleSelectAll(event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
+  toggleSelectAll(event: Event): void { // Use DOM Event
+    const checked = (event as any).target.checked; // Fallback to any
     this.paginatedNotifications.forEach(notification => {
       if (notification.registration?.idRegist) {
         this.selectedRegistrations[notification.registration.idRegist] = checked;
@@ -119,11 +145,15 @@ export class NotificationComponent implements OnInit {
 
     this.isLoading = true;
     this.error = null;
+    this.successMessage = null;
+
     this.registrationService.bulkUpdateRegistrationStatus({ body: statusUpdates }).subscribe({
       next: () => {
         this.selectedRegistrations = {};
         this.isLoading = false;
+        this.successMessage = `Selected registrations ${status.toLowerCase()} successfully`;
         this.loadNotifications();
+        setTimeout(() => this.successMessage = null, 3000);
       },
       error: (err) => {
         this.isLoading = false;
@@ -137,6 +167,7 @@ export class NotificationComponent implements OnInit {
   markAsRead(id: number): void {
     this.isLoading = true;
     this.error = null;
+    this.successMessage = null;
     this.notificationService.markAsRead({ id }).subscribe({
       next: () => {
         this.isLoading = false;
@@ -154,6 +185,7 @@ export class NotificationComponent implements OnInit {
   markAllAsRead(): void {
     this.isLoading = true;
     this.error = null;
+    this.successMessage = null;
     this.notificationService.markAllAsRead().subscribe({
       next: () => {
         this.isLoading = false;
@@ -174,5 +206,16 @@ export class NotificationComponent implements OnInit {
 
   getSelectedCount(): number {
     return Object.values(this.selectedRegistrations).filter(Boolean).length;
+  }
+
+  getRemainingPlaces(eventId: number): number {
+    const event = this.events[eventId];
+    if (!event || event.numberOfPlaces === undefined) {
+      return Infinity;
+    }
+    const confirmedAndPending = (event.registrations || []).filter(
+      reg => reg.status === 'CONFIRMED' || reg.status === 'PENDING'
+    ).length;
+    return Math.max(0, event.numberOfPlaces - confirmedAndPending);
   }
 }

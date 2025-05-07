@@ -12,7 +12,7 @@ import { NotificationE } from '../models/notificationE';
 })
 export class BusinessNotificationService {
   private apiUrl = 'http://localhost:8080/business';
-  private wsUrl = 'http://localhost:8080/ws';
+ // private wsUrl = 'http://localhost:8080/ws';
   private stompClient: Client | null = null;
   private subscription: StompSubscription | null = null;
   private notificationsSubject = new BehaviorSubject<NotificationE[]>([]);
@@ -33,7 +33,7 @@ export class BusinessNotificationService {
       console.error('No user ID found');
       return;
     }
-    this.stompClient = new Client({
+    /*this.stompClient = new Client({
       webSocketFactory: () => new SockJS(this.wsUrl),
       connectHeaders: {
         Authorization: `Bearer ${this.tokenService.getToken()}`
@@ -116,5 +116,5 @@ export class BusinessNotificationService {
       },
       error: (err) => console.error('Error loading notifications:', err)
     });
-  }
-}
+  }*/
+}}

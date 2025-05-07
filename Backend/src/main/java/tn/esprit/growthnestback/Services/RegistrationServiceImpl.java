@@ -64,11 +64,13 @@ public class RegistrationServiceImpl implements IRegistrationServices {
     public Registration addRegistration(Registration registration) {
         Long userId = registration.getUser().getId();
         Long eventId = registration.getEvent().getIdEvent();
+        log.info("Adding registration for userId={}, eventId={}", userId, eventId);
 
         // Step 1: Check if registration already exists
         Optional<Registration> existingRegistration =
                 registrationRepository.findByUserIdAndEventId(userId, eventId);
         if (existingRegistration.isPresent()) {
+            log.warn("User {} already registered for event {}", userId, eventId);
             throw new RuntimeException("User is already registered for this event");
         }
 
@@ -82,6 +84,7 @@ public class RegistrationServiceImpl implements IRegistrationServices {
         if (event.getNumberOfPlaces() != null) {
             List<ReservationStatus> statuses = List.of(ReservationStatus.CONFIRMED, ReservationStatus.PENDING);
             long registrationCount = registrationRepository.countByEventIdAndStatuses(eventId, statuses);
+            log.info("Event {}: {} registrations, {} places available", eventId, registrationCount, event.getNumberOfPlaces());
             if (registrationCount >= event.getNumberOfPlaces()) {
                 throw new RuntimeException("No available places for this event");
             }
@@ -95,12 +98,18 @@ public class RegistrationServiceImpl implements IRegistrationServices {
         newRegistration.setReservationDate(new Date());
 
         Registration savedRegistration = registrationRepository.save(newRegistration);
+        log.info("Registration saved: id={}", savedRegistration.getIdRegist());
 
         // Step 5: Create notification for admin
-        String message = String.format("New registration for event '%s' by user '%s'",
-                event.getTitle(), user.getUsername());
-        Notification notification = new Notification(savedRegistration, message);
-        notificationRepository.save(notification);
+        try {
+            String message = String.format("New registration for event '%s' by user '%s'",
+                    event.getTitle(), user.getUsername());
+            Notification notification = new Notification(savedRegistration, message);
+            notificationRepository.save(notification);
+            log.info("Notification created for registration {}", savedRegistration.getIdRegist());
+        } catch (Exception e) {
+            log.error("Failed to create notification for registration {}", savedRegistration.getIdRegist(), e);
+        }
 
         return savedRegistration;
     }

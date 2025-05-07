@@ -59,14 +59,7 @@
                       {{ event.event?.date | date: 'shortTime' }}
                       <span class="cl12 m-l-4 m-r-6">|</span>
                     </span>
-                    <span>
-                      <i class="zmdi zmdi-accounts mr-2"></i>
-                      {{ event.reservationCount || 0 }} / 
-                      {{ event.event?.numberOfPlaces || 'Unlimited' }} attending
-                      <ng-container *ngIf="event.event?.numberOfPlaces">
-                        ({{ getRemainingPlaces(event) }} remaining)
-                      </ng-container>
-                    </span>
+                    
                   </span>
 
                   <a href="javascript:void(0);" 

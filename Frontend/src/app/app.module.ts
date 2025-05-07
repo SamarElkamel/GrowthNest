@@ -117,6 +117,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatNativeDateModule } from '@angular/material/core';
 import { OrderDetailsModalComponent } from './BackOffice/component/order-details-modals/order-details-modals.component';
+import { ChatComponent } from './chat/chat.component';
 
 
 
@@ -185,7 +186,7 @@ import { OrderDetailsModalComponent } from './BackOffice/component/order-details
     StockManagementComponent,
     MyBusinessListComponent,
     RevenueDashboardComponent,
-
+ChatComponent,
 
 
   ],

@@ -143,6 +143,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    this.notificationService.disconnectWebSocket();
+    //this.notificationService.disconnectWebSocket();
   }
 }

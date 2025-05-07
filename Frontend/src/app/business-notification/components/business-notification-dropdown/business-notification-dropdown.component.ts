@@ -26,8 +26,8 @@ export class BusinessNotificationDropdownComponent implements OnInit, OnDestroy 
 
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
-      this.notificationService.initializeWebSocket();
-      this.notificationService.loadInitialNotifications();
+      //this.notificationService.initializeWebSocket();
+      //this.notificationService.loadInitialNotifications();
       this.subscription.add(
         this.notificationService.notifications$.subscribe((notifications) => {
           this.notifications = notifications;
@@ -38,7 +38,7 @@ export class BusinessNotificationDropdownComponent implements OnInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    this.notificationService.disconnectWebSocket();
+    //this.notificationService.disconnectWebSocket();
     this.subscription.unsubscribe();
   }
 
@@ -46,9 +46,9 @@ export class BusinessNotificationDropdownComponent implements OnInit, OnDestroy 
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  markAsRead(notification: NotificationE): void {
+ /* markAsRead(notification: NotificationE): void {
     if (!notification.isRead) {
-      this.notificationService.markAsRead(notification.id).subscribe({
+      //this.notificationService.markAsRead(notification.id).subscribe({
         next: () => {
           notification.isRead = true;
           this.unreadCount = this.notifications.filter(n => !n.isRead).length;
@@ -83,5 +83,5 @@ export class BusinessNotificationDropdownComponent implements OnInit, OnDestroy 
   isAdmin(): boolean {
     const role = this.tokenService.getUserRole();
     return role === 'ROLE_ADMIN';
-  }
+  }*/
 }

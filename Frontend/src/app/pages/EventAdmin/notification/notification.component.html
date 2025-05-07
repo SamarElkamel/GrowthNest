@@ -1,14 +1,11 @@
-<div class="card">
-  <div class="card-body">
-
 <div class="notification-container container-fluid py-4">
   <div class="management-header text-center mb-4">
-    <h2>Pending Registration Notifications</h2>
+    <h2 class="display-5 fw-bold text-primary">Pending Registration Notifications</h2>
     <p class="lead text-muted">Manage event registration requests</p>
   </div>
 
   <div class="action-buttons d-flex mb-4">
-    <button class="btn btn-primary me-2" (click)="markAllAsRead()" [disabled]="isLoading" id="butt">
+    <button class="btn btn-primary me-2" (click)="markAllAsRead()" [disabled]="isLoading">
       <i class="fas fa-check-circle me-2"></i>Mark All as Read
     </button>
     <button class="btn btn-outline-secondary" (click)="goBack()" [disabled]="isLoading">
@@ -28,6 +25,11 @@
     <button type="button" class="btn-close" (click)="error = null" aria-label="Close"></button>
   </div>
 
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
+    {{ successMessage }}
+    <button type="button" class="btn-close" (click)="successMessage = null" aria-label="Close"></button>
+  </div>
+
   <div class="card shadow-sm" *ngIf="!isLoading && !error && notifications.length > 0">
     <div class="card-header bg-white border-bottom-0">
       <h5 class="card-title mb-0">Notifications</h5>
@@ -43,6 +45,7 @@
             </th>
             <th>Message</th>
             <th>Event</th>
+            <th>Capacity</th>
             <th>User</th>
             <th>Date</th>
             <th class="text-end">Actions</th>
@@ -62,6 +65,19 @@
             <td>
               <span class="badge bg-info bg-opacity-10 text-info">
                 {{ notification.registration?.event?.title || 'Unknown event' }}
+              </span>
+            </td>
+            <td>
+              <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                <ng-container *ngIf="notification.registration?.event?.idEvent as eventId">
+                  {{ events[eventId]?.numberOfPlaces || 'Unlimited' }}
+                  <ng-container *ngIf="events[eventId]?.numberOfPlaces">
+                    ({{ getRemainingPlaces(eventId) }} remaining)
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="!notification.registration?.event?.idEvent">
+                  Unknown
+                </ng-container>
               </span>
             </td>
             <td>
@@ -127,6 +143,4 @@
       class="d-flex justify-content-center">
     </ngb-pagination>
   </div>
-</div>
-</div>
 </div>

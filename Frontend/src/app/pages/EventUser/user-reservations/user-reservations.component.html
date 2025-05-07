@@ -48,12 +48,7 @@
               </span>
             </td>
             <td>
-              <!-- Only show Delete button for PENDING status -->
-              <button *ngIf="reservation.status === 'PENDING'" 
-                      class="btn btn-sm btn-danger" 
-                      (click)="deleteReservation(reservation.idRegist!)">
-                Delete
-              </button>
+          
               
               <!-- Show Download button for CONFIRMED status -->
               <button *ngIf="reservation.status === 'CONFIRMED'"
